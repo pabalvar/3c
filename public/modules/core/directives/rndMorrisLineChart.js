@@ -112,7 +112,7 @@ angular.module('randomStack')
                 stacked: scope.params.stacked,
                 hideHover:true,
                 //hoverCallback: function (index, options, content, row) {
-                //    return '<a href="#!/app/RRHH/funcionarios">'+content+'</a>' ;
+                //    return '<a href="#!/app/.../funcionarios">'+content+'</a>' ;
                 //} // ASI se agregaría un link al popup
               });
             } else {

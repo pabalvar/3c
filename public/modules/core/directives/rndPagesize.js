@@ -1,4 +1,4 @@
-angular.module('RRHH')
+angular.module('core')
     .directive('rndPageSize', [
         function () {
             return {

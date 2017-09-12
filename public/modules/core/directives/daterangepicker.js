@@ -33,10 +33,10 @@ angular.module('randomStack')
      * # DaterangepickerCtrl
      * Controller of the randomStack
      */
-    .controller('DaterangepickerjsCtrl', function ($scope, $rootScope, $moment, rrhhServiceContratosFilter) {
+    .controller('DaterangepickerjsCtrl', function ($scope, $rootScope, $moment/*, rrhhServiceContratosFilter*/) {
         // Inicializar local scope
-        $scope.startDate = rrhhServiceContratosFilter.fechaini;
-        $scope.endDate = rrhhServiceContratosFilter.fechafin;
+        $scope.startDate = $moment.utc().startOf('month').format("YYYY-MM-DD");//rrhhServiceContratosFilter.fechaini;
+        $scope.endDate = $moment.utc().endOf('month').format("YYYY-MM-DD");//rrhhServiceContratosFilter.fechafin;
 
         var getStep = function (fechaini, fechafin, add) {
             var info = {};
@@ -105,11 +105,11 @@ angular.module('randomStack')
 
         // Watcher a localscope. Al cambiar, actualizar root, y actualizar startDateReadable
         $scope.$watch('startDate', function (newVal, oldVal) {
-            rrhhServiceContratosFilter.fechaini = newVal;
+            //rrhhServiceContratosFilter.fechaini = newVal;
             $scope.readable = dateRangeReadable(newVal, $scope.endDate);
         });
         $scope.$watch('endDate', function (newVal, oldVal) {
-            rrhhServiceContratosFilter.fechafin = newVal;
+            //rrhhServiceContratosFilter.fechafin = newVal;
             $scope.readable = dateRangeReadable($scope.startDate, newVal);
         });
 

@@ -1,4 +1,4 @@
-angular.module('RRHH')
+angular.module('core')
     .factory('rndPage', function () {
         // State machine
         return function (_params) {
