@@ -7,7 +7,7 @@
 
 var driver = require('../../../../app/lib/Server/drivers/mssql.server.driver'),
 	users = require('../../../../app/lib/Users/controllers/users.server.controller'),
-	EmpresasCtlr= require('../../../../app/rrhh/empresas/controllers/empresas.controller');
+	EmpresasCtlr= require('../../../../app/lib/empresas/controllers/empresas.controller');
 
 module.exports = function(app) {
 	// User Routes
