@@ -1,0 +1,41 @@
+﻿<div class="page bg-white">
+
+    <!-- ================= BRANDING ========================== -->
+    <div class="text-center">
+        <div id="branding">
+            <a href="index.html" class="brand-retina">
+                <img src="images/corporate/logo@2x-dark.png" alt="Random">
+            </a>
+            <h3 class="text-light text-greensea">Sistema de recursos humanos</h3>
+        </div>
+    </div>
+    <!-- ================= BRANDING END========================== -->
+
+    <!-- ================= LOGIN BOX ========================== -->
+    <div class="container w-420 p-15 bg-white mt-40 text-center">
+
+        <h2 class="text-light text-greensea">Inicio de sesión</h2>
+
+        <form name="form" class="form-validation mt-20" novalidate>
+
+            <div class="form-group">
+                <input type="email" class="form-control underline-input" placeholder="Email" ng-model="user.username" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" placeholder="Clave" class="form-control underline-input" ng-model="user.password" required>
+            </div>
+
+            <div class="form-group text-left mt-20">
+                <button type="submit" class="btn btn-greensea b-0 br-2 mr-5" ng-click="logIn()" ng-disabled='form.$invalid'>Entrar</button>
+                <label class="checkbox checkbox-custom-alt checkbox-custom-sm inline-block">
+                <input type="checkbox" ng-model="remember_session">
+                <i></i> Mantener Sesión?</label>
+            </div>
+
+        </form>
+
+    </div>
+    <!-- ================= LOGIN BOX END========================== -->
+
+</div>

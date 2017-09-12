@@ -1,0 +1,41 @@
+﻿<ncy-breadcrumb></ncy-breadcrumb>
+
+
+<div class="page page-users">
+
+  <!-- row -->
+  <div class="row">
+
+    <div class="col-md-12">
+
+      <!-- tile -->
+      <section class="tile tile-simple shadow">
+
+        <!-- tile body -->
+        <div class="tile-body">
+
+          <ul class="list-unstyled m-20">
+            <li ng-if="user.name"><strong>Nombre:</strong> {{user.name}}</li>
+            <li ng-if="user.firstLastName"><strong>Apellido Paterno:</strong> {{user.firstLastName}}</li>
+            <li ng-if="user.secondLastName"><strong>Apellido Materno:</strong> {{user.secondLastName}}</li>
+            <li ng-if="user.isActive === true || user.isActive === false"><strong>Activo?:</strong> {{user.isActive | boolToStr}}</li>
+            <li ng-if="user.lastLogin"><strong>Último Login:</strong> {{user.lastLogin | date:'dd/MM/yy - H:mm'}}</li>
+          </ul>
+
+          <div class="form-footer">
+            <button class="btn btn-success b-0 pull-right" ui-sref="app.users.edit({user_id: user.id})">Editar</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ui-sref="app.users.list"><i class="fa fa-arrow-left"></i> Volver</button>
+          </div>
+
+        </div>
+        <!-- /tile body -->
+
+      </section>
+      <!-- /tile -->
+
+    </div>
+
+  </div>
+  <!-- /row -->
+
+</div>

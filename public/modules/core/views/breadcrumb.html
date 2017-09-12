@@ -1,0 +1,31 @@
+<div class="pageheader mb-0">
+	<div class="page-bar">
+		<div class="bg-slategray">
+			<!--<pre>{{steps|json}}</pre>-->
+			<ol class="page-breadcrumb">
+				<li ng-repeat="step in steps track by $index" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">
+					<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">
+						<i class="ml-5 mr-5" ng-if="step.ncyBreadcrumb.icon" ng-class="step.ncyBreadcrumb.icon"></i> {{step.ncyBreadcrumbLabel}}
+					</a>
+					<span class="pl-10" ng-switch-when="true">
+						<i class="ml-5 mr-5" ng-class="step.ncyBreadcrumb.icon" ></i>{{step.ncyBreadcrumbLabel}}
+					</span>
+				</li>
+			</ol>
+
+			<div ng-controller="DaterangepickerjsCtrl" class="page-toolbar mr-10" data-ng-show="showDateRangePicker">
+				<span class="mr-10"><small>ventana de tiempo : </small></span>
+				<a href="javascript:;" class="pr-0 bg-slategray" ng-click="dateBack()">
+					<i class="fa fa-backward"></i>
+				</a>
+				<a href="javascript:;" class="btn btn-default no-border bg-slategray" daterangepicker="rangeOptions" date-begin="startDate"
+				 date-end="endDate">
+					<i class="fa fa-calendar"></i><span>&nbsp;&nbsp;{{readable}}</span>&nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+				</a>
+				<a href="javascript:;" class="pl-0 pr-10 bg-slategray" ng-click="dateForward()">
+					<i class="fa fa-forward"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

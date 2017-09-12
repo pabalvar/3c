@@ -1,0 +1,69 @@
+<!-- /script: Dropdown de la lista de conceptos -->
+<script type="text/ng-template" id="conceptoSelectCustomTemplate.html">
+    <a>
+        <div class="media-body">
+            <p class="media-heading mb-0 mt-0">{{match.model.NOKOCO}}
+                <span class="pull-right text-muted">{{match.model.CLASE}}</span>
+            </p>
+            <span class="text-sm" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+        </div>
+    </a>
+</script>
+<!-- /script -->
+
+<!-- PopUp Filtros -->
+<section>
+
+    <!-- Botón Submit -->
+    <div class="row">
+        <div class="col-xs-12 pr-10 mb-10">
+            <span class="float-right ml-5">
+                <button type="submit" ng-click="onSubmit()" class="btn btn-default btn-xs" 
+                    ng-disabled="!vm.concepto.KOCO">
+                    <fa name="plus"></fa>
+                </button>
+            </span>
+            <i class="fa fa-cube text-muted mr-5"></i> Concepto...
+        </div>
+    </div>
+    <!-- /Botón Submit -->
+
+    <div class="row">
+        <!-- selección de concepto: ng-model="vm.concepto" -->
+        <div rnd-ws is-busy="[conceptos]" is-empty="conceptos.$ready" class="col-xs-12 mt-5">
+            <input type="text" ng-model="vm.concepto" placeholder="ingrese nombre concepto" typeahead-template-url="conceptoSelectCustomTemplate.html"
+                uib-typeahead="concepto as concepto.KOCO for concepto in conceptos.data | filter:{clave:$viewValue}"
+                class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-on-select="onSelectConcepto($item, $model, $label)">
+            <label class="text-muted"><small>Concepto</small></label>
+        </div>
+        <!-- /selección de concepto -->
+
+        <!-- selección de propiedad: ng-model="vm.propiedad" -->
+        <div rnd-ws is-busy="[concepto]" is-empty="concepto.$ready" hide-banner="true" class="col-xs-12">
+            <select id="propiedad" class="form-control ng-pristine ng-valid ng-not-empty ng-touched text-sm pl-0 pr-0" 
+                ng-model="vm.propiedad" ng-change="refreshDialog()">
+                <option ng-repeat="column in concepto.columns" value="{{column.field}}">{{column.name}}</option>
+            </select>
+            <label class="text-muted"><small>Propiedad</small></label>
+        </div>
+        <!-- /selección de propiedad: ng-model="vm.propiedad" -->
+
+        <!-- selección de operador: ng-model="vm.operador" -->
+        <div class="col-xs-12" ng-if="vm.propiedad">
+            <select class="form-control ng-pristine ng-valid ng-not-empty ng-touched text-sm pl-0 pr-0" 
+                ng-model="vm.operador">
+                <option ng-repeat="op in operadores" value="{{op.id}}">{{op.name}}</option>
+            </select>
+            <label class="text-muted"><small>Operador</small></label>
+        </div>
+        <!-- /selección de operador: ng-model="vm.operador" -->
+
+        <!-- selección de valor: ng-model="vm.valor" -->        
+        <div class="col-xs-12" ng-if="vm.propiedad ">
+            <rnd-input data="vm.Data" line="vm.linea" key="vm.propiedad" index-by="{{vm.propiedad}}" 
+            columns="concepto.columns" rtablas="concepto.rtablas">
+            </rnd-input>
+            <label class="text-muted"><small>Valor</small></label>
+        </div>
+    </div>
+</section>

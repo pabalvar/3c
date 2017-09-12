@@ -1,0 +1,56 @@
+<ncy-breadcrumb></ncy-breadcrumb>
+
+
+<div class="page page-users" ng-controller="UsersListCtrl">
+
+    <!-- page content -->
+    <div class="pagecontent">
+
+
+        <!-- row -->
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+
+
+                <!-- tile -->
+                <section class="tile tile-shadow" fullscreen="isFullscreen01">
+
+                    <!-- tile header -->
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font"><strong>Usuarios</strong> web</h1>
+                        <ul class="controls">
+
+                            <li>
+                                <a ui-sref="app.users.new" class="bg-info lter"><i class="fa fa-user-plus mr-5"></i> Nuevo usuario web</a>
+                            </li>
+                            <!-- control ventana -->
+                            <rnd-minimizar></rnd-minimizar>
+                            <rnd-fullscreen></rnd-fullscreen>
+                        </ul>
+
+                    </div>
+                    <!-- /tile header -->
+
+                    <!-- tile body -->
+                    <div class="tile-body">
+                        <table datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-disable-deep-watchers="true" class="table table-custom dt-responsive"></table>
+                    </div>
+                    <!-- /tile body -->
+
+                </section>
+                <!-- /tile -->
+
+
+            </div>
+            <!-- /col -->
+        </div>
+        <!-- /row -->
+
+
+
+    </div>
+    <!-- /page content -->
+
+
+</div>

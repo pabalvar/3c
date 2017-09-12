@@ -1,0 +1,73 @@
+
+<section class="row" data-ng-controller="AuthenticationController">
+<div class="page-signin">
+
+    <div class="signin-header">
+    	<h3 class="col-md-12 text-center">Ingresa con tus datos</h3>
+
+        <div class="container text-center">
+            <section class="logo">
+                <img src="/modules/users/img/random_logo.png">
+            </section>
+        </div>
+    </div>
+
+    <div class="main-body">
+        <div class="container" style="width:580px">
+            <div class="form-container">
+					<form data-ng-submit="signin()" class="form-horizontal" autocomplete="off">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                                <input type="text"
+                                	   id="username"
+                                	   name="username"
+                                       class="form-control"
+                                       data-ng-model="credentials.username"
+                                       placeholder="Nombre de usuario"
+                                       >
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                </span>
+                                <input type="password"
+                                       id="password"
+                                       name="password"
+                                       class="form-control"
+                                       data-ng-model="credentials.password"
+									   placeholder="Contraseña"
+                                       >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                        	<button type="submit" class="btn btn-primary btn-lg btn-block">Ingresar</button>
+                        </div>
+
+                        <div data-ng-show="error" class="text-center text-danger">
+							<strong data-ng-bind="error"></strong>
+						</div>
+
+                    </fieldset>
+                </form>
+
+                <!--<section>
+                    <p class="text-center"><a href="/#!/password/forgot">Forgot your password?</a></p>
+                    <p class="text-center text-muted text-small">Don't have an account yet? <a href="/#!/signup">Sign up</a></p>
+                </section>-->
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</section>

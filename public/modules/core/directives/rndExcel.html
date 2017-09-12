@@ -1,0 +1,34 @@
+<!-- Download -->
+<li class="dropdown dropdown-toggle settings"
+    uib-tooltip="descargar datos"
+    uib-dropdown
+    uib-dropdown-toggle
+    on-toggle="toggled(open)">
+    <a>
+        <i class="fa fa-download"></i>
+    </a>
+    <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+        <li>
+            <a ng-click="toExcel()">
+                <fa name="file-excel-o"></fa> Excel (.xls)
+            </a>
+        </li>
+        <li>
+            <a ng-click="toWord()">
+                <fa name="file-word-o"></fa> Word (.doc)
+            </a>
+        </li>
+        <li>
+            <a ng-click="toCSV()">
+                <fa name="file-code-o"></fa> Texto plano (.csv)
+            </a>
+        </li>
+        <li>
+            <a ng-click="setMediaType('pdf')"
+               ng-disabled="true">
+                <fa name="file-pdf-o"></fa> PDF
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- /Download -->

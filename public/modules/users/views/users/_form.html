@@ -1,0 +1,90 @@
+﻿<form name="form" class="form-horizontal" submit-validate ng-submit="submitForm(form.$valid)" role="form" novalidate>
+
+	<div class="form-group" ng-if="!editing || form_changes.changeEmail" ng-class="{ 'has-error' : form.email.$invalid && form.email.$dirty, 'has-success' : form.email.$valid && form.email.$dirty, 'has-warning' : user_diffs.hasOwnProperty('email')}">
+		<label for="email" class="col-sm-2 control-label">Email <span class="text-danger" style="font-size: 15px;">*</span></label>
+		<div class="col-sm-4">
+			<input type="email" name="email" id="email" class="form-control" ng-model="user.email" placeholder="a@a.cl" required>
+			<p class="help-block">
+				<span ng-show="form.email.$error.required && form.email.$dirty">El Email es requerido.</span>
+				<span ng-show="form.email.$error.email && form.email.$dirty">El Email no tiene formato corecto.</span>
+			</p>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-if="!editing || (form_changes.changePass || form_changes.changeEmail)" ng-class="{ 'has-error' : form.password.$invalid && form.password.$dirty, 'has-success' : form.password.$valid && form.password.$dirty, 'has-warning' : user_diffs.hasOwnProperty('password')}">
+		<label for="password" class="col-sm-2 control-label">Clave <span class="text-danger" style="font-size: 15px;">*</span></label>
+		<div class="col-sm-4">
+			<input type="password" name="password" id="password" class="form-control" ng-model="user.password" pattern="^(?=.*\d)(?=.*[a-zA-Z]).{4,16}$" required>
+			<p class="help-block">
+				<span ng-show="form.password.$error.required && form.password.$dirty">La Clave es requerida.</span>
+				<span ng-show="form.password.$error.pattern && form.password.$dirty">La Clave debe ser de entre 4 y 16 caracteres. Y contener números y letras.</span>
+			</p>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-if="!editing || (form_changes.changePass || form_changes.changeEmail)" ng-class="{ 'has-error' : form.confirm_password.$invalid && form.confirm_password.$dirty, 'has-success' : form.confirm_password.$valid && form.confirm_password.$dirty }">
+		<label for="confirm_password" class="col-sm-2 control-label">Confirmar Clave <span class="text-danger" style="font-size: 15px;">*</span></label>
+		<div class="col-sm-4">
+			<input type="password" name="confirm_password" id="confirm_password" class="form-control" ng-model="user.confirm_password" ui-validate=" '$value==user.password' " ui-validate-watch=" 'user.password' " required>
+			<p class="help-block">
+				<span ng-show="form.confirm_password.$error.required && form.confirm_password.$dirty">La Confirmación de Clave es requerida.</span>
+				<span ng-show="!form.confirm_password.$error.required && form.confirm_password.$error.validator && form.confirm_password.$dirty">La Confirmación de Clave no coincide.</span>
+			</p>
+		</div>
+	</div>
+	
+	<hr class="line-dashed line-full" ng-if="!editing || (form_changes.changePass || form_changes.changeEmail)">
+	
+	<div class="form-group" ng-class="{ 'has-warning' : user_diffs.hasOwnProperty('name')}">
+		<label for="name" class="col-sm-2 control-label">Nombre</label>
+		<div class="col-sm-4">
+			<input type="text" name="name" id="name" class="form-control" ng-model="user.name">
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{ 'has-warning' : user_diffs.hasOwnProperty('firstLastName')}">
+		<label for="firstLastName" class="col-sm-2 control-label">Apellido Paterno</label>
+		<div class="col-sm-4">
+			<input type="text" name="firstLastName" id="firstLastName" class="form-control" ng-model="user.firstLastName">
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{ 'has-warning' : user_diffs.hasOwnProperty('secondLastName')}">
+		<label for="secondLastName" class="col-sm-2 control-label">Apellido Materno</label>
+		<div class="col-sm-4">
+			<input type="text" name="secondLastName" id="secondLastName" class="form-control" ng-model="user.secondLastName">
+		</div>
+	</div>
+	
+	<hr class="line-dashed line-full">
+	
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-4">
+			<label for="isActive" class="checkbox checkbox-custom-alt">
+				<input type="checkbox" name="isActive" id="isActive" ng-model="user.isActive"><i></i>
+				Activo
+			</label>
+		</div>
+	</div>
+	
+	<hr class="line-dashed line-full">
+	
+	<div class="form-group mt-40" ng-hide="!editing">
+    <div class="col-sm-8 col-md-offset-2">
+      <label class="checkbox checkbox-custom-alt inline mr-20">
+        <input type="checkbox" ng-click="setChangeEmail()" ng-disabled="form_changes.changePass"><i></i>
+        Cambiar Email
+      </label>
+      <label class="checkbox checkbox-custom-alt inline">
+        <input type="checkbox" ng-click="setChangePass()" ng-disabled="form_changes.changeEmail"><i></i>
+        Cambiar Clave
+      </label>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="submit" class="btn btn-success b-0 pull-right" ng-disabled="form.$invalid || (editing && noChanges)">Enviar</button>
+    <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ui-sref="app.users.list"><i class="fa fa-arrow-left"></i> Volver</button>
+  </div>
+
+</form>

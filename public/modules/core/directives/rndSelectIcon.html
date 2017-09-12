@@ -1,0 +1,13 @@
+<span class="dropdown" uib-dropdown on-toggle="toggled(open)">
+    <span href uib-dropdown-toggle class="dropdown-toggle settings">
+        {{title}} <i class="fa fa-{{profiles.selected.icon||'ellipsis-v'}}"></i>
+        {{showSelected?'&nbsp;'+(profiles.selected.name||title):''}}
+    </span>
+    <ul class="dropdown-menu with-arrow animated littleFadeInUp">
+        <li ng-repeat="profile in profiles.data">
+            <a ng-click="setProfile(profile.id)">
+                <fa name="{{profile.icon}}"></fa> {{profile.name}}
+            </a>
+        </li>
+    </ul>
+</span>

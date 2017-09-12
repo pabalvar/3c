@@ -1,0 +1,102 @@
+<!-- scope: type, line, column, rtablas, dialog, key, indexBy -->
+<!-- small><pre><small>{{line}} </small></pre></small> -->
+
+<div ng-show="line.$estado.$isOpen">
+    <!-- debug 
+    <pre>pre: {{line[key]}}</pre>-->
+
+
+    <!-- autocomplete -->
+    <div ng-if="type.datatype=='autocomplete'"
+         class="form-validation">
+        <input ng-model="buffer.tmpInput"
+               type="text"
+               class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               placeholder="búsqueda por RUT o nombre"
+               uib-typeahead="x.RUT as x.searchString for x in (column.source($viewValue))"
+               typeahead-loading="loadingLocations"
+               typeahead-no-results="noResults"
+               ng-required="column.required"
+               ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
+               typeahead-editable="false">
+        <md-progress-linear ng-show="loadingLocations"
+                            md-mode="indeterminate"
+                            ng-disabled="true"></md-progress-linear>
+        <div ng-show="noResults">
+            <i class="glyphicon glyphicon-remove"></i>No se encontraron resultados
+        </div>
+    </div>
+
+    <!-- rtabla -->
+    <div ng-if="type.datatype=='rtabla'"
+         class="form-validation"
+         uib-dropdown>
+        <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
+        <select ng-model="buffer.tmpInput"
+                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in rtablas[column.tabla].data track by item[column.options.returnClient]"
+    
+                class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
+                ng-required="column.required">
+         </select>
+    </div>
+
+    <!-- date -->
+    <div ng-if="type.datatype=='date'"
+         class="row">
+        <div class="col-md-12 form-validation">
+            <p class="input-group">
+                <input ng-model="buffer.tmpInput"
+                       ng-show="!dateCtrl.isDateInfinite"
+                       type="text"
+                       class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                       uib-datepicker-popup="{{dateCtrl.format}}"
+                       ng-model-options="{timezone: 'utc'}"
+                       is-open="dateCtrl.isOpen"
+                       datepicker-options="dateOptions"
+                       ng-required="column.required"
+                       close-text="cerrar"
+                       alt-input-formats="dateCtrl.altInputFormats"
+                       datepicker-popup-template-url="modules/core/directives/rndInput-date.html" />
+                <span class="form-control"
+                      ng-show="dateCtrl.isDateInfinite">{{line[key]|monitor:column }} </span>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="dateCtrl.toggleOpen()">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- numérico -->
+    <div ng-if="type.datatype=='number'||type.datatype=='currency'"
+         class="form-validation">
+        <input ng-model="buffer.tmpInput"
+               type="number"
+               class="form-control text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
+               ng-required="column.required">
+    </div>
+
+    <!-- texto -->
+    <div ng-if="type.datatype=='string'"
+         class="form-validation">
+        <input ng-model="buffer.tmpInput"
+               type="text"
+               class="form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               ng-readonly="column.readOnly && (column.pk && lineMeta.$action!='N' )"
+               ng-required="column.required">
+    </div>
+
+</div>
+
+<!-- mostrar input si no está en modo edit -->
+<span ng-show="!line.$estado.$isOpen && type.datatype!='dialog'">{{line[key]| monitor:column:rtablas}}</span>
+
+<!-- Estado -->
+<div ng-if="type.datatype=='dialog'"
+     class="form-validation">
+    <rnd-estado line="line"></rnd-estado>
+</div>
+<!-- /Estado -->

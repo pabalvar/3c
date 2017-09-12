@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <div ng-if="resource.busy">
+            <md-progress-linear md-mode="indeterminate" ng-disabled="true"></md-progress-linear>
+        </div>
+
+        <div ng-if="!resource.error && !resource.busy && resource.data.length==0" class="alert alert-info "> No existen datos
+        </div>
+        <!--<pre>{{ctrl|json}}</pre>-->
+        <div class="{{resource.busy?'busy':''}} {{resource.error?'dead':''}}">
+            <div class="row ">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs ">
+                        <li ng-repeat="clase in resource.data" ng-class="ctrl.selected[clase[keyprop]]?'active':''">
+                            <a href="" ng-click="toggleTab($event,clase[keyprop])" data-ng-bind="clase[nameprop]"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

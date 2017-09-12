@@ -1,0 +1,1 @@
+htmlhint -r tag-pair,attr-no-duplication public/modules

@@ -1,0 +1,79 @@
+<header class="clearfix" data-ng-controller="rdmHeaderCtlr">
+
+    <!-- Left-side navigation -->
+    <ul class="nav-left pull-left list-unstyled list-inline ">
+        <li class="sidebar-collapse divided-right">
+            <a href="javascript:;" collapse-sidebar>
+                <fa name="outdent"></fa>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Branding -->
+    <div class="branding" style="background-color: transparent; height:100%">  
+        <a ui-sref="app.home">
+            <!--<span><strong>Random</strong>X+</span>-->
+            <div class="mt-10 mb-10">
+                <img height="20px" src="modules/theme/images/random-logo.png" alt="Random ERP" >
+            </div>
+        </a>
+        <a href="javascript:;" class="offcanvas-toggle visible-xs-inline" offcanvas-sidebar><i class="fa fa-bars"></i></a>
+    </div>
+    <!-- Branding end -->
+    
+    
+    <!-- Right-side navigation -->
+    <ul class="nav-right pull-right list-inline">
+        
+            
+        <!-- EMPRESA -->
+        <li class="dropdown nav-profile" uib-dropdown data-ng-if="isLoggedIn()">
+            <a href class="dropdown-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
+            <span data-ng-repeat="company in companies"
+                data-ng-show="currentCompany == company.id && company.showName==true" 
+                >{{ company.name }} 
+                 <fa name="angle-down"></fa></span>
+            <img data-ng-repeat="company in companies" 
+                data-ng-show="currentCompany == company.id && company.showImg==true" 
+                data-ng-src="{{company.img}}" 
+                alt="">
+            </a>
+            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInDown" role="menu">
+                <li data-ng-repeat="company in companies"
+                    data-ng-class="{active: currentCompany == company.id}">
+                    <a href="" data-ng-click="changeCompany(company.id)">
+                    <img data-ng-show="company.showImg" 
+                        data-ng-src="{{company.img}}"
+                        alt=""> 
+                    <span data-ng-show="company.showName" data-ng-bind="company.name"></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- /EMPRESA -->
+        
+        <li data-ng-show="isLoggedIn()" class="dropdown nav-profile" uib-dropdown>
+            <a href class="dropdown-toggle" uib-dropdown-toggle>
+                <span>
+                <img src="/images/profile-photo.jpg" alt="" class="img-circle size-30x30">
+                </span>
+                <span>
+                    {{ currentUser().username }} 
+                    <fa name="angle-down"></fa>
+                </span>
+            </a>
+            <ul class="dropdown-menu animated littleFadeInRight" role="menu">
+                
+                <li>
+                    <a href="" ng-click="logOut()">
+                        <fa name="sign-out"></fa>
+                        Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li ng-hide="isLoggedIn()"><a ui-sref="login">Abrir sesión</a></li>
+        
+    </ul>
+    <!-- Right-side navigation end -->
+</header>

@@ -1,0 +1,66 @@
+<ncy-breadcrumb></ncy-breadcrumb>
+
+<div class="page">
+
+  <div class="tile xwidget-box-minovate shadow" widget-header-name='Configuracion de Credenciales SQL Server' col='12' id-widget='config-bd'>
+    <div class="tile-body" data-ng-controller="ConfigController" data-ng-init="buscarDatosBD()">
+
+      <form name="bd_config" class="form-validation" validate data-ng-submit="guardar()">
+        <div class="form-group">
+          <label for="">Server</label>
+          <input type="text" class="form-control" placeholder="Colocar servidor" required data-ng-model="form.server">
+        </div>
+
+        <div class="form-group">
+          <label for="">Puerto</label>
+          <input type="text" class="form-control" placeholder="Colocar puerto" data-ng-model="form.port" data-ng-readonly="bool_port_default"
+            required>
+        </div>
+        <div>
+          <dl>
+            <dd>
+              <label class="ui-checkbox">
+                    <input type="checkbox"
+                          data-ng-model="bool_port_default"
+                          data-ng-checked="escogerPuertoDefault(bool_port_default)"
+                    >
+                    <span> Utilizar puerto por defecto</span>
+                  </label>
+            </dd>
+          </dl>
+        </div>
+
+        <div class="form-group">
+          <label for="">Database</label>
+          <input type="text" class="form-control" placeholder="ingresar nombre de la base de datos" required data-ng-model="form.database">
+          <span></span>
+        </div>
+
+        <div class="form-group">
+          <label for="">Usuario</label>
+          <input type="text" class="form-control" placeholder="Usuario para acceder a base de datos" required data-ng-model="form.user">
+        </div>
+
+        <div class="form-group">
+          <label for="">Contraseña</label>
+          <input type="password" class="form-control" placeholder="Contraseña para acceder a base de datos" required data-ng-model="form.password">
+        </div>
+
+        <button type="submit" class="btn btn-success" data-ng-disabled="!canSubmit()">Guardar</button>
+        <button class="btn btn-default" data-ng-disabled="!canRevert()" data-ng-click="revert()">Revertir cambios</button>
+
+
+
+        <button class="btn btn-default" data-ng-click="resetConnection()">Resetear conexión</button>
+      </form>
+      <!-- Alertas-->
+      <rnd-notification show="VistaEstados.alerta" type="warning" content="{{VistaEstados.textoAlerta}}">
+      </rnd-notification>
+
+      <rnd-notification show="VistaEstados.error" type="danger" content="{{VistaEstados.textoError}}">
+      </rnd-notification>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,70 @@
+
+<section>
+    <div ng-if="!hideDropArea" class="row">
+        <div class="col-md-6 col-lg-6">
+            <div class="input-group">
+                <span class="input-group-btn ">
+                <button ng-click="setMode('replace')" ng-show="modo.id=='edit' " type="button" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                <button ng-click="setMode('edit')" ng-show="!(modo.id=='edit')" type="button" class="btn btn-default"><i class="fa fa-retweet"></i></button>
+            </span>
+                <textarea rows="1" placeholder="pegar desde Excel aquí" style="resize:none; overflow:hidden; border-style:dashed dashed dashed solid"
+                    class="form-control text-center" ng-model="DA.input" ng-change="DA.onChange()">
+                    </textarea>
+                    <span class="input-group-btn">
+                <button title="Incorporar todas las columas del modelo" ng-click="setColumns('model')" type="button" class="btn btn-default ml-5"><i class="fa fa-magic"></i></button>
+                <!-- custom buttons ADD -->
+                <button ng-if="buttonsadd.length" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="b in buttonsadd"><a ng-click="b.func(b.title)">{{b.title}}</a></li>
+                    </ul>
+                    <!-- /custom buttons -->
+                    </span>
+
+                    <span class="input-group-btn">
+                <button title="Borrar tabla" ng-click="deleteTable()" type="button" class="btn btn-default"><i class="fa fa-trash-o"></i></button>
+                <!-- custom buttons ADD -->
+                <button ng-if="buttonsdel.length" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="b in buttonsdel"><a ng-click="b.func(b.title)">{{b.title}}</a></li>
+                    </ul>
+                    <!-- /custom buttons -->
+                    </span>
+                    <span class="input-group-btn">
+                <button title="Descargar tabla como archivo Excel" ng-click="toExcel()" type="button" class="btn btn-default "><i class="fa fa-file-excel-o"></i></button>
+            </span>
+
+            </div>
+            <label class="text-sm text-muted">Modo: <em>{{modo.label}}</em></label>
+        </div>
+        <div class="col-md-2 col-lg-3"></div>
+        <div class="col-md-4 col-lg-3">
+            <div class="input-group">
+                <input id="buscar" placeholder="buscar" style="resize:none; width:100%; vertical-align: center; height: auto;" class="form-control"
+                    ng-model="DA.search" ng-change="DA.onSearch()" ng-disabled="!tabla.data.length"/>
+                <span class="input-group-btn">
+                    <button  ng-disabled="true" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+            <label class="text-sm  text-muted">Total registros: <em>{{tabla.data.length}}</em>, visibles: <em>{{tabla.visible.length}}</em></label>
+        </div>
+
+    </div>
+
+    <!-- Handson Table -->
+    <div class="row" ng-show="tabla.columns">
+        <div class="col-md-12 {{hideDropArea?'embeded':''}}">
+            <!--<pre>{{tabla.settings}}</pre>
+            <pre>{{tabla.columns}}</pre>
+            <pre>{{tabla.visible}}</pre>-->
+            <hot-table  hot-id="{{idx}}" columns="tabla.columns" datarows="tabla.visible" settings="tabla.settings"></hot-table>
+            <p ng-if="!hideDropArea" class="text-sm text-transparent-white">&copy; 2016 Random</p>
+        </div>
+    </div>
+    <!-- Handson Table -->
+</section>

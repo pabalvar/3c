@@ -1,0 +1,28 @@
+<div id="sidebar-wrap"
+     class="horizontal-shadow">
+    <uib-accordion close-others="oneAtTime"
+                   slimscroll="{height: '100%'}">
+
+        <div uib-accordion-group
+             is-open="status.isFirstOpen"
+             ng-class="{'open': status.isFirstOpen, 'closed': !status.isFirstOpen}">
+            <uib-accordion-heading> Navegación
+                <i class="pull-right fa"
+                   ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}">
+              </i>
+            </uib-accordion-heading>
+            <ul id="navigation"
+                nav-collapse
+                ripple>
+                <li ng-repeat="item in menuItems"
+                    ui-sref-active="active">
+                    <a ui-sref={{item.name}}>
+                        <i ng-class="item.ncyBreadcrumb.icon"></i>
+                        <span>{{item.ncyBreadcrumb.label}} </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </uib-accordion>
+</div>

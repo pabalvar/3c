@@ -1,0 +1,51 @@
+<script type="text/ng-template"
+        id="customTemplate.html">
+    <a>
+        <div class="media-body">
+            <p class="media-heading mb-0 mt-0">{{match.model.NOKOCO}}
+                <span class="pull-right text-muted">{{match.model.CLASE}}</span>
+            </p>
+            <span class="text-sm"
+                  ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+        </div>
+    </a>
+</script>
+
+
+<div class="input-group">
+    <!-- botón buscar -->
+    <span class="input-group-btn"><button class="btn btn-default btn-sm"><i class="fa fa-cubes"></i></button></span>
+    <!-- /botón buscar -->
+
+    <!-- barra de texto -->
+    <div class="p-4 rnd-b bg-white ">
+
+        <!-- pildora concepto -->
+        <div class="stackable ml-5 mr-5 bg-white pl-10 pr-10 rnd-b-round-dk"
+             ng-repeat="concept in output.selected">
+            <p class="mb-0">
+                <i class="fa fa-cube mr-5"></i>{{concept.NOKOCO}} <span ng-click="ITEMS.onRemove($index)"
+                      class="pull-right ml-5">✖</span>
+            </p>
+        </div>
+        <!-- /pildora concepto -->
+
+        <!-- text-input -->
+        <div class="stackable">
+            <input id="inputy"
+                   type="text"
+                   ng-model="ITEMS.input"
+                   placeholder="agregar concepto..."
+                   uib-typeahead="state as state.KOCO for state in ITEMS.list | filter:{clave:$viewValue} | filter:{CLASE:ITEMS.selectedClase}"
+        
+                   typeahead-template-url="customTemplate.html"
+                   class="ml-5 b-0 text-sm "
+                   typeahead-show-hint="true"
+                   typeahead-min-length="0"
+                   typeahead-on-select="ITEMS.onSelect($item, $model, $label)">
+        </div>
+        <!-- text-input -->
+
+    </div>
+    <!-- /barra de texto -->
+</div>

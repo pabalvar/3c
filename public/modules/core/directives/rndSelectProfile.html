@@ -1,0 +1,10 @@
+<li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+    <a href uib-dropdown-toggle class="dropdown-toggle settings"><i ng-class="profiles.selected.default?'':'text-primary'" class="fa {{icon||'fa-flask'}}"></i>{{showSelected?'&nbsp;'+(profiles.selected.name||title):''}}</a>
+    <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+        <li ng-repeat="profile in profiles.data">
+            <a ng-click="setProfile(profile.id)">
+                <fa name="{{profiles.selected.id==profile.id?'circle':'circle-thin'}}"></fa> {{profile.name}}
+            </a>
+        </li>
+    </ul>
+</li>
