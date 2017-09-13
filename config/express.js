@@ -1,29 +1,20 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var fs = require('fs', 'dont-enclose'),
     http = require('http', 'dont-enclose'),
     https = require('https', 'dont-enclose'),
     express = require('express'),
     favicon = require('serve-favicon'),
-    //morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    //session = require('express-session'),
     compress = require('compression'),
     methodOverride = require('method-override'),
     cookieParser = require('cookie-parser'),
     cookieSession = require('cookie-session'),
-    //helmet = require('helmet'),
     passport = require('passport'),
-    //MSSQLStore=require('connect-mssql')(session),
-    //flash = require('connect-flash'),
     config = require('./config'),
     consolidate = require('consolidate'),
-    path = require('path', 'dont-enclose');
-var logger = require('./logger.js');
-var proxy = require('http-proxy-middleware');
+    path = require('path', 'dont-enclose'),
+    logger = require('./logger.js');
 
 /**
 * Si quieres cambiar constantes revisa params.js
@@ -31,10 +22,6 @@ var proxy = require('http-proxy-middleware');
 module.exports = function (connectionPool) {
     // Initialize express app
     var app = express();
-
-    // Proxy para documentación API
-    //app.use('/docs', proxy(config.docu.url+'/docs'));
-    //app.use('/api-docs', proxy(config.docu.url+'/api-docs'));
 
     // Ruta a log files
     var localPath = config.localPath;
@@ -49,9 +36,6 @@ module.exports = function (connectionPool) {
 
     //ruta para visualizador de log Scribe
     app.use('/logs', scribe.webPanel());
-    //app.use(scribe.express.logger(console,function(req,res){return true;})); // Si se quiere loggear requestsa express
-
-    /** END CONSOLE.LOG **/
 
     // Favourite Icon
     app.use(favicon("public/favicon.ico"));
@@ -80,7 +64,6 @@ module.exports = function (connectionPool) {
     app.locals.auth = require('./passport')(app);
     app.use(passport.initialize()); // passport initialize middleware
     //app.use(passport.session()); // passport session middleware [TO-DO: after passport auth (config function: serializeUser() & deserializeUser()), use: req.session o req.user]
-
     //app.use(app.locals.auth); //RECOMMENDED: use an environment variable for referencing the secret and keep it out of your codebase (should be equal to the one use on models/Users.js)
 
     // Setting application local variables
@@ -120,17 +103,12 @@ module.exports = function (connectionPool) {
 
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
-        // Enable logger (morgan)
-        //app.use(morgan('dev'));
 
         // Disable views cache
         //app.set('view cache', false);
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
     }
-
-    // connect flash for flash messages
-    //app.use(flash());
 
     // Setting the app router and static folder
     app.use(express.static(path.resolve('./public')));
