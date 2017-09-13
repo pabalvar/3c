@@ -1,5 +1,5 @@
 {
-  "name": "random-stack",
+  "name": "random3c",
   "description": "Aplicación basada en node-mssql, express, angular y nodejs (NEAN)",
   "version": "1.0.0",
   "author": "Random",
@@ -8,7 +8,7 @@
     "npm": "1.4.x"
   },
   "scripts": {
-    "start": "0lib.bat && set NODE_ENV=development && set port=3000 && nodemon server.js",
+    "start": "set NODE_ENV=development && set port=3000 && nodemon server.js",
     "production": "grunt build && set NODE_ENV=production && node server.js",
     "doc": "gulp documentation",
     "make_version": "grunt make_version",
