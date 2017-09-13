@@ -1,0 +1,211 @@
+<ncy-breadcrumb></ncy-breadcrumb>
+<!-- top-section -->
+<section class="tile tile-datos-contratos vertical-shadow ">
+
+    <!-- widget: Filtros -->
+    <div class="tile-widget rnd-b-t bg-default lter pb-5 pt-5"
+         ng-if="modo.masivo">
+        <div class="row">
+            <div class="col-md-4">
+                <p class="help-block ml-5 text-default">
+                    <span ng-show="ContratosWS.busy || PersonasWS.busy"><i class="fa fa-refresh fa-spin fa mr-5"/></span>
+                    <span ng-show="!ContratosWS.busy && !PersonasWS.busy"
+                          class="text-strong mr-5">{{modo.source=='contratos'?Contratos.recordsTotal:PersonasWS.recordsTotal}} </span>
+                    <span>{{modo.source=='contratos'?'contratos':'personas'}} coinciden con el criterio de búsqueda</span>
+                </p>
+            </div>
+            <div class="col-md-8">
+                <rrhh-contratos-filter servicio="rrhhServiceContratosFilter"></rrhh-contratos-filter>
+            </div>
+        </div>
+    </div>
+    <!-- /widget: Filtros -->
+
+    <!-- widget: Acciones y visualizaciones -->
+    <div class="tile-widget rnd-b-t bg-default lter pb-5 pt-5">
+        <div class="row">
+            <!-- Acciones -->
+            <div class="col-md-8 {{updateState()}}">
+                <p class="help-block">Acciones: </p>
+                <button ng-disabled="!sumState.canSave || sumState.canDelete"
+                        ng-click="saveChanges()"
+                        type="submit"
+                        class="btn btn-default btn-sm">
+                        <fa class="mr-10" name="floppy-o"></fa>Guardar cambios
+                </button>
+                <button ng-disabled="!sumState.canDelete || sumState.canSave"
+                        ng-click="saveChanges()"
+                        type="submit"
+                        class="btn btn-default btn-sm">
+                        <fa class="mr-10" name="trash"></fa>Eliminar marcados
+                </button>
+                <button ng-if="modo.masivo"
+                        ng-click="createLine()"
+                        type="submit"
+                        class="btn btn-default btn-sm">
+                        <fa class="mr-10" name="calendar-plus-o"></fa>Nuevo contrato
+                </button>
+                <p class="mb-0"
+                   ng-if="sumState.canSave && sumState.canDelete">
+                    <label class="text-sm text-danger">No es posible grabar cuando existen simultáneamente líneas marcadas para modificar y eliminar. Utilice la opción 'descartar línea'<em></em></label>
+                </p>
+            </div>
+            <!-- /Acciones -->
+            <!-- visualizaciones -->
+            <div class="col-md-4 text-right-md">
+                <div class="btn-group">
+                    <p class="help-block">Visualización: </p>
+
+                    <!-- sólo visible -->
+                    <button class="btn btn-default mr-5"
+                            uib-tooltip="mostrar sólo registros modificados"
+                            ng-disabled="!sumState.canHide"
+                            ng-click="getTouched()"><fa class="" name="eye-slash"></fa>
+                    </button>
+                    <!-- /sólo visible -->
+
+                    <!-- page size -->
+                    <div ng-show="Contratos.recordsTotal>5 || PersonasWS.recordsTotal >5"
+                         class="btn-group mr-5">
+                        <rnd-page-size rnd-page="page"></rnd-page-size>
+                    </div>
+                    <!-- /page size -->
+
+                    <!-- grilla form -->
+                    <label class="btn btn-default"
+                           uib-tooltip="mostrar como grilla"
+                           ng-model="modo.grid"
+                           uib-btn-radio="'table'"><fa name="th-list"></fa> 
+                    </label>
+                    <label class="btn btn-default"
+                           uib-tooltip="mostar como formulario"
+                           ng-model="modo.grid"
+                           uib-btn-radio="'form'"
+                           ng-disabled="page.size>page.maxSizeForm"><fa name="th-large"></fa> 
+                    </label>
+                    <!-- /grilla form -->
+
+                </div>
+            </div>
+            <!-- /visualizaciones -->
+
+        </div>
+    </div>
+    <!-- /widget: Acciones y visualizaciones -->
+
+</section>
+<!-- /top-section -->
+
+<!-- content section -->
+<div class="row m-0 content-section">
+
+    <!-- widget -->
+    <div class="col-lg-12">
+        <div class="tile tile-listado-contratos rnd-b tile-shadow"
+             fullscreen="tileListadoContratos">
+
+            <!-- widget header-->
+            <div class="tile-header dvd dvd-btm p-0">
+                <ul class="controls float-left btn-sm">
+                    <rnd-reload reload="refresh"
+                                is-busy="[ContratosWS,CONsaveWS]"></rnd-reload>
+                </ul>
+                <p class="m-0 text-center"><small>Listado de <strong>contratos </strong>coincidentes</small></p>
+                <ul class="controls btn-sm">
+                    <rnd-excel data="Personas.data"
+                               model="Model"></rnd-excel>
+                    <rnd-minimizar></rnd-minimizar>
+                    <rnd-fullscreen></rnd-fullscreen>
+                </ul>
+            </div>
+            <!-- /widget header-->
+
+            <!-- widget body -->
+            <div class="tile-body"
+                 rnd-ws
+                 is-busy="[ContratosWS,CONsaveWS]"
+                 is-empty="true">
+
+                <!-- Alertas -->
+                <rnd-alerts is-busy="[ContratosWS,CONsaveWS]"
+                            alert-service="alert">
+                </rnd-alerts>
+                <!-- /Alertas -->
+
+                <!-- DropArea y filter -->
+                <div class="row">
+
+                    <!-- DropArea -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <rnd-drop-area service="dropArea"></rnd-drop-area>
+                    </div>
+                    <!-- /DropArea -->
+
+                    <div class="col-sm-6 col-md-4 col-lg-6"></div>
+
+                    <!-- filter local -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <rnd-searchbox on-change="onChangeLocalFilter"></rnd-searchbox>
+                    </div>
+                    <!-- filter local -->
+                </div>
+                <!-- /DropArea y filter -->
+
+                <div class="data-container"
+                     ng-if="ContratosWS.$ready">
+
+                    <!-- CRUD contrato FORM -->
+                    <div class="row"
+                         ng-if="modo.grid=='form'">
+
+                        <div class="col-md-6"
+                             ng-repeat="contrato in Contratos.data">
+                            <rrhh-contratos-form contrato="contrato"
+                                                 contratos="Contratos"
+                                                 model="Model"
+                                                 modelcontrato="ModelContrato"
+                                                 lineaction="lineAction">
+                            </rrhh-contratos-form>
+                        </div>
+                    </div>
+                    <!-- /CRUD contrato FORM -->
+
+                    <!-- CRUD persona TABLE -->
+                    <div ng-if="Contratos.data && modo.grid=='table'"
+                         class="mb-10">
+                        <hot-table ng-if="ContratosWS.$ready"
+                                   hot-id="hot"
+                                   columns="hotTable.Columns"
+                                   datarows="Contratos.data"
+                                   settings="hotTable.Settings">
+                        </hot-table>
+                    </div>
+                    <!-- /CRUD persona TABLE -->
+
+                    <!-- paginación -->
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <ul ng-show="Contratos.recordsTotal>page.size || PersonasWS.recordsTotal > page.size"
+                                uib-pagination
+                                direction-links="false"
+                                max-size="5"
+                                boundary-link-numbers="true"
+                                items-per-page="page.size"
+                                total-items="Contratos.recordsTotal || PersonasWS.recordsTotal"
+                                ng-model="page.current"
+                                ng-change="refresh()">
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /paginación -->
+
+                </div>
+
+            </div>
+            <!-- /widget body -->
+        </div>
+    </div>
+    <!-- /widget -->
+
+</div>
+<!-- /content section -->

@@ -1,0 +1,57 @@
+<!-- Text-area del Tags -->
+<div class="input-group input-group-sm">
+    <span class="input-group-btn"><button class="btn btn-default btn-sm"><i class="fa fa-search"></i></button></span>
+    <tags-input ng-model="tags"
+                text="customText"
+                min-length="1"
+                display-property="name"
+                add-on-space="true"
+                placeholder=" buscar..."
+                template="tag-template"
+                on-tag-clicked="onTagClicked($tag)"
+                on-tag-removing="onTagRemoving($tag)"
+                on-tag-adding="onTagAdding($tag, this)"
+                replace-spaces-with-dashes="false"
+                add-from-autocomplete-only="false">
+    </tags-input>
+    <span class="input-group-btn"> 
+        <button uib-popover-template="'filtros-predeterminados'" popover-class="wide-popover shadow" popover-placement="bottom-right" class="btn btn-sm btn-default" type="button">
+            <i class="fa fa-chevron-down"></i>
+        </button> 
+    </span>
+</div>
+
+<!-- Píldora de un TAG -->
+<script type="text/ng-template"
+        id="tag-template">
+    <div class="tag-template">
+        <div class="text-default b-0 ">
+            <span><i class="{{data.icon}}" ng-if="data.icon"></i>{{' '+$getDisplayText()}}</span>
+            <a class="remove-button"
+               ng-click="$removeTag()">&#10006;</a>
+        </div>
+    </div>
+</script>
+
+<!-- Filtros predeterminados -->
+<script type="text/ng-template"
+        id="filtros-predeterminados">
+    <section class="tile tile-simple">
+        <div class="tile-body p-0">
+            <div class="list-group no-radius no-border">
+                <a class="list-group-item"
+                   ng-repeat="item in fFilters track by item.id"
+                   ng-click="onItemClick(item)">
+                    <span class="float-right ml-5">
+                            <fa ng-show="item.showCheck" name="check-square-o"></fa>
+                            <fa ng-show="!item.showCheck" name="square-o"></fa>
+                    </span><i class="{{item.icon}} text-muted mr-5"></i> {{item.name}}
+                </a>
+                <a href=""
+                   class="list-group-item">
+                    <rnd-concepto-select-plus output="concepto"></rnd-concepto-select-plus>
+                </a>
+            </div>
+        </div>
+    </section>
+</script>

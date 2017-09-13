@@ -1,0 +1,113 @@
+<section ng-show="!contrato.$estado.$hidden"
+         class="form-horizontal">
+    <div class="tile mt-10"
+         fullscreen="tileContrato">
+
+        <!-- mini Header -->
+        <div class="tile-header dvd dvd-btm paper m-0 p-0">
+
+            <!-- marcador estado -->
+            <ul class="controls float-left btn-sm">
+                <li>
+                    <a>
+                        <rnd-estado line="contrato"></rnd-estado>
+                    </a>
+                </li>
+            </ul>
+            <!-- /marcador estado -->
+
+            <p class="m-0 text-center">
+                <small><i class="fa fa-user mr-5"></i><strong>Contrato</strong><span class="text-muted"> : {{contrato.KOCON}}</span></small>
+            </p>
+            <ul class="controls btn-sm">
+                <rnd-minimizar></rnd-minimizar>
+                <rnd-fullscreen></rnd-fullscreen>
+            </ul>
+        </div>
+        <!-- /mini Header -->
+
+        <!-- datos Contrato-->
+        <div class="tile-body paper">
+            <!-- datos fijos -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="thumb thumb-md">
+                        <img ng-if="contrato.SEX=='F'"
+                             class="img align-center m-10"
+                             src="modules/theme/images/female-avatar.png">
+                        <img ng-if="contrato.SEX=='M'"
+                             class="img align-center m-10"
+                             src="modules/theme/images/male-avatar.png">
+                    </div>
+                </div>
+                <div class="col-md-9">
+
+                    <ul class="list-unstyled text-default text-capitalize  mb-20">
+                        <li>
+                            <h3 class="mt-0">{{contrato.NOMBRE|lowercase}} {{contrato.APPP|lowercase}} {{contrato.APPM|lowercase}}</h3>
+                        </li>
+                        <li><strong class="inline-block w-xs">RUT: </strong> {{contrato.RUT}}</li>
+                        <li><strong class="inline-block w-xs">Contrato: </strong> {{contrato.KOCON}}</li>
+                        <li><strong class="inline-block w-xs">UUID Contrato: </strong><small class="text-muted"> {{contrato.UIDXCONTRAT}}</small></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /datos fijos -->
+
+            <div class="row b-t pt-10">
+
+                <!-- Botones edición -->
+                <div class="col-lg-12">
+                    <button type="submit"
+                            title="modificar contacto"
+                            class="z-index-top btn btn-default btn-rounded-20 btn-xs pull-right ml-5 "
+                            ng-class="contrato.$estado.$isOpen?'bg-warning lt':''"
+                            ng-click="lineaction('editar',contrato)">
+                                                    <i class="fa fa-pencil" />
+                                                </button>
+                    <button title="eliminar contacto"
+                            class="z-index-top btn btn-default btn-rounded-20 btn-xs pull-right ml-5 "
+                            ng-disabled="contrato.$estado.$dirty"
+                            ng-click="lineaction('eliminar',contrato)">
+                                                    <i class="fa fa-trash" />
+                                                </button>
+                </div>
+
+                <!-- datos variable -->
+                <div class="col-lg-12 b-r">
+                    <p class="text-uppercase text-strong mb-10 custom-font">Datos Contacto</p>
+                    <div class="form-group mb-0">
+                        <label class="col-md-4 text-right-md text-default lt">RUT: </label>
+                        <div class="col-md-8">
+                            <rnd-input data="contratos"
+                                       line="contrato"
+                                       key="'RUT'"
+                                       index-by="UIDXCONTRAT"
+                                       columns="model"
+                                       rtablas="contratos.rtablas"></rnd-input>
+                        </div>
+                    </div>
+                    <div ng-repeat="m in modelcontrato"
+                         class="form-group mb-0">
+                        <label class="col-md-4 text-right-md text-default lt">{{m.name}}:</label>
+                        <div class="col-md-8">
+                            <rnd-input data="contratos"
+                                       line="contrato"
+                                       key="m.field"
+                                       index-by="UIDXCONTRAT"
+                                       columns="model"
+                                       rtablas="contratos.rtablas"></rnd-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 b-r">
+
+                </div>
+                <!-- /datos variable -->
+            </div>
+
+        </div>
+        <!-- /datos Persona-->
+
+    </div>
+</section>
