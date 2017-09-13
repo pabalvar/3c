@@ -180,7 +180,7 @@ module.exports = function(grunt) {
                 ],
                 dest: 'dest/node_modules'
             },
-            public_lib: { expand: true, cwd: 'public/lib', src: ['**'], dest: 'dest/public/lib' },
+            public_lib: { expand: true, cwd: 'public/ng_modules', src: ['**'], dest: 'dest/public/ng_modules' },
             public_custom_lib: { expand: true, cwd: 'public/custom-lib', src: ['**'], dest: 'dest/public/custom-lib' },
             public_dist: { expand: true, cwd: 'public/dist', src: ['**'], dest: 'dest/public/dist' },
             public_assets: { expand: true, cwd: 'public/assets', src: ['**'], dest: 'dest/public/assets' },
