@@ -38,22 +38,6 @@ module.exports = function(app) {
         }
     ));
 
-    /*
-    // To get the User login on the Passport Session Cookie
-    passport.serializeUser(function(user, done) {
-      done(null, user.id);
-    });
-
-    passport.deserializeUser(function(id, done) {
-      var consultaBD = Users.get(id);
-    	var request = new sql.Request(app.locals.connectionPool);
-    	return request.batch(consultaBD, function(err, recordset) {
-    		var user = recordset[0];
-    		return done(null, user);
-    	});
-    });
-    */
-
     var auth = jwt({
         secret: 'RANDOM_SECRET',
         userProperty: 'payload'
