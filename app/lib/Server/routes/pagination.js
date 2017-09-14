@@ -14,7 +14,10 @@ module.exports = function (app) {
                 if (query.size) ret.pagination.size = parseInt(query.size);
                 if (query.page) ret.pagination.page = parseInt(query.page);
             }
-            if (query.order) ret.pagination.order = query.order;
+            if (query.order) {
+                ret.pagination = ret.pagination||{};
+                ret.pagination.order = query.order;
+            }
 
         }
         req.pagination = ret;
