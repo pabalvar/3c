@@ -17,7 +17,7 @@ var fs = require('fs', 'dont-enclose'),
     db = require('../app/lib/Server/controllers/config.server.controller.js');
 
 
-module.exports = function (connectionPool, config) {
+module.exports = function (config) {
     // Initialize express app
     var app = express();
 
@@ -63,26 +63,18 @@ module.exports = function (connectionPool, config) {
     // use passport
     app.locals.auth = require('./passport')(app);
     app.use(passport.initialize()); // passport initialize middleware
-    //app.use(passport.session()); // passport session middleware [TO-DO: after passport auth (config function: serializeUser() & deserializeUser()), use: req.session o req.user]
-    //app.use(app.locals.auth); //RECOMMENDED: use an environment variable for referencing the secret and keep it out of your codebase (should be equal to the one use on models/Users.js)
 
     // Setting application local variables
-
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
     app.locals.keywords = config.app.keywords;
     app.locals.jsFiles = config.getJavaScriptAssets();
     app.locals.cssFiles = config.getCSSAssets();
-    app.locals.connectionPool = connectionPool;
     app.locals.localPath = localPath;
-    app.locals.paramsSQL = config.paramsSQL;
-    app.locals.sqlConnection = config.sqlConnection;
-
 
     // abrir archivo conexión 
     db.read(config);
     db.reset(app)();
-
 
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
@@ -128,12 +120,8 @@ module.exports = function (connectionPool, config) {
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
-        // If the error object doesn't exists
-        if (!err) return next();
-
-        // Log it
-        process.console.Error(err.stack);
-
+        if (!err) return next(); // If the error object doesn't exists
+        process.console.Error(err.stack);        // Log it
         // Error page
         res.status(500).json({ type: "ERR_SRV_UNKNOWN", message: "Error de servidor", error: err.stack });
     });
@@ -160,7 +148,6 @@ module.exports = function (connectionPool, config) {
         // Return HTTPS server instance
         return httpsServer;
     }
-
 
     // Return Express server instance
     return app;

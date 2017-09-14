@@ -1,17 +1,19 @@
 'use strict';
 
 // Dependencias
-var config = require('./config/config');
+var configParams = require('./config/config.js');
+var configExpress = require('./config/express.js');
 
-initServer({},config);
+initServer(configParams, configExpress);
+
 /** función que inicia el servidor */
-function initServer(_config) {
+function initServer(_params, _express) {
 	//Se crea la app express
-	var app = require('./config/express')(_config);
+	var app = _express(_params);
 
 	//Se inicia el app para escuche en el puerto en <port>
-	app.listen(_config.port);
-	console.log(_config.app.title + ' version ' + _config.app.version + ' iniciado en puerto ' + _config.port);
+	app.listen(_params.port);
+	console.log(_params.app.title + ' version ' + _params.app.version + ' iniciado en puerto ' + _params.port);
 
 	// Expose app
 	exports = module.exports = app;
