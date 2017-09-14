@@ -624,7 +624,7 @@ var SQLcast = function (s, p, opt) {
             var pag = o.pagination;
             // inicializar valores por defecto
             pag.page = pag.page || 1; // página 1 por defecto
-            pag.size = pag.size || 10; // largo página 10 por defecto
+            pag.size = pag.size || 9999; // largo página 10000 por defecto
             pag.minRow = pag.minRow || pag.start || (pag.page - 1) * (pag.size); // Inicio de página
             pag.maxRow = pag.maxRow || pag.minRow + pag.size + 1; // Fin de página
             // Generar texto para paginación 
@@ -664,7 +664,7 @@ var SQLcast = function (s, p, opt) {
                 R['epilogue'] = s_epilogue;
             } else {
                 if (TSQL_POST_2012) {
-                    R['epilogue'] = ' OFFSET ' + pag.start + ' ROWS FETCH NEXT ' + pag.size + ' ROWS ONLY';
+                    R['epilogue'] = ' OFFSET ' + pag.minRow + ' ROWS FETCH NEXT ' + pag.size + ' ROWS ONLY';
                     R['order'] = ' ORDER BY ' + getOrderBy(pag.order);
                 } else {
                     // Versión SQL < 2012
