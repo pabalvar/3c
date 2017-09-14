@@ -116,7 +116,8 @@ module.exports = function (config) {
     config.getGlobbedFiles('./app/lib/*/routes/**/*.js').forEach(requirePath);
     config.getGlobbedFiles('./app/rrhh/contracts/routes/**/*.js').forEach(requirePath);
     config.getGlobbedFiles('./app/rrhh/!(contracts)/routes/**/*.js').forEach(requirePath);
-    config.getGlobbedFiles('./app/!(lib|rrhh)/routes/**/*.js').forEach(requirePath);
+    // módulos no anidados. eg. /app/gestion/entidades.routes.js
+    config.getGlobbedFiles('./app/!(lib|rrhh)/*.routes.js').forEach(requirePath);
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
