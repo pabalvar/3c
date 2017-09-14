@@ -5,7 +5,7 @@
   <div class="tile xwidget-box-minovate shadow" widget-header-name='Configuracion de Credenciales SQL Server' col='12' id-widget='config-bd'>
     <div class="tile-body" data-ng-controller="ConfigController" data-ng-init="buscarDatosBD()">
 
-      <form name="bd_config" class="form-validation" validate data-ng-submit="guardar()">
+      <form name="bd_config" class="form-validation" validate>
         <div class="form-group">
           <label for="">Server</label>
           <input type="text" class="form-control" placeholder="Colocar servidor" required data-ng-model="form.server">
@@ -46,7 +46,7 @@
           <input type="password" class="form-control" placeholder="Contraseña para acceder a base de datos" required data-ng-model="form.password">
         </div>
 
-        <button type="submit" class="btn btn-success" data-ng-disabled="!canSubmit()">Guardar</button>
+        <button type="submit" class="btn btn-success" ng-click="guardar()" data-ng-disabled="!canSubmit()">Guardar</button>
         <button class="btn btn-default" data-ng-disabled="!canRevert()" data-ng-click="revert()">Revertir cambios</button>
 
 

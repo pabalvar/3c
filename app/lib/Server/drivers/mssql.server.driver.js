@@ -8,7 +8,7 @@ var sql = require('mssql'),
 
 exports.namedQuery = function (req, res, queryObj, store, callback) {
     var err;
-    var verbose = (req.app.locals.debugLevel > 2)
+    var verbose = (req.app.locals.config.debugLevel > 2)
     // Generar ID de transacción
     var id = uidGen.v4();
 
@@ -98,7 +98,7 @@ exports.namedQuery = function (req, res, queryObj, store, callback) {
 exports.executeQuery = function (app) {
 
     return function (req, res, next) {
-        var debug = (app.locals.debugLevel > 2);
+        var debug = (app.locals.config.debugLevel > 2);
         var query = req.consultaBD;
         var queryName = req.consultaBDN || 'consultaBD';
 
@@ -150,7 +150,7 @@ exports.executeQuery = function (app) {
 };
 
 exports.transaction = function (app) {
-    var debug = (app.locals.debugLevel > 2);
+    var debug = (app.locals.config.debugLevel > 2);
 
     return function (req, res, queries, store, callback) {
         // queries es un objeto {"model_name1":"select * from","model_name2":"select * from ..."}

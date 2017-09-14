@@ -72,7 +72,7 @@ module.exports = {
                 "public/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js",
                 "public/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js",
                 "public/bower_components/angular-translate-storage-local/angular-translate-storage-local.js",
-                "public/bower_components/jquery-ui/ui/jquery-ui.js",
+                "public/bower_components/jquery-ui/jquery-ui.js",
                 "public/bower_components/angular-ui-router/release/angular-ui-router.js",
                 "public/bower_components/angular-ui-select/dist/select.js",
                 //"public/bower_components/angular-ui-tree/dist/angular-ui-tree.js",

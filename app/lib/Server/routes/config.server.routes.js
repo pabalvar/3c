@@ -1,30 +1,13 @@
 'use strict';
 
-/*
- * Dependencias de modulos.
- */
-var config = require('../../../../app/lib/Server/controllers/config.server.controller');
+var db = require('../controllers/config.server.controller');
 
-
-
-module.exports = function(app) {
+module.exports = function (app) {
 
     app.route('/config/db')
-        .get(config.list(app))
-        .post(config.startNewConnection(app),
-            config.create(app)
-        );
-    app.route('/config/db:dbId')
-        .get(config.read)
-        .put(config.update);
-
-    app.route('/config/db/reset/:dbId')
-        .get(config.resetConnection(app));
-
+        .get(db.list(app))
+        .post(db.reset(app), db.save(app))
+        .put(db.reset(app))
     app.route('/config/debug/:debugLevel')
-        .get(config.setDebugLevel(app));
-
-    /*-------------Middleware para binding de algunas rutas-------------*/
-    app.param('dbId', config.dbById);
-
+        .get(db.setDebugLevel(app));
 };

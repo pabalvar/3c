@@ -10,21 +10,21 @@ exports.console = function(app){
                 console.error(txt,txt2||'');
             }
             console.Warning = function(txt,txt2) {
-                if (app.locals.debugLevel >= 1) {
+                if (app.locals.config.debugLevel >= 1) {
                     console.warning(txt,txt2||'');
                 }else{
                     console._tags=[];
                 }
             }
             console.Log = function(txt,txt2) {
-                if (app.locals.debugLevel >= 2) {
+                if (app.locals.config.debugLevel >= 2) {
                     console.log(txt,txt2||'');
                 }else{
                     console._tags=[];
                 }
             }
             console.Info = function(txt,txt2) {
-                if (app.locals.debugLevel >= 3) {
+                if (app.locals.config.debugLevel >= 3) {
                     console.info(txt,txt2||'');
                 }else{
                     console._tags=[];

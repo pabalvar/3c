@@ -11,15 +11,13 @@ var fs = require('fs', 'dont-enclose'),
     cookieParser = require('cookie-parser'),
     cookieSession = require('cookie-session'),
     passport = require('passport'),
-    config = require('./config'),
     consolidate = require('consolidate'),
     path = require('path', 'dont-enclose'),
-    logger = require('./logger.js');
+    logger = require('./logger.js'),
+    db = require('../app/lib/Server/controllers/config.server.controller.js');
 
-/**
-* Si quieres cambiar constantes revisa params.js
-*/
-module.exports = function (connectionPool) {
+
+module.exports = function (connectionPool, config) {
     // Initialize express app
     var app = express();
 
@@ -29,10 +27,12 @@ module.exports = function (connectionPool) {
         rootPath: path.join(localPath, '/logs')
     });
 
-    // Debug level
+    // Anexar config/env/params.js en app.locals.config
     app.locals = app.locals || {};
-    app.locals.debugLevel = config.debugLevel; // error=0,warning=1,log=2,info=3
-    process.console = logger.console(app)(process.console); // agrega métodos console.Error, etc... 
+    app.locals.config = config;
+
+    // Métodos console.Error, console.Info, etc
+    process.console = logger.console(app)(process.console);
 
     //ruta para visualizador de log Scribe
     app.use('/logs', scribe.webPanel());
@@ -67,6 +67,7 @@ module.exports = function (connectionPool) {
     //app.use(app.locals.auth); //RECOMMENDED: use an environment variable for referencing the secret and keep it out of your codebase (should be equal to the one use on models/Users.js)
 
     // Setting application local variables
+
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
     app.locals.keywords = config.app.keywords;
@@ -76,6 +77,12 @@ module.exports = function (connectionPool) {
     app.locals.localPath = localPath;
     app.locals.paramsSQL = config.paramsSQL;
     app.locals.sqlConnection = config.sqlConnection;
+
+
+    // abrir archivo conexión 
+    db.read(config);
+    db.reset(app)();
+
 
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
@@ -103,7 +110,6 @@ module.exports = function (connectionPool) {
 
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
-
         // Disable views cache
         //app.set('view cache', false);
     } else if (process.env.NODE_ENV === 'production') {
@@ -117,9 +123,8 @@ module.exports = function (connectionPool) {
     function requirePath(routePath) { require(path.resolve(routePath))(app); }
     config.getGlobbedFiles('./app/lib/*/routes/**/*.js').forEach(requirePath);
     config.getGlobbedFiles('./app/rrhh/contracts/routes/**/*.js').forEach(requirePath);
-    config.getGlobbedFiles('./app/**/routes/**/*.js').forEach(requirePath);
-    //config.getGlobbedFiles('./app/lib_erp/*.js').forEach(requirePath);
-    config.getGlobbedFiles('./app/gestion/*.js').forEach(requirePath);
+    config.getGlobbedFiles('./app/rrhh/!(contracts)/routes/**/*.js').forEach(requirePath);
+    config.getGlobbedFiles('./app/!(lib|rrhh)/routes/**/*.js').forEach(requirePath);
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
@@ -155,6 +160,7 @@ module.exports = function (connectionPool) {
         // Return HTTPS server instance
         return httpsServer;
     }
+
 
     // Return Express server instance
     return app;

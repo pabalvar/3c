@@ -13,20 +13,14 @@ var connectionFile = path.join(localPath, 'sql.connection.json');
 // Nivel de DEBUG. error=0,warning=1,log=2,info=3
 var debugLevel = process.env.DEBUG_LEVEL || 2;
 
-// URL del servidor de documentación
-var docSrvURL = process.env.DOCU_URL || 'http://localhost:80';
-
 module.exports = {
     app: {
-        title: 'Random RRHH',
-        description: 'Sistema de recursos humanos',
+        title: 'Random ERP',
+        description: 'Sistema Random 3C',
         keywords: 'Web, RANDOM ERP',
         version: '1.0.0'
     },
     debugLevel: debugLevel,
-    docu: {
-        url: docSrvURL
-    },
     port: port,
     localPath: localPath,
     sql: {
@@ -35,7 +29,6 @@ module.exports = {
             'password': '',
             'server': '',
             'database': '',
-
             'options': {
                 'tdsVersion': '7_1',
                 'encrypt': true,  //Usar para un servidor Azure

@@ -5,48 +5,6 @@ angular.module('users').config(['$stateProvider',
     function ($stateProvider) {
         // Users state routing
         $stateProvider
-            /*.
-            state('profile', {
-                url: '/settings/profile',
-                templateUrl: 'modules/users/views/settings/edit-profile.html'
-            }).
-            state('password', {
-                url: '/settings/password',
-                templateUrl: 'modules/users/views/settings/change-password.html'
-            }).
-            state('accounts', {
-                url: '/settings/accounts',
-                templateUrl: 'modules/users/views/settings/social-accounts.html'
-            }).
-            state('signup', {
-                url: '/signup',
-                templateUrl: 'modules/users/views/authentication/signup.html'
-            }).
-            state('signin', {
-                url: '/signin',
-                templateUrl: 'modules/users/views/authentication/signin.html',
-                ncyBreadcrumb: {
-                    parent:'home',
-                label: 'Login'
-              }
-            }).
-            state('forgot', {
-                url: '/password/forgot',
-                templateUrl: 'modules/users/views/password/forgot-password.html'
-            }).
-            state('reset-invalid', {
-                url: '/password/reset/invalid',
-                templateUrl: 'modules/users/views/password/reset-password-invalid.html'
-            }).
-            state('reset-success', {
-                url: '/password/reset/success',
-                templateUrl: 'modules/users/views/password/reset-password-success.html'
-            }).
-            state('reset', {
-                url: '/password/reset/:token',
-                templateUrl: 'modules/users/views/password/reset-password.html'
-            })
-            */
 
             //Login Route
             .state('login', {
@@ -54,7 +12,7 @@ angular.module('users').config(['$stateProvider',
                 templateUrl: 'modules/users/views/authentication/login.html',
                 controller: 'AuthCtrl',
                 onEnter: ['$state', 'auth_service', function ($state, auth_service) {
-                    if (auth_service.isLoggedIn()) {$state.go('app.home');}
+                    if (auth_service.isLoggedIn()) { $state.go('app.home'); }
                 }]
             })
 
@@ -73,7 +31,7 @@ angular.module('users').config(['$stateProvider',
                     parent: 'app.home',
                     label: 'Usuarios web',
                     icon: 'fa fa-laptop',
-                    menuLevel:1,
+                    menuLevel: 1,
                     menuPrio: 50
                 },
                 resolve: {
