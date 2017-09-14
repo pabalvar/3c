@@ -100,7 +100,7 @@ function createConnection(app) {
                 // Actualizar app.locals
                 //app.locals.connectionPool.close();
                 app.locals.connectionPool = connectionPool;
-                console.log("se crea conexión sql")
+                console.log("se crea conexión sql con base:", connection.server,":",connection.port," ",connection.database )
                 if (req) req.newConfig = connection;
                 if (next){ next();}
             }
