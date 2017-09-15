@@ -245,11 +245,6 @@ var SQLexpr = function (d) {
     this.setDefaults = function (a) {
         // fijar defaults
         this.defaults = a;
-		/*
-		// insertar encabezados
-		for (var i in a){
-			this.addField(i);
-		}*/
     }
 
     // Define transformaciones para una columna. Por ejemplo si columna A=x, A=COALESCE(x). 
@@ -257,11 +252,6 @@ var SQLexpr = function (d) {
     this.setTransform = function (a) {
         // fijar defaults
         this.transform = a;
-		/*
-		// insertar encabezados
-		for (var key in a){
-			this.addField(key);
-		}*/
     }
 
     // Define alias SQL de un campo JSON.  
@@ -269,11 +259,6 @@ var SQLexpr = function (d) {
     this.setAlias = function (a) {
         // fijar defaults
         this.alias = a;
-		/*
-		// insertar encabezados
-		for (var i in a){
-			this.addField(i);
-		}*/
     }
 
     // Init
