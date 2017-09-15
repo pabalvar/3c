@@ -5,7 +5,7 @@ var _ = require('lodash'),
 
 module.exports = _.extend(
 	require('./env/assets.js'),
-	require('./env/params.js'),
+	require('./env/params.js')
 	//require('./env/' + (process.env.NODE_ENV || 'development')) || {} // se carga development.js por defecto
 );
 
