@@ -8,6 +8,7 @@ exports.getEntidades = getEntidades;
 
 // Detalle de implementación
 function getEntidades(req, res, next) {
+  req.query.id = req.params.id;
   req.query.tiposuc = req.query.tiposuc||true; // por defecto P
     req.consultas.entidades = SQLcast(getEntidadesQuerySQL(), req.query, req.pagination);
     next();
@@ -32,6 +33,7 @@ FROM
   MAEEN
 -->> where
 WHERE 1=1
+  AND KOEN = '123'--<< id
   AND TIEN IN ( 'C','A' )--<< tien
   AND TIPOSUC in ('P')--<< tiposuc
   AND KOEN in ('SISTEMICA')--<< koen

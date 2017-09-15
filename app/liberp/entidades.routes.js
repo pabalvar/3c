@@ -6,7 +6,7 @@ var globals = require('../lib/globals/controllers/globals.js');
 
 module.exports = function (app) {
 /** CRUD **/
-app.route('/entidades/:koen*?')
+app.route('/entidades/:id*?')
     .get(
     entidades.getEntidades,
     driver.executeListQuery(app),
