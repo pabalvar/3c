@@ -1,22 +1,16 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var _ = require('lodash'),
 	glob = require('glob');
 
 module.exports = _.extend(
 	require('./env/assets.js'),
 	require('./env/params.js'),
-	require('./env/' + (process.env.NODE_ENV || 'development')) || {} // se carga development.js por defecto
+	//require('./env/' + (process.env.NODE_ENV || 'development')) || {} // se carga development.js por defecto
 );
 
-/**
- * Get files by glob patterns
- */
+/** Obtiene archivos por patrones */
 module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
-	// For context switching
 	var _this = this;
 
 	// URL paths regex
