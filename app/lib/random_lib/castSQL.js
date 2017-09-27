@@ -479,7 +479,7 @@ var SQLcast = function (s, p, opt) {
                     R[section] += e + ' ';
                 }
             }
-        } else if (e.match(secctionBegin)) {
+        } else if (e.match(secctionBegin)) { // La línea es -->> section
             section = e.match(secctionBegin)[1];
             R[section] = '';
         } else if (e.match(inLineComment)) { // este else debe ir al final!
