@@ -1,6 +1,9 @@
 'use strict';
+// Registrar módulo
+ApplicationConfiguration.registerModule('gestion');
 
-angular.module('core').config(['$stateProvider',
+// Definición de rutas
+angular.module('gestion').config(['$stateProvider',
     function ($stateProvider) {
         $stateProvider
 
