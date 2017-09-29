@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('core').config(['$stateProvider',
+angular.module('gestion').config(['$stateProvider',
     function ($stateProvider) {
         $stateProvider
 
-            /** Gestion : abstract */
+            /** gestion.pagos : abstract */
             .state('app.gestion.pagos', {
                 abstract: true,
                 onEnter: ['auth_service', function (auth_service) { auth_service.checkLoggedIn(); }],
                 url: '/pagos',
                 template: '<div ui-view></div>'
             })
-            /** Gestion : abstract */
+            /** gestion.pagos : clientes */
             .state('app.gestion.pagos.clientes', {
                 onEnter: ['auth_service', function (auth_service) { auth_service.checkLoggedIn(); }],
-                url: '/pagos/clientes',
+                url: '/clientes',
                 templateUrl: 'modules/gestion/pagos/views/gestion.pagos.clientes.html',
                 controller:'gestionPagosClientesController',
                 ncyBreadcrumb: {
