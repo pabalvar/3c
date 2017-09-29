@@ -19,7 +19,6 @@ function getDocumentosPendientesDePago(req, res, next) {
     req.query.espgdo = 'P';
     req.query.nudonodefi = 0;
     req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
-    console.log(req.consultas.documentos);
     next();
 }
 

@@ -23,10 +23,10 @@ function getEntidadesQuerySQL(){
 
 -->> select
 SELECT 
-  TIEN,
-  TRIM(KOEN) as KOEN,
-  TRIM(SUEN) as SUEN,
-  TRIM(NOKOEN) as NOKOEN,
+    TIEN,
+    RTRIM(KOEN) as KOEN,
+    RTRIM(SUEN) as SUEN,
+    RTRIM(NOKOEN) as NOKOEN,
   TIPOSUC
 -->> from
 FROM 

@@ -57,6 +57,13 @@ exports.returnStatus = function(req,res){
     res.send(out);
 }
 
+/** Función de salida para NO queries, usado para retornar constantes **/
+exports.returnConstante = function(req,res){
+    var out=req.data;
+    out.object='constantes';
+    res.send(out);
+}
+
 // definición objetos salida
 // contrato_dialog {object:'contrato_dialog', data:[], rtablas}
 exports.contrato_dialog = function(req,res){
