@@ -6,10 +6,15 @@ var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 exports.getMonedas = getMonedas;
 exports.getFormasDePago = getFormasDePago;
 exports.getParamsFuncionario = getParamsFuncionario;
-
+exports.getEmisoresDocumento = getEmisoresDocumento;
 
 function getParamsFuncionario(req, res, next){
     req.consultas.paramFuncionario = SQLcast(getParamsFuncionarioQuerySQL(), req.query, req.pagination);
+    next();
+}
+
+function getEmisoresDocumento(req, res, next){
+    req.consultas.emisores = SQLcast(getEmisoresDocumentoSql(), req.query, req.pagination);
     next();
 }
 
@@ -22,17 +27,37 @@ function getMonedas(req, res, next) {''
 }
 
 function getFormasDePago(req, res, next) {
-    var formasDePago = ["EFV EFECTIVO","CHV CHEQUE BANCARIO","TJV TARJETA DE CREDITO","LTV LETRA DE CAMBIO",
-                                "PAV PAGARE DE CREDITO","DEP PAGO POR DEPOSITO","ATB TRANSFERENCIA BANCARIA" ];
+    if(req.query.tipo == "ventas"){
+        var formasDePago = ["EFV EFECTIVO","CHV CHEQUE BANCARIO","TJV TARJETA DE CREDITO","LTV LETRA DE CAMBIO",
+                            "PAV PAGARE DE CREDITO","DEP PAGO POR DEPOSITO","ATB TRANSFERENCIA BANCARIA" ];
+    }
+    else {
+        var formasDePago = ["EFC EFECTIVO","CHC CHEQUE EMPRESA ","TJC TARJETA DE CREDITO","LTC LETRA DE CAMBIO",
+                            "PAC PAGARE DE CREDITO","PTB TRANSFERENCIA BANCARIA" ];
+    }
     req.data = formasDePago;
     next();
 }
+
+function getEmisoresDocumentoSql(){
+    return `
+   -->> select
+   SELECT 
+        EMISOR.EMPRESA, EMISOR.KOENDP, EMISOR.SUENDP, EMISOR.TIDPEN, EMISOR.KOTEENDP, EMISOR.NOKOENDP
+   -->> from
+   FROM 
+        TABENDP EMISOR
+   -->> where
+   WHERE 1=1
+        AND EMISOR.TIDPEN=UPPER('CH')--<< tipoDocumento
+    `; 
+   }
 
 function getParamsFuncionarioQuerySQL(){
     return `
    -->> select
    SELECT 
-        CONF.ESUCURSAL, CONF.EBODEGA, CONF.ECAJA, CONF.ELISTAVEN, CONF.ELISTACOM, CONF.NLISTACOM, CONF.ELISTAINT, CONF.NLISTAINT
+        CONF.ESUCURSAL, CONF.EBODEGA, CONF.ECAJA, CONF.ELISTAVEN, CONF.ELISTACOM, CONF.NLISTACOM, CONF.ELISTAINT, CONF.NLISTAINT, CONF.DIASMAXPAG
    -->> from
    FROM 
         CONFIEST CONF

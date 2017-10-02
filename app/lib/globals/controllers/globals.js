@@ -58,10 +58,14 @@ exports.returnStatus = function(req,res){
 }
 
 /** Función de salida para NO queries, usado para retornar constantes **/
-exports.returnConstante = function(req,res){
-    var out=req.data;
-    out.object='constantes';
+exports.returnConstante = function(req, res){
+    var out = {
+        "values" : req.data,
+        "object" : 'constante'
+    };
+    //res.send(req.data);   
     res.send(out);
+    return;
 }
 
 // definición objetos salida
