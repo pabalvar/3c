@@ -28,12 +28,25 @@ function getMonedas(req, res, next) {''
 
 function getFormasDePago(req, res, next) {
     if(req.query.tipo == "ventas"){
-        var formasDePago = ["EFV EFECTIVO","CHV CHEQUE BANCARIO","TJV TARJETA DE CREDITO","LTV LETRA DE CAMBIO",
-                            "PAV PAGARE DE CREDITO","DEP PAGO POR DEPOSITO","ATB TRANSFERENCIA BANCARIA" ];
+        var formasDePago = [
+                                    { 'TIDPEN' : 'EF', 'codigo': 'EFV', 'nombre': 'EFECTIVO' } ,
+                                    { 'TIDPEN' : 'CH', 'codigo': 'CHV', 'nombre': 'CHEQUE BANCARIO'  } ,
+                                    { 'TIDPEN' : 'TJ', 'codigo': 'TJV', 'nombre': 'TARJETA DE CREDITO'   } ,
+                                    { 'TIDPEN' : 'LT', 'codigo': 'LTV', 'nombre': 'LETRA DE CAMBIO'   } ,
+                                    { 'TIDPEN' : 'PA', 'codigo': 'PAV', 'nombre': 'PAGARE DE CREDITO'   } ,
+                                    { 'TIDPEN' : 'DE', 'codigo': 'DEP', 'nombre': 'PAGO POR DEPOSITO'   } ,
+                                    { 'TIDPEN' : 'AT', 'codigo': 'ATB', 'nombre': 'TRANSFERENCIA BANCARIA'   }
+                                ];
     }
     else {
-        var formasDePago = ["EFC EFECTIVO","CHC CHEQUE EMPRESA ","TJC TARJETA DE CREDITO","LTC LETRA DE CAMBIO",
-                            "PAC PAGARE DE CREDITO","PTB TRANSFERENCIA BANCARIA" ];
+        var formasDePago =  [
+                                        { 'TIDPEN' : 'EF', 'codigo': 'EFC', 'nombre': 'EFECTIVO' } ,
+                                        { 'TIDPEN' : 'CH', 'codigo': 'CHC', 'nombre': 'CHEQUE EMPRESA'  } ,
+                                        { 'TIDPEN' : 'TJ', 'codigo': 'TJC', 'nombre': 'TARJETA DE CREDITO'   } ,
+                                        { 'TIDPEN' : 'LT', 'codigo': 'LTC', 'nombre': 'LETRA DE CAMBIO'   } ,
+                                        { 'TIDPEN' : 'PA', 'codigo': 'PAC', 'nombre': 'PAGARE DE CREDITO'   } ,
+                                        { 'TIDPEN' : 'PT', 'codigo': 'PTB', 'nombre': 'TRANSFERENCIA BANCARIA'   } 
+                                    ];
     }
     req.data = formasDePago;
     next();
@@ -43,7 +56,8 @@ function getEmisoresDocumentoSql(){
     return `
    -->> select
    SELECT 
-        EMISOR.EMPRESA, EMISOR.KOENDP, EMISOR.SUENDP, EMISOR.TIDPEN, EMISOR.KOTEENDP, EMISOR.NOKOENDP
+        EMISOR.EMPRESA, LTRIM(RTRIM(EMISOR.KOENDP)) as KOENDP, LTRIM(RTRIM(EMISOR.SUENDP)) as SUENDP, EMISOR.TIDPEN,
+        LTRIM(RTRIM(EMISOR.KOTEENDP)) as KOTEENDP, LTRIM(RTRIM(EMISOR.NOKOENDP)) as NOKOENDP
    -->> from
    FROM 
         TABENDP EMISOR
@@ -77,7 +91,7 @@ function getMonedasQuerySQL(){
 
 -->> select
 SELECT 
-    KOMO,VAMO,NOKOMO  
+    LTRIM(RTRIM(KOMO)) AS KOMO, LTRIM(RTRIM(VAMO)) AS VAMO, LTRIM(RTRIM(NOKOMO)) as NOKOMO  
 -->> from
 FROM 
     MAEMO
