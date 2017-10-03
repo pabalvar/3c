@@ -1,0 +1,307 @@
+{
+	"id": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+	"name": "Random-Gestion",
+	"description": "",
+	"order": [
+		"3788c4f9-420e-07fe-ad66-ce35dc16bdb6",
+		"878975e1-9f11-50e1-5330-021bec401bdd",
+		"15bcc640-5637-3f86-81ee-e402b9a2e220",
+		"0276de0f-6b21-8e39-90f8-f8f27cb9692e",
+		"5c496305-97ea-326b-5657-b4c4f6783faf",
+		"6f672615-6841-e5cc-4b4d-27155b1de5e1",
+		"b7bbe94b-8a24-4849-4124-5ac08d060228"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": "920363",
+	"public": false,
+	"requests": [
+		{
+			"id": "0276de0f-6b21-8e39-90f8-f8f27cb9692e",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/values/monedas",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506714643500,
+			"name": "getMonedas",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "15bcc640-5637-3f86-81ee-e402b9a2e220",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/documentos/traeDeuda?koen=000_GALLETA&idEmpresa=01",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "koen",
+					"value": "000_GALLETA",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "idEmpresa",
+					"value": "01",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506694801023,
+			"name": "Documentos Pendiente Pago",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "3788c4f9-420e-07fe-ad66-ce35dc16bdb6",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/entidades",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "search",
+					"value": "000",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "size",
+					"value": "12",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "start",
+					"value": "0",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "search",
+					"value": "",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "page",
+					"value": "2",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506719502380,
+			"name": "entidades",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "5c496305-97ea-326b-5657-b4c4f6783faf",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/values/parametrosModalidad?idEmpresa=01&modalidad=VENTA",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "idEmpresa",
+					"value": "01",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "modalidad",
+					"value": "VENTA",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506719500135,
+			"name": "getParametrosModalidad",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "6f672615-6841-e5cc-4b4d-27155b1de5e1",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/values/formasDePago?tipo=ventas",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "tipo",
+					"value": "ventas",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506969726541,
+			"name": "getFormasDePago",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "878975e1-9f11-50e1-5330-021bec401bdd",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/documentos?idEmpresa=01&id=96544490-4",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "order",
+					"value": "KOEN",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "size",
+					"value": "12",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "start",
+					"value": "0",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "search",
+					"value": "J",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "page",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "idEmpresa",
+					"value": "01",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "id",
+					"value": "96544490-4",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1506610620189,
+			"name": "documentos",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		},
+		{
+			"id": "b7bbe94b-8a24-4849-4124-5ac08d060228",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/values/emisoresDocumento?tipoDocumento=tj",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "tipoDocumento",
+					"value": "tj",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507061105639,
+			"name": "getEmisoresDocumento",
+			"description": "",
+			"collectionId": "9bf20413-d049-17c0-48d8-da7d30d065a3",
+			"responses": []
+		}
+	]
+}
