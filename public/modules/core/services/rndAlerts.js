@@ -4,7 +4,7 @@ angular.module('core')
 
     .factory('rndAlerts', ['$timeout',
         function ($timeout) {
-            return function (s, store) {
+            return function () {
                 function inPlaceReplace(str, obj) {
                     var ret = str;
                     var tokens = str.match(/{{\w+[^}]*}}/g);
