@@ -89,7 +89,7 @@ angular.module('core')
 			// Ahora recorrer la tabla, hasta encontrar el valor
 			for (var i = 0; i < rtabla.data.length; i++) {
 				// caracter -> se usa para separar campos. Si se cambia debe coincidir con decodeTabla
-				if (rtabla.data[i][opts.returnClient] == (input||'').split(_SEPARATOR_)[0]) {
+				if (rtabla.data[i][opts.returnClient] == (input || '').split(_SEPARATOR_)[0]) {
 					value = rtabla.data[i][opts.returnSrv];
 					valid = true;
 					break;
@@ -183,7 +183,7 @@ angular.module('core')
 			var fecha = new Date(input);
 			return fecha > FarFuture;
 		}
-		return function (input, param, rtablas) {
+		return function (input, param, _rtablas) {
 
 			var ret = input;
 			var type = getDatatype(param);
@@ -217,6 +217,8 @@ angular.module('core')
 
 				// rtabla
 			} else if (type.datatype == 'rtabla') {
+				// Si rtabla es una función, instanciar ahora
+				var rtablas = (typeof (_rtablas) == 'function') ? _rtablas() : _rtablas;
 				// el valor se encuentra en rtabla[param.tabla]
 				ret = decodeRtabla(input, rtablas[param.tabla], param.options).value;
 

@@ -1,3 +1,9 @@
+/* PAD: Parche para que contador de datatable quede más a la derecha */
+.dataTables_length{
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 /* PAD: Bordes para acoplar dos tile widget */
 .rnd-b-t{
   border-top: thin solid #CCCCCC;
