@@ -99,8 +99,19 @@ exports.executeQuery = function (app) {
 
     return function (req, res, next) {
         var debug = (app.locals.config.debugLevel > 2);
+
+        // Revisar si viene consulta en req.consultaBD
         var query = req.consultaBD;
         var queryName = req.consultaBDN || 'consultaBD';
+
+        // Si no se encuentra nada, revisar en req.consultas
+        if (!query){
+            for (var key in req.consultas){
+                if (query) console.tag("SQL", "executeQuery").Error("Viene más de una consulta en executeQuery. Usa executeListQuery ");
+              query = req.consultas[key];
+              queryName = key
+            }
+        }
 
         console.tag("SQL", "QUERY", "RUN", queryName).Info(query);
 
@@ -281,45 +292,40 @@ exports.executeListQuery = function (app) {
         // Inicializo historial de consultas. Cada vez que se ejecuta una consulta se anota acá. 
         req.consultasEjecutadas = req.consultasEjecutadas || [];
 
-        // Salir si no hay nada que hacer
-        var noJob = true;
-        var executed = req.consultasEjecutadas || [];
-        if (req.consultas instanceof Array) {
-            if (req.consultas.length) {
-                noJob = false;
-            }
-        } else { // Asume objeto recorre keys
-            for (var key in req.consultas) {
-                if (req.consultasEjecutadas.indexOf(key) < 0) {
-                    noJob = false;
-                }
-            }
+        // Detectar si hay consultas
+        var job = false;
+        for (var key in req.consultas) {
+            job |= (req.consultasEjecutadas.indexOf(key) < 0);
         }
-        if (noJob) {
+
+        // Salir si no hay consultas
+        if (!job) {
             console.tag("SQL").Log("executeListQuery: Nada que hacer, next()");
             next();
             return 0;
         }
 
+        // Iniciar transacción. ToDO: Corregir que todas se están ejecutando en la misma transacción
         req.resultados = req.resultados || {};
         var transaction = new sql.Transaction(app.locals.connectionPool);
 
         transaction.begin(function (err) {
+            // Salir con error si no resulta iniciar la transacción
             if (err) {
-
-                res.status(500).json({
-                    error: err
-                });
+                res.status(500).json({ error: err });
                 console.tag("SQL").Error('Error in transaction begin', err);
                 return 0
             }
 
+            // instanciar objeto request
+            var request = new sql.Request(transaction);
+
+            // Crear objeto de objetos sql.Request
+            var requestObject = setUpMultipleQueries(req, request);
+
             console.tag('SQL', 'QUERY').Info(req.consultas);
 
-            var request = new sql.Request(transaction);
-            var listQuery = setUpMultipleQueries(req, request);
-
-            async.series(listQuery,
+            async.series(requestObject,
 
                 function (err, results) {
                     // results is now equal to: {one: [{a: 1}], two: [{b: 2}]}
@@ -356,41 +362,32 @@ exports.executeListQuery = function (app) {
 };
 
 function setUpMultipleQueries(req, request) {
-    var listQuery = req.consultas;
-    var execQuery = req.consultasEjecutadas;
+    var consultas = req.consultas;
+    var consultasEjecutadas = req.consultasEjecutadas;
     var requestObject = {};
-    //Si es array se itera
-    if (_.isArray(listQuery)) {
-        listQuery.forEach(function (elem, index) {
 
-            //Si es un string, se intenta ejecutar como si fuera query
-            if (_.isString(elem)) {
-                requestObject['q' + index] = function (callback) {
-                    request.query(elem, callback);
-                };
-            }
-            //Si es un objeto, se pregunta si es que tiene los campos 'nick' y 'query'
-            else if (_.isObjectLike(elem) && elem.nick && elem.query) {
-                requestObject[elem.nick] = function (callback) {
-                    request.query(elem.query, callback);
-                };
-            }
-        });
-    }
-    //Sino, es un objeto y se itera por sus atributo propios
-    else {
-        _.forOwn(listQuery, function (value, key) {
-            if (execQuery.indexOf(key) < 0) {
-                //console.log("ejecutando consulta",key);
-                execQuery.push(key); // Se registra consulta como ejecutada
+    _.forOwn(consultas, function (value, key) {
+        if (consultasEjecutadas.indexOf(key) < 0) {
+            if (typeof (value) == 'string') {
+                // Si value es array se considera [0] es consulta, [1] es count
+                consultasEjecutadas.push(key); // Se registra consulta como ejecutada
                 requestObject[key] = function (callback) {
-                    request.batch(value, callback)
+                    request.batch(value, callback);
                 }
             } else {
-                //console.log("consulta ignorada",key);
+                if (value.query) {
+                    consultasEjecutadas.push(key); // Se registra consulta como ejecutada
+                    requestObject[key] = function (callback) { request.batch(value.query, callback) }
+                }
+                if (value.datatable) {
+                    consultasEjecutadas.push(key + '_datatable'); // Se registra consulta como ejecutada
+                    requestObject[key + '_datatable'] = function (callback) { request.batch(value.datatable, callback) }
+                }
             }
-        })
-    }
+        } else {
+            //console.log("consulta ignorada",key);
+        }
+    })
 
     return requestObject;
 };
