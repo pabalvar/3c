@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 // Authentication service for user variables
 angular.module('users')
@@ -63,7 +63,7 @@ angular.module('users')
 }])
 
 
-// TO-DO: eliminar este m�todo antigua, siguiendole la pista de uso antigua primero!
+// TO-DO: eliminar este método antigua, siguiendole la pista de uso antigua primero!
 
 .factory('Authentication', [
 	function() {
