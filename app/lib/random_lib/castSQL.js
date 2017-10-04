@@ -2,23 +2,20 @@
 const TSQL_POST_2012 = true;
 var _ = require('lodash');
 
-if (typeof process !== 'undefined') {
-    var console = process.console;// Running on node?
+if (typeof process !== 'undefined') { // Running on node?
+    exports.SQLcast = SQLcast;
+    exports.SQLexpr = SQLexpr;
+    exports.SQLquery = SQLquery;
+    var console = process.console;
 }
 
-/** Convertir parámetro order en OrderBy */
-function getOrderBy(input) {
-    if (!input) console.error("No viene order by");
-    var ret = [];
-    var arr = _.castArray(input)
-    arr.forEach(function (o) {
-        if (o[0] == '-') { // si nombre de campo viene antecedido de "-" es desc
-            ret.push(o.slice(1) + ' desc')
-        } else {
-            ret.push(o);
-        }
-    });
-    return ret.join(',') + ' ';
+function SQLquery(s, p, opt){
+    var ret = {};
+    ret.query = SQLcast(s,p,opt);
+    if (p.type=='datatable'){
+        ret.datatable = SQLcast(s,p,{count:true});
+    }
+    return ret;
 }
 
 /**
@@ -73,7 +70,7 @@ function getOrderBy(input) {
     model.setTransform({"SLOGAN":" Me llamo {NOMBRE}, edad {EDAD}"})
     model.valuesToSQLString()           // -->      "('Pablo','40',' Me llamo Pablo, edad 40'),('Juan','20',' Me llamo Juan, edad 20')"
  */
-var SQLexpr = function (d) {
+function SQLexpr(d) {
     // containers
     this.data = [];
     this.fields = [];
@@ -357,7 +354,7 @@ var source =
     
 */
 
-var SQLcast = function (s, p, opt) {
+function SQLcast(s, p, opt) {
     // @xxx     DATE()     HASHBYTES()     COALESCE()               SELECT..FROM..   DROP TABLE        ( .... )
     var sqlexpr = /^(?:@\w+)|DATE\(.*\)|HASHBYTES\(.*\)|NEWID\(.*\)|COALESCE\(.*\)|SUM\(.*\)|SELECT.*FROM.*|DROP.*TABLE.*|^\s*\(.*\)\s*$|^\s*\[.*\]\s*$/i;
     var noquote = '/noquote';
@@ -609,7 +606,7 @@ var SQLcast = function (s, p, opt) {
             var pag = o.pagination;
             // inicializar valores por defecto
             pag.page = pag.page || 1; // página 1 por defecto
-            pag.size = pag.size || 9999; // largo página 10000 por defecto
+            pag.size = (pag.size>0)?pag.size:9999; // largo página 10000 por defecto
             pag.minRow = pag.minRow || pag.start || (pag.page - 1) * (pag.size); // Inicio de página
             pag.maxRow = pag.maxRow || pag.minRow + pag.size + 1; // Fin de página
             // Generar texto para paginación 
@@ -677,7 +674,17 @@ var SQLcast = function (s, p, opt) {
 }
 
 
-if (typeof process !== 'undefined') { // Running on node?
-    exports.SQLcast = SQLcast;
-    exports.SQLexpr = SQLexpr;
+/** Convertir parámetro order en OrderBy */
+function getOrderBy(input) {
+    if (!input) console.error("No viene order by");
+    var ret = [];
+    var arr = _.castArray(input)
+    arr.forEach(function (o) {
+        if (o[0] == '-') { // si nombre de campo viene antecedido de "-" es desc
+            ret.push(o.slice(1) + ' desc')
+        } else {
+            ret.push(o);
+        }
+    });
+    return ret.join(',') + ' ';
 }
