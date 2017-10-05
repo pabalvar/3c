@@ -57,7 +57,7 @@ module.exports = function (config) {
     app.use(cookieSession({ secret: 'RANDOM_SECRET' })); // Express cookie session middleware
 
     // use passport
-    app.locals.auth = require('./passport.js')(app);
+    app.locals.auth = require('./config.passport.js')(app);
     app.use(passport.initialize()); // passport initialize middleware
     //app.use(passport.session());
 
