@@ -47,22 +47,19 @@ module.exports = function (config) {
     app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
     app.use(bodyParser.json({ limit: "50mb" }));
 
-    /* Retorna un objeto con los filtros del cliente en forma segura*/
+    /* Inicializar campos consulta SQL*/
     app.use(function (req, res, next) {
-        // Init campos SQL
         req.consultas = req.consultas || {};
         next();
     });
 
     app.use(methodOverride());
-
-    app.use(cookieSession({
-        secret: 'RANDOM_SECRET'
-    })); // Express cookie session middleware
+    app.use(cookieSession({ secret: 'RANDOM_SECRET' })); // Express cookie session middleware
 
     // use passport
-    app.locals.auth = require('./passport')(app);
+    app.locals.auth = require('./passport.js')(app);
     app.use(passport.initialize()); // passport initialize middleware
+    //app.use(passport.session());
 
     // Setting application local variables
     app.locals.title = config.app.title;
@@ -117,7 +114,7 @@ module.exports = function (config) {
     config.getGlobbedFiles('./app/rrhh/contracts/routes/**/*.js').forEach(requirePath);
     config.getGlobbedFiles('./app/rrhh/!(contracts)/routes/**/*.js').forEach(requirePath);
     // módulos no anidados. eg. /app/gestion/entidades.routes.js
-    config.getGlobbedFiles('./app/liberp/*routes.js').forEach(requirePath);    
+    config.getGlobbedFiles('./app/liberp/*routes.js').forEach(requirePath);
     config.getGlobbedFiles('./app/!(lib|rrhh)/*.routes.js').forEach(requirePath);
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
