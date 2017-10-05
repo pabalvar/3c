@@ -4,7 +4,19 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken'); // for session managment
 
 // Login
-exports.login = function (req, res, next) {
+exports.login = login; 
+exports.requiresLogin = requiresLogin;
+
+function requiresLogin(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(401).send({
+            message: 'Usuario no ha abierto sesión'
+        });
+    }
+    next();
+};
+
+function login(req, res, next) {
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).json({ message: 'Completar todos los campos.' });
 	}
