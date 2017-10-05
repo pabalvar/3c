@@ -2,7 +2,7 @@
 
 // Dependencias
 var configParams = require('./config/config.js');
-var configExpress = require('./config/express.js');
+var configExpress = require('./config/config.express.js');
 
 initServer(configParams, configExpress);
 
