@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('config')
-	.controller('ConfigController', ['$scope', '$location', '$state', 'Authentication', '$resource', 'db',
-		function ($scope, $location, $state, Authentication, $resource, db) {
-
-			$scope.authentication = Authentication;
+	.controller('ConfigController', ['$scope', '$resource', 'db',
+		function ($scope, $resource, db) {
 
 			var original = {};
 			var Objeto_Estados = {
