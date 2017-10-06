@@ -65,9 +65,9 @@ angular.module('core')
                     order: getQueryOrder(query),
                     start: query.start,
                     size: query.length,
-                    search: query.search.value,
                     type: 'datatable'
                 }
+                if (query.search.value) params.search = query.search.value;
                 // Llamar a WS
                 Params.resource(params,callback,settings);
             }
@@ -83,10 +83,10 @@ angular.module('core')
                     .withOption('info', options.info==undefined?true:options.info) // mostrar "Mostrando registros xx al yy". por defecto true
                     .withOption('processing', true)
                     .withOption('serverSide', true)
-                    .withOption('bFilter', options.search)
+                    .withOption('bFilter', options.search) // campo búsqueda
                     .withOption('bPaginate', options.pagination==undefined?true:options.pagination) // mostrar paginación abajo
                     .withPaginationType('numbers')
-                    .withOption('lengthMenu', [[10000, 1000, 100, 20, 10, 5], ['todos', 1000, 20, 10, 5]])
+                    .withOption('lengthMenu', [[5,10,20,9999], [5,10,20,'todos']])
                     .withDisplayLength(5)
                     .withBootstrap()
                     .withOption('aaSorting', [2, 'asc'])// ordenar por APPP
