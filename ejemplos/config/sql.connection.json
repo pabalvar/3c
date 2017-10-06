@@ -1,1 +1,0 @@
-{"server":"rrhh.database.windows.net","port":1433,"database":"VIDRIOS","user":"usuario","password":"RandomERP$","options":{"rowCollectionOnDone":false,"rowCollectionOnRequestCompletion":false,"useColumnNames":false,"tdsVersion":"7_1"},"driver":"tedious","stream":false,"parseJSON":false}
