@@ -20,9 +20,10 @@ angular.module('core')
       }
     })
 
-    //dashboard
+    // home
     .state('app.home', {
       url: '/home',
+      onEnter: ['auth_service', function (auth_service) { auth_service.checkLoggedIn(); }],
       templateUrl: 'modules/core/views/home.html',
       ncyBreadcrumb: {
           label: 'Inicio',
