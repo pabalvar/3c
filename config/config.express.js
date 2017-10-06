@@ -23,9 +23,7 @@ module.exports = function (config) {
 
     // Ruta a log files
     var localPath = config.localPath;
-    var scribe = require('scribe-js')({
-        rootPath: path.join(localPath, '/logs')
-    });
+    var scribe = require('scribe-js')({ rootPath: path.join(localPath, '/logs') });
 
     // Anexar config/env/params.js en app.locals.config
     app.locals = app.locals || {};
@@ -54,13 +52,21 @@ module.exports = function (config) {
     });
 
     app.use(methodOverride());
-    app.use(cookieSession({ secret: 'RANDOM_SECRET' })); // Express cookie session middleware
+    app.use(cookieSession({ secret: 'RANDOM_SECRET', resave: false, saveUninitialized: false }));
 
     // use passport
-    app.locals.auth = require('./config.passport.js')(app);
+    app.locals.auth = ()=>true;//  = require('./config.passport.js')(app);
     app.use(passport.initialize()); // passport initialize middleware
-    //app.use(passport.session());
+    app.use(passport.session());
 
+    passport.deserializeUser(function (user, done) {
+        //console.log("deserializing", user)
+        done(null, user);  // invalidates the existing login session.
+    });
+    passport.serializeUser(function (user, done) {
+        //console.log("serializing", user)
+        done(null, user.id)
+    });
     // Setting application local variables
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
