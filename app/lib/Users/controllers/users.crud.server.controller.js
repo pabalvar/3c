@@ -1,11 +1,11 @@
 'use strict';
- 
-var UsersDB= require('../queries/users.queries.js');		
-			
-exports.getUsers = function(req, res, next) {
+
+var UsersDB = require('../queries/users.queries.js');
+
+exports.getUsers = function (req, res, next) {
 	// Si viene idxlogin anota que es consulta de un resultado (no lista)
-	if (req.params.idxlogin){
-		req.singleResource=true;
+	if (req.params.idxlogin) {
+		req.singleResource = true;
 		req.query.idxlogin = req.params.idxlogin
 	}
 	// Cargar consulta SQL
@@ -13,7 +13,7 @@ exports.getUsers = function(req, res, next) {
 	next();
 };
 
-exports.createUsers = function(req, res, next) {
+exports.createUsers = function (req, res, next) {
 	req.consultaBD = UsersDB.createUsersQuery(req.body.data);
 	next();
 };
