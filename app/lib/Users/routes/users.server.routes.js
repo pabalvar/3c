@@ -2,7 +2,7 @@
 
 var driver = require('../../../../app/lib/Server/drivers/mssql.server.driver'),
 	usersCrud = require('../../../../app/lib/Users/controllers/users.crud.server.controller.js'),
-	usersAuth = require('../../../../app/lib/Users/controllers/users.authentication.server.controller.js'),
+	auth = require('../../../../config/config.passport.js'),
 	globals = require('../../../../app/lib/globals/controllers/globals.js');
 
 
@@ -11,17 +11,17 @@ module.exports = function (app) {
 	/* Login Users*/
 	app.route('/login')
 		.post(
-		usersAuth.login
+		auth.login
 		)
 	app.route('/logout')
 		.get(
-		usersAuth.logout
+		auth.logout
 		)
 
 	/** CRUD Users */
 	app.route('/users/:idxlogin*?')
 		.get(
-		//app.locals.auth,
+		app.locals.auth,
 		usersCrud.getUsers,
 		driver.executeListQuery(app),
 		globals.queryOut
