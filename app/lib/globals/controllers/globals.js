@@ -1,5 +1,10 @@
 ﻿'use strict';
 
+exports.initReq = function(req,res,next){
+    req.consultas = req.consultas || {};
+    next();
+}
+
 /** Middleware que convierte parámetros query de la URL **/
 exports.urlParams = function(req,res,next){
     if (req.query){
