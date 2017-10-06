@@ -1,10 +1,8 @@
 'use strict';
 
-var squel = require('squel').useFlavour('mssql'),
-    SQLcast= require('../../../../app/lib/random_lib/castSQL').SQLcast,
+var SQLcast= require('../../../../app/lib/random_lib/castSQL').SQLcast,
     SQLexpr= require('../../../../app/lib/random_lib/castSQL').SQLexpr,
     console= process.console;
-
 
 var getDireccionQuery = `
 SELECT
