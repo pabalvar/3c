@@ -56,7 +56,10 @@ angular.module('users')
 	auth.logOut = function(){
 		if ($window.localStorage[token_name]) { $window.localStorage.removeItem(token_name); }
 		else if ($window.sessionStorage[token_name]) { $window.sessionStorage.removeItem(token_name); }
-		$state.go('login', {}, {reload: true});
+
+		return $http.get('/logout', user).then(function(data){
+			$state.go('login', {}, {reload: true});
+		});
 	};
 
   return auth;
