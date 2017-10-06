@@ -1,22 +1,15 @@
 'use strict';
 
+var driver = require('../../../../app/lib/Server/drivers/mssql.server.driver.js'),
+  empresas = require('../controllers/empresas.controller.js'),
+  globals = require('../../../../app/lib/globals/controllers/globals.js');
 
-/*
- * Dependencias de modulos.
- */
-var driver= require('../../../../app/lib/Server/drivers/mssql.server.driver.js'),
-    EmpresasCtlr = require('../controllers/empresas.controller');
-
-
-module.exports = function(app) {
-
-  /*-----------------------Routes-------------------------*/
+module.exports = function (app) {
   app.route('/empresas')
-    .get(EmpresasCtlr.list,
-         driver.executeQuery(app),
-         EmpresasCtlr.out
-  );
-
-  /*--------------------Middleware-----------------------*/
-  app.param('empresaId', EmpresasCtlr.empresaId);
+    .get(
+    app.locals.auth,
+    empresas.getEmpresas,
+    driver.executeListQuery(app),
+    globals.queryOut
+    );
 };

@@ -4,19 +4,17 @@
 /*
  * Dependencias de modulos.
  */
-var driver= require('../../../../app/lib/Server/drivers/mssql.server.driver.js'),
-    PreferencesCtlr = require('../controllers/preferences.controller');
+var driver = require('../../../../app/lib/Server/drivers/mssql.server.driver.js'),
+  Preferences = require('../controllers/preferences.controller.js'),
+  globals = require('../../../../app/lib/globals/controllers/globals.js');
 
 
-module.exports = function(app) {
+module.exports = function (app) {
+  app.route('/preferences/')
+    .get(
+    Preferences.getPreference,
+    driver.executeQuery(app),
+    globals.queryOut
+    );
 
-  /*-----------------------Routes-------------------------*/
-  app.route('/preferences')
-    .get(PreferencesCtlr.list,
-         driver.executeQuery(app),
-         PreferencesCtlr.out
-  );
-
-  /*--------------------Middleware-----------------------*/
-  app.param('preferenceId', PreferencesCtlr.preferenceId);
 };

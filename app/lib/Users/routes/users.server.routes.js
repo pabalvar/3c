@@ -12,7 +12,11 @@ module.exports = function (app) {
 	app.route('/login')
 		.post(
 		usersAuth.login
-		);
+		)
+	app.route('/logout')
+		.get(
+		usersAuth.logout
+		)
 
 	/** CRUD Users */
 	app.route('/users/:idxlogin*?')
