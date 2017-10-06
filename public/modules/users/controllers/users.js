@@ -24,12 +24,13 @@ function($scope, $state, $stateParams, User, toastr) {
 function(rndDTO, $scope, DTOptionsBuilder, DTColumnBuilder, $compile, User, toastr, $state, $filter) {
 
 	$scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
-			return User.query(function(){},function(){
+			return User.get(function(){},function(){
 				toastr.error('El Servicio no pudo encontrar a los Usuarios. Reintente.', {progressBar: true});
 			}).$promise;
 	})
 	.withPaginationType('simple_numbers')
 	.withBootstrap()
+	.withDataProp('data')
 	.withOption('responsive', true)
 	.withLanguage(rndDTO.language.es)
 	.withOption('createdRow', function(row) {
