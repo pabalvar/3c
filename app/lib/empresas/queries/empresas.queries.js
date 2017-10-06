@@ -1,11 +1,11 @@
 'use strict';
 
-var SQLcast= require('../../../../app/lib/random_lib/castSQL').SQLcast;
+var SQLcast = require('../../../../app/lib/random_lib/castSQL').SQLcast;
 
 exports.getEmpresasQuery = getEmpresasQuery;
 
-function getEmpresasQuerySQL(){
-return `
+function getEmpresasQuerySQL() {
+    return `
 -->> select
 SELECT
 TRIM(EMPRESA) as EMPRESA,
@@ -29,8 +29,8 @@ AND EMPRESA in ('01')--<< hasAccess
 `;
 }
 
-function getEmpresasQuery(params,output){   
-    return SQLcast(getEmpresasQuerySQL(),params,output);
+function getEmpresasQuery(params, output) {
+    return SQLcast(getEmpresasQuerySQL(), params, output);
 }
 
 
