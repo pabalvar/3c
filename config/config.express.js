@@ -10,10 +10,11 @@ var fs = require('fs', 'dont-enclose'),
     methodOverride = require('method-override'),
     cookieParser = require('cookie-parser'),
     cookieSession = require('cookie-session'),
-    passport = require('passport'),
+    configPassport = require('./config.passport.js'),
     consolidate = require('consolidate'),
     path = require('path', 'dont-enclose'),
     logger = require('./logger.js'),
+    globals = require('../app/lib/globals/controllers/globals.js'),
     db = require('../app/lib/Server/controllers/config.server.controller.js');
 
 
@@ -46,27 +47,14 @@ module.exports = function (config) {
     app.use(bodyParser.json({ limit: "50mb" }));
 
     /* Inicializar campos consulta SQL*/
-    app.use(function (req, res, next) {
-        req.consultas = req.consultas || {};
-        next();
-    });
-
+    app.use(globals.initReq);
     app.use(methodOverride());
     app.use(cookieSession({ secret: 'RANDOM_SECRET', resave: false, saveUninitialized: false }));
 
-    // use passport
-    app.locals.auth = ()=>true;//  = require('./config.passport.js')(app);
-    app.use(passport.initialize()); // passport initialize middleware
-    app.use(passport.session());
+    // inicializar passport
+    configPassport.init(app);
+    app.locals.auth = configPassport.requiresLogin;//require('./config.passport.js')(app);
 
-    passport.deserializeUser(function (user, done) {
-        //console.log("deserializing", user)
-        done(null, user);  // invalidates the existing login session.
-    });
-    passport.serializeUser(function (user, done) {
-        //console.log("serializing", user)
-        done(null, user.id)
-    });
     // Setting application local variables
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
