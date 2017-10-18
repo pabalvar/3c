@@ -17,8 +17,7 @@ set COMPILERSDIR=%RANDOMDIR%\..\..\ext
 IF exist "%RANDOMDIR%\userconf.bat" call "%RANDOMDIR%\userconf.bat"
 
 :: Opciones de proyecto
-set MDBDIR=%COMPILERSDIR%\MongoDB\Mongodb3.0\%CPUOS%\bin
-set NODDIR=%COMPILERSDIR%\Nodejs\Node6.9\%CPUOS%
+set NODDIR=%COMPILERSDIR%\Nodejs\Node6.11\%CPUOS%
 set TMPDIR=%RANDOMDIR%\tmpdb
 
 :NORMAL_EXIT
