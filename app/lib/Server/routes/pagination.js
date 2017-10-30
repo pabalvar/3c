@@ -3,10 +3,11 @@
 module.exports = function (app) {
     app.use(function (req, res, next) {
 
-        // catches: count,start,size,page
+
         var ret = {}
         var query = req.query;
         if (query) {
+            // catches: count,start,size,page
             if (query.count) ret.count = query.count;
             if (query.start || query.size || query.page) {
                 ret.pagination = {};
@@ -18,8 +19,13 @@ module.exports = function (app) {
                 ret.pagination = ret.pagination||{};
                 ret.pagination.order = query.order;
             }
+            
+            // catch: fields: convierte en setFields como array
+            if (query.fields) ret.setFields = req.query.fields
 
         }
+
+        // Ojo se está asignando ret.pagination.pagination....
         req.pagination = ret;
         //console.log("using castSQL middleware:", req.pagination);
         next();
