@@ -25,7 +25,6 @@ CONFIGP
 -->> where
 WHERE 1=1
 AND EMPRESA in ('01')--<< empresa
-AND EMPRESA in ('01')--<< hasAccess
 `;
 }
 

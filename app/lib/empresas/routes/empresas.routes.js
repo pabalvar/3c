@@ -7,7 +7,7 @@ var driver = require('../../../../app/lib/Server/drivers/mssql.server.driver.js'
 module.exports = function (app) {
   app.route('/empresas')
     .get(
-    app.locals.auth,
+    //app.locals.auth,
     empresas.getEmpresas,
     driver.executeListQuery(app),
     globals.queryOut
