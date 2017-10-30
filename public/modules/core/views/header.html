@@ -12,7 +12,6 @@
     <!-- Branding -->
     <div class="branding" style="background-color: transparent; height:100%">  
         <a ui-sref="app.home">
-            <!--<span><strong>Random</strong>X+</span>-->
             <div class="mt-10 mb-10">
                 <img height="20px" src="modules/theme/images/random-logo.png" alt="Random ERP" >
             </div>
@@ -23,29 +22,21 @@
     
     
     <!-- Right-side navigation -->
-    <ul class="nav-right pull-right list-inline">
-        
+    <ul class="nav-right pull-right list-inline"> 
             
         <!-- EMPRESA -->
         <li class="dropdown nav-profile" uib-dropdown data-ng-if="isLoggedIn()">
             <a href class="dropdown-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
-            <span data-ng-repeat="company in companies"
-                data-ng-show="currentCompany == company.id && company.showName==true" 
-                >{{ company.name }} 
+            <span data-ng-repeat="empresa in empresas"
+                data-ng-show="empresaSelected == empresa.EMPRESA" 
+                >{{ empresa.NombreCorto }} 
                  <fa name="angle-down"></fa></span>
-            <img data-ng-repeat="company in companies" 
-                data-ng-show="currentCompany == company.id && company.showImg==true" 
-                data-ng-src="{{company.img}}" 
-                alt="">
             </a>
             <ul class="dropdown-menu pull-right with-arrow animated littleFadeInDown" role="menu">
-                <li data-ng-repeat="company in companies"
-                    data-ng-class="{active: currentCompany == company.id}">
-                    <a href="" data-ng-click="changeCompany(company.id)">
-                    <img data-ng-show="company.showImg" 
-                        data-ng-src="{{company.img}}"
-                        alt=""> 
-                    <span data-ng-show="company.showName" data-ng-bind="company.name"></span>
+                <li data-ng-repeat="empresa in empresas"
+                    data-ng-class="{active: empresaSelected == empresa.EMPRESA}">
+                    <a href="" data-ng-click="setEmpresa(empresa.EMPRESA)">
+                    <span data-ng-show="empresa.NombreCorto" data-ng-bind="empresa.NombreCorto"></span>
                     </a>
                 </li>
             </ul>

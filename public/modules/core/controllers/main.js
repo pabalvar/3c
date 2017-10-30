@@ -8,16 +8,14 @@
  * Controller of the randomStack
  */
 
-angular.module('randomStack')
-
+angular.module('core')
   .controller('rdmMainCtrl',
-  function ($scope, $rootScope, $http, $window, $translate, toastr, auth_service, Preferences) {
+  function ($scope, $rootScope, $http, $window, $translate, toastr, auth_service, rndEmpresa) {
 
     angular.extend($scope, {
       //Variables de login
       isLoggedIn: auth_service.isLoggedIn,
       currentUser: auth_service.currentUser(),
-
       //Variables asociadas a como se ve el template
       main: {
         title: 'Random ERP',
@@ -40,58 +38,7 @@ angular.module('randomStack')
       $scope.iframeWidth = $window.innerWidth;
       $scope.iframeHeight = $window.innerHeight;
       $scope.$digest();
-    });
-
-    /*--------------------Variables y funciones asociadas a compañia-----------------------*/
-
-    //Si el usuario cambia, cambia la empresa
-    $scope.$watch(function () { return auth_service.currentUser() }, function (newVal, oldValue) {
-      $scope.currentUser = newVal;
-      $scope.companies = [];
-      $scope.changeCompany(undefined);
-
-      if ($scope.currentUser) {
-        Preferences.canAccess({ userid: $scope.currentUser.id },
-          function (res) {
-
-            // Caso no se encuentra compañía, se entrega un valor por defecto sin privilegios
-            var defaultCompany = {
-              "name": "público",
-              "id": "XX",
-              "showImg": false,
-              "showName": false
-            }
-
-            var out = res.map(e => ({
-                img: e.src_image, //'images/companies/'+elem.id+'.png',
-                name: e.name,
-                id: e.id,
-                showImg: false,
-                showName: true
-            }));
-
-            if (out.length == 0) {
-              // Avisar que no encontró empresa
-              var warning = {
-                message: 'Usuario no aparece con alguna empresa asociada'
-              };
-              console.log(warning.message);
-              toastr.warning(warning.message, { progressBar: true });
-              out.push(defaultCompany);
-            }
-
-            $scope.companies = out;
-            $rootScope.companies = $scope.companies;
-
-            $scope.changeCompany($scope.companies[0].id);
-          });
-      }
-    }, true)
-
-
-    $scope.changeCompany = function (companyID) {
-      $rootScope.currentCompany = companyID;
-    }
+    });  
 
     /*--------------------Variables y funciones asociadas a cambio de Lenguaje-----------------------*/
     $scope.languages = [
@@ -104,9 +51,14 @@ angular.module('randomStack')
       $translate.use(langKey);
       $scope.currentLanguage = langKey;
     };
-
     $scope.currentLanguage = $translate.proposedLanguage() || $translate.use();
 
+    /** Empresa */
+    $scope.$watch(rndEmpresa.get, function(n,o){
+      $scope.empresaSelected = n;
+      $scope.empresas = rndEmpresa.getEmpresas();
+    });
+    $scope.setEmpresa = rndEmpresa.set;
 
     /*--------------Si el containerClass cambia se adquiere a nivel local------------*/
     $rootScope.$watch('containerClass', function (newValue, oldValue) {

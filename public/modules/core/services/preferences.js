@@ -6,7 +6,7 @@ angular.module('core')
 	function($q, $http, $resource) {
 		return $resource('preferences', { }, {
 			update: {method: 'PUT'},
-			canAccess: { method:'GET', isArray:true, url:'users/empresas/canAccess'}
+			get: { method:'GET', url:'preferences'}
 		});
 	}
 ])
