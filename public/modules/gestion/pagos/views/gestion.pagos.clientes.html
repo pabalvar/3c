@@ -1,15 +1,36 @@
 <ncy-breadcrumb></ncy-breadcrumb>
 
+<div class="row m-0">
+  <div class="col-sm-12 col-md-10 col-lg-8 p-0"
+       rnd-tile-widget>
 
-<!-- content section -->
-<section class="tile tile-datos-contratos vertical-shadow ">
-  <div class="tile-widget rnd-b-t bg-default lter pb-5 pt-5">
-    <input type="text"
-           ng-model="search_input" />
-    <h1> Entidades</h1>
-    <pre>{{pasoEntidades|json}}</pre>
-    <h1> Pagos</h1>
-    <pre>{{pasoPagos|json}}</pre>
+    <!-- Entidad -->
+    <rnd-searchbox options="{placeholder:'buscar entidad'}"
+                   meta="metaEntidad"
+                   dataset="pasoEntidad"
+                   source="traeEntidad"
+                   rtablas="rtablas">
+    </rnd-searchbox>
+
+    <rnd-datatable options="{showReload:false, showEmpty:'<h2>Ingresa clientes</h2><p>ingresa el RUT o algún dato del cliente para revisar su deuda</p>'}"
+  
+                   meta="metaEntidad"
+                   source="pasoEntidad"
+                   rtablas="rtablas">
+    </rnd-datatable>
+    <!-- /Entidad -->
+
+    <!-- Deuda -->
+    <rnd-datatable ng-if="pasoEntidad.length"
+                   options="{showReload:false, showEmpty:'<h2>Todo pagado</h2><p> no tiene deuda</p>'}"
+                   dataset="pasoDeuda"
+                   meta="metaDeuda"
+                   source="traeDeuda"
+                   rtablas="rtablas"
+                   instance="apiDeuda">
+    </rnd-datatable>
+
+    <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda">{{item}}</p></pre>
+    <!-- /Deuda -->
   </div>
-</section>
-<!-- /content section -->
+</div>
