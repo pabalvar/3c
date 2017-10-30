@@ -2,20 +2,21 @@
 
 var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
-/** GET **/
 exports.getEntidades = getEntidades;
 
 
 // Detalle de implementación
 function getEntidades(req, res, next) {
-  req.query.id = req.params.id;
-  req.query.tiposuc = req.query.tiposuc||true; // por defecto P
-    req.consultas.entidades = SQLcast(getEntidadesQuerySQL(), req.query, req.pagination);
-    next();
+  // en este contecto req.params.id es koen
+  if (req.params.id) req.query.koen = req.params.id;
+
+  req.query.tiposuc = req.query.tiposuc || true; // por defecto P
+  req.consultas.entidades = SQLcast(getEntidadesQuerySQL(), req.query, req.pagination);
+  next();
 }
 
-function getEntidadesQuerySQL(){
- return `
+function getEntidadesQuerySQL() {
+  return `
  -- Búsqueda global 
  declare @search varchar(1000)
  set @search = '%'+'texto'--<< search
@@ -33,13 +34,12 @@ FROM
   MAEEN
 -->> where
 WHERE 1=1
-  AND KOEN = '123'--<< id
+  AND KOEN in ('SISTEMICA')--<< koen
   AND TIEN IN ( 'C','A' )--<< tien
   AND TIPOSUC in ('P')--<< tiposuc
-  AND KOEN in ('SISTEMICA')--<< koen
   AND UPPER( COALESCE(KOEN, '')+COALESCE(NOKOEN, '') ) like @search --<< search?
 -->> order  
 ORDER BY 
   KOEN, SUEN 
- `; 
+ `;
 }
