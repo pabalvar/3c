@@ -5,7 +5,13 @@ var documentos = require('./documentos.js');
 var globals = require('../lib/globals/controllers/globals.js');
 
 module.exports = function (app) {
-    
+    app.route('/documentos/traeDeuda')
+        .get(
+        documentos.traeDeuda,
+        driver.executeListQuery(app),
+        globals.queryOut
+        );
+        
     app.route('/documentos/:id*?') // id=IDMAEEDO
         .get(
         documentos.getDocumentos,
@@ -13,12 +19,7 @@ module.exports = function (app) {
         globals.queryOut
         );
 
-    app.route('/documentos/traeDeuda')
-        .get(
-        documentos.traeDeuda,
-        driver.executeListQuery(app),
-        globals.queryOut
-        );
+
 
 
 }
