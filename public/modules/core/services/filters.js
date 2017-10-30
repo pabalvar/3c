@@ -1,7 +1,12 @@
 const _SEPARATOR_ = '➙'; // ojo, se usa en rndInput.html tb. 
 
 angular.module('core')
-
+	/** inserta html desde controlador */
+	.filter("trust", ['$sce', function ($sce) {
+		return function (htmlCode) {
+			return $sce.trustAsHtml(htmlCode);
+		}
+	}])
 	/** Destaca texto ingresado (usado en facts) */
 	.filter('buzzlight', function ($sce) {
 		return function (text, buzzwords) {
@@ -229,6 +234,11 @@ angular.module('core')
 					else if (input.match(/f/i)) ret = 'Femenino'
 					else ret = input; // error
 				}
+			}
+			// string
+			else if (type.datatype == 'string'){
+				//si viene variante usar directamente
+				if (type.variant=='capitalize') ret = $filter('capitalize')(input);
 			}
 
 			return ret;

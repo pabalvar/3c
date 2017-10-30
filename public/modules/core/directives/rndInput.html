@@ -1,7 +1,7 @@
 <!-- scope: type, line, column, rtablas, dialog, key, indexBy -->
 <!-- small><pre><small>{{line}} </small></pre></small> -->
 
-<div ng-show="line.$estado.$isOpen">
+<div ng-if="true || line.$estado.$isOpen">
     <!-- debug 
     <pre>pre: {{line[key]}}</pre>-->
 
@@ -11,13 +11,14 @@
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="text"
-               class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               style="width: 100%;"
+               class="{{line.$estado.$isOpen?'':'b-0 bg-white'}} rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                placeholder="búsqueda por RUT o nombre"
                uib-typeahead="x.RUT as x.searchString for x in (column.source($viewValue))"
                typeahead-loading="loadingLocations"
                typeahead-no-results="noResults"
                ng-required="column.required"
-               ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
+               ng-disabled="(line.$estado.$action!='N' && column.readOnly) || !line.$estado.$isOpen"
                typeahead-editable="false">
         <md-progress-linear ng-show="loadingLocations"
                             md-mode="indeterminate"
@@ -33,9 +34,9 @@
          uib-dropdown>
         <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
         <select ng-model="buffer.tmpInput"
-                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in rtablas[column.tabla].data track by item[column.options.returnClient]"
-    
-                class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in _rtablas[column.tabla].data track by item[column.options.returnClient]"
+                style="width: 100%;"
+                class="rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                 ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                 ng-required="column.required">
          </select>
@@ -45,11 +46,12 @@
     <div ng-if="type.datatype=='date'"
          class="row">
         <div class="col-md-12 form-validation">
-            <p class="input-group">
+            <p class="input-group mb-0">
                 <input ng-model="buffer.tmpInput"
                        ng-show="!dateCtrl.isDateInfinite"
                        type="text"
-                       class="form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                       style="width: 6em;"
+                       class="rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                        uib-datepicker-popup="{{dateCtrl.format}}"
                        ng-model-options="{timezone: 'utc'}"
                        is-open="dateCtrl.isOpen"
@@ -57,11 +59,13 @@
                        ng-required="column.required"
                        close-text="cerrar"
                        alt-input-formats="dateCtrl.altInputFormats"
+                       datepicker-append-to-body="true"
                        datepicker-popup-template-url="modules/core/directives/rndInput-date.html" />
-                <span class="form-control"
-                      ng-show="dateCtrl.isDateInfinite">{{line[key]|monitor:column }} </span>
+                <span class="form-control rndinput"
+                      ng-show="dateCtrl.isDateInfinite"
+                      >{{line[key]|monitor:column }} </span>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="dateCtrl.toggleOpen()">
+                    <button type="button" class="ml-5 p-0 b-0 btn btn-default" ng-click="dateCtrl.toggleOpen()">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
                 </span>
@@ -74,7 +78,8 @@
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="number"
-               class="form-control text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               style="width: 95%;"
+               class="rndinput form-control text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                ng-required="column.required">
     </div>
@@ -84,15 +89,18 @@
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="text"
-               class="form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-               ng-readonly="column.readOnly && (column.pk && lineMeta.$action!='N' )"
+               style="width: 95%;"
+               class="rndinput form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               ng-readonly="(column.readOnly && (column.pk && lineMeta.$action!='N' ))  || !line.$estado.$isOpen"
                ng-required="column.required">
     </div>
 
 </div>
 
 <!-- mostrar input si no está en modo edit -->
-<span ng-show="!line.$estado.$isOpen && type.datatype!='dialog'">{{line[key]| monitor:column:rtablas}}</span>
+<span ng-show="false && !line.$estado.$isOpen && type.datatype!='dialog'" class="pl-5">
+    {{line[key]| monitor:column:rtablas}}
+</span>
 
 <!-- Estado -->
 <div ng-if="type.datatype=='dialog'"

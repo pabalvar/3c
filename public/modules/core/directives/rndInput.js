@@ -92,7 +92,8 @@ angular.module("core")
 
           /** Función que hace cargo de cuando el input es de tipo rtabla. */
           function initRtabla() {
-            buffer.tmpInput = decodeRtabla(line[key], rtablas[column.tabla], column.options).data
+            $scope._rtablas = (typeof(rtablas)=='function')?rtablas():rtablas; // instanciar si es función
+            buffer.tmpInput = decodeRtabla(line[key], $scope._rtablas[column.tabla], column.options).data
             // Anexar hook para cambiar la tabla
             hooks.push(updateInputRtabla);
           }

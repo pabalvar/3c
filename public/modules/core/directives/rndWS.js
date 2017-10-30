@@ -6,6 +6,27 @@ angular.module("core")
     restrict:'EA'
     ,transclude:true
     ,scope:{
+        service:'=',
+        isEmpty:'=',
+        showEmpty:'@',
+        hideBanner:'@'
+    }
+    ,template: `
+<!-- Busy Bar -->
+<md-progress-linear ng-if="service.busy" md-mode="indeterminate" ng-disabled="true"></md-progress-linear>      
+<!-- contenido original -->
+<div class="{{service.busy?'busy':''}} {{service.error?'dead':''}}">
+    <ng-transclude></ng-transclude>
+</div>
+`
+  }
+})
+/** Selecciona en profile.selected. Requiere profile.data=[{id:'',name:'',default:true|false}] **/
+.directive("rndWss", function(){
+  return{
+    restrict:'EA'
+    ,transclude:true
+    ,scope:{
         isBusy:'=',
         isEmpty:'=',
         showEmpty:'@',
@@ -21,7 +42,6 @@ angular.module("core")
     <ng-transclude ng-show="showEmpty || isEmpty||(isBusy[0].error||isBusy[1].error||isBusy[2].error||isBusy[3].error)" ></ng-transclude>
 </div>
 `
-
   }
 })
 .directive("rndReload", function(){
