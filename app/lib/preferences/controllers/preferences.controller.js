@@ -7,3 +7,11 @@ exports.getPreference = function(req,res,next){
       next();
 };
 
+exports.getEmpresas = function(params){
+      var params = params||{}
+      params.variable=params.variable||"canAccess";
+      params.module=params.module||"RRHH";
+
+      return PreferencesDB.getPreferencesQuery(params,{setFields:'EMPRESA'});
+}
+
