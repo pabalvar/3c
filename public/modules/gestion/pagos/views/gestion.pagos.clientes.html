@@ -12,7 +12,7 @@
                    rtablas="rtablas">
     </rnd-searchbox>
 
-    <rnd-datatable options="{showReload:false, showEmpty:'<h2>Ingresa clientes</h2><p>ingresa el RUT o algún dato del cliente para revisar su deuda</p>'}"
+    <rnd-datatable options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente para revisar su deuda</p>'}"
   
                    meta="metaEntidad"
                    source="pasoEntidad"
@@ -20,17 +20,29 @@
     </rnd-datatable>
     <!-- /Entidad -->
 
+    <!-- Pagos -->
+    <rnd-datatable ng-if="pasoEntidad.length"
+                   options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>'}"
+                   dataset="pasoPago"
+                   meta="metaPago"
+                   source="traePago"
+                   rtablas="rtablas"
+                   instance="apiPago">
+    </rnd-datatable>
+    <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago">{{item}}</p></pre>
+    <!-- /Pagos -->
+
     <!-- Deuda -->
     <rnd-datatable ng-if="pasoEntidad.length"
-                   options="{showReload:false, showEmpty:'<h2>Todo pagado</h2><p> no tiene deuda</p>'}"
+                   options="{showReload:false, showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>'}"
                    dataset="pasoDeuda"
                    meta="metaDeuda"
                    source="traeDeuda"
                    rtablas="rtablas"
                    instance="apiDeuda">
     </rnd-datatable>
-
-    <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda">{{item}}</p></pre>
     <!-- /Deuda -->
+
+
   </div>
 </div>
