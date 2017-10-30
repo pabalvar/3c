@@ -1,0 +1,60 @@
+<div class="input-group">
+    <span class="input-group-btn">
+        <button ng-disabled="true"
+                type="button"
+                class="btn btn-default">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+    <input type="text"
+           ng-model="selected"
+           placeholder="{{options.placeholder}}"
+           uib-typeahead="items as (items[items.$meta[0].field]) for items in sourceP($viewValue)"
+           typeahead-loading="loadingLocations"
+           typeahead-no-results="noResults"
+           typeahead-wait-ms="200"
+           typeahead-template-url="rndSearchBox.popup.html"
+           typeahead-on-select="onSelectLocal($item, $meta, $label)"
+           class="form-control">
+
+</div>
+<md-progress-linear ng-if="loadingLocations"
+                    md-mode="indeterminate"
+                    ng-disabled="true">
+</md-progress-linear>
+<div ng-show="noResults">
+    <strong class="mr-5">&empty;</strong> No se encontraron resultados
+</div>
+
+<!--<div class="input-group">
+    <input placeholder="buscar (entre visibles)"
+           class="form-control"
+           ng-model="filterString"
+           ng-change="onChange(filterString)"
+           ng-disabled="" />
+    <span class="input-group-btn">
+        <button ng-disabled="true"
+                type="button"
+                class="btn btn-default">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</div>-->
+
+<!-- script de popoup-->
+<script type="text/ng-template"
+        id="rndSearchBox.popup.html">
+    <a href
+       tabindex="-1"
+       ng-attr-title="{{match.label}}">
+        <p class="mb-0"
+           ng-bind-html="match.label | uibTypeaheadHighlight:query"></p>
+        <span class="text-sm text-muted pl-4"
+              ng-repeat="m in match.model.$meta">
+            <span ng-if="!$first">
+                <strong>{{m.name}}</strong>: {{match.model[m.field]| monitor:m:match.model.$rtablas}}
+            </span>
+        </span>
+    </a>
+</script>
+<!-- /script de popoup-->

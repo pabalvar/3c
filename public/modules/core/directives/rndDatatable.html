@@ -1,0 +1,30 @@
+<div ng-if="options.showReload"
+     class="input-group">
+    <span class="input-group-btn">
+        <button ng-disabled="!tabla.instance"
+                ng-click="reload()"
+                type="button"
+                class="btn btn-default">
+            <i class="fa fa-refresh"></i>
+        </button>
+    </span>
+</div>
+
+<md-progress-linear ng-if="!tabla.instance || busy"
+                    md-mode="indeterminate"
+                    ng-disabled="true">
+</md-progress-linear>
+
+<div ng-show="(alwaysShow || tabla.instance.DataTable.data().length) && !busy">
+    <table class="table table-condensed hideextra table-custom inputable dt-responsive dt-right"
+           datatable=""
+           dt-disable-deep-watchers="true"
+           dt-columns="tabla.columns"
+           dt-options="tabla.options"
+           dt-instance="tabla.instance">
+    </table>
+</div>
+<div class="text-center"
+     ng-show="!tabla.instance.DataTable.data().length && !busy"
+     ng-bind-html="emptyHintHtml | trust">
+</div>
