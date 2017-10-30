@@ -51,7 +51,7 @@ AND DPCE.ENDP IN  ('001')--<< koen
 AND DPCE.TIDP IN  ('FCV')--<< tidp
 AND DPCE.ESASDP IN ('P')--<< esasdp
 AND DPCE.ESPGDP = 'N'--<< espgdp
--->> orderby
+-->> order
 ORDER BY 
 DPCE.FEEMDP
 `}
