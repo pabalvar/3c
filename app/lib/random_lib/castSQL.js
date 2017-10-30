@@ -6,14 +6,15 @@ if (typeof process !== 'undefined') { // Running on node?
     exports.SQLcast = SQLcast;
     exports.SQLexpr = SQLexpr;
     exports.SQLquery = SQLquery;
-    var console = process.console;
+    exports.getSearchStringQuery = getSearchStringQuery;
+   // var console = process.console;
 }
 
-function SQLquery(s, p, opt){
+function SQLquery(s, p, opt) {
     var ret = {};
-    ret.query = SQLcast(s,p,opt);
-    if (p.type=='datatable'){
-        ret.datatable = SQLcast(s,p,{count:true});
+    ret.query = SQLcast(s, p, opt);
+    if (p.type == 'datatable') {
+        ret.datatable = SQLcast(s, p, { count: true });
     }
     return ret;
 }
@@ -219,8 +220,8 @@ function SQLexpr(d) {
             }
             if (method == 'insert') {
                 lineas.push("(" + linea.join(",") + ")");
-            }else if(method == 'strArr'){
-                lineas.push(linea.join(",") );
+            } else if (method == 'strArr') {
+                lineas.push(linea.join(","));
             }
         }
         if (method == 'insert') {
@@ -232,7 +233,7 @@ function SQLexpr(d) {
                 tmp.push(af[i] + "=" + linea[i]);
             }
             r = " " + tmp.join(",") + " ";
-        }else if (method == 'strArr'){
+        } else if (method == 'strArr') {
             return lineas
         }
 
@@ -400,8 +401,8 @@ function SQLcast(s, p, opt) {
             match.variable = "['" + match.variable + "']";
             match.evalVar = eval('p' + match.variable);
             // Caso variable --<< var?  se reemplaza var por truthy o falsey
-            if (match.binary){
-                match.evalVar = match.evalVar?true:false;
+            if (match.binary) {
+                match.evalVar = match.evalVar ? true : false;
             }
             // Agregar comillas si variable es de tipo string
             if (typeof match.evalVar == 'string') {
@@ -535,13 +536,30 @@ function SQLcast(s, p, opt) {
 
             // Generar texto para paginación
             var s_select = R['select'].replace(/select/i, ' ');// Aislar select
-            var s_prefijo = R['from'].match(/^from\s+\w+\s+(\w+)/i)[1]; // Aislar alias de la tabla (from XCLASE D)
+            var s_prefijo = (R['from'].match(/^from\s+\w+\s+(\w+)/i) || [])[1]; // Aislar alias de la tabla (from XCLASE D)
 
             // agregar prefijio por defecto si es que el setField no lo tiene
+            /* PAD: nueva implementacion de fields, ahora se respeta la sintax original
             fields = _.castArray(o.setFields).map(function (f) {
                 var pre = s_prefijo ? s_prefijo + '.' : '';
                 var ret = f.match(/\./) ? f : pre + f; // Si el campo viene con punto no se agrega el prefijo deducido
                 return ret;
+            })*/
+
+            // separar por comas y eliminar si no está incluido en la setFields
+            fields = s_select.split(',').filter(function (s) {
+                var string_pasa = _.castArray(o.setFields).some(function (o) {
+                    var regex = new RegExp("[^a-z]" + o + "([^a-z]|$)", 'i');
+                    var match = s.match(o);
+                    //console.log("posible match en :", o, s)
+                    var r = match ? true : false;
+                    if (r) {
+                        //console.log("match en :", o, s)
+                    }
+                    return r
+                })
+                return string_pasa;
+
             })
 
             var s_top = s_select.match(/(\stop\s+\d+)/i); // Aislar top
@@ -552,7 +570,7 @@ function SQLcast(s, p, opt) {
             };
 
             var tmp_select = 'SELECT ' + s_top + ' ' + fields.join(',') + ' ';
-            
+
             // Reemplazar sección select por texto anterior
             R['select'] = tmp_select;
             /*
@@ -606,7 +624,7 @@ function SQLcast(s, p, opt) {
             var pag = o.pagination;
             // inicializar valores por defecto
             pag.page = pag.page || 1; // página 1 por defecto
-            pag.size = (pag.size>0)?pag.size:9999; // largo página 10000 por defecto
+            pag.size = (pag.size > 0) ? pag.size : 9999; // largo página 10000 por defecto
             pag.minRow = pag.minRow || pag.start || (pag.page - 1) * (pag.size); // Inicio de página
             pag.maxRow = pag.maxRow || pag.minRow + pag.size + 1; // Fin de página
             // Generar texto para paginación 
@@ -687,4 +705,18 @@ function getOrderBy(input) {
         }
     });
     return ret.join(',') + ' ';
+}
+
+/* Crea string para searchstring 
+@param f un array con nombres de campos
+*/
+function getSearchStringQuery(f) {
+    // condiciones = COALESCE(KOEN, '')+COALESCE(NOKOEN, '')...
+    var cond = _.castArray(f).map(f => `COALESCE('${f}', '')`).join('+');
+
+    // ret = AND UPPER( COALESCE(KOEN, '')+COALESCE(NOKOEN, '') ) like @search --<< search?
+    var ret = `and UPPER(${cond}) like @search`
+
+    return ret;
+
 }
