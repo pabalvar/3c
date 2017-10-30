@@ -27,7 +27,6 @@ module.exports = function (app) {
             globals.queryOut
     );
 
-
     app.route('/values/formasDePago*?')
         .get(
             values.getFormasDePago,
