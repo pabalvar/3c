@@ -11373,6 +11373,9 @@ body {
 .pl-10 {
   padding-left: 10px !important; }
 
+.pl-4 {
+    padding-left: 4px !important; }
+
 .pl-0 {
   padding-left: 0px !important; }
 
@@ -11387,6 +11390,9 @@ body {
 
 .pr-10 {
   padding-right: 10px !important; }
+  
+.pr-4 {
+    padding-right: 4px !important; }
 
 .pr-0 {
   padding-right: 0px !important; }
