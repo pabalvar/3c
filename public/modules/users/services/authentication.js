@@ -62,6 +62,12 @@ angular.module('users')
 		});
 	};
 
+	auth.createHeaders = function(){
+		var self = this;
+		var token = this.getToken();
+		return {Authorization: 'Bearer ' + token}
+	}
+
   return auth;
 }])
 
