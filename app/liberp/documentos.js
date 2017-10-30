@@ -2,20 +2,20 @@
 
 var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
-/** GET PAGOS **/
 exports.getDocumentos = getDocumentos;
-exports.getDocumentosPendientesDePago = getDocumentosPendientesDePago;
+exports.traeDeuda = traeDeuda;
 
+// Detalle de implementación
 function getDocumentos(req, res, next) {
-  req.query.koen = req.query.id;
-  //req.query.tiposuc = req.query.tiposuc||true; // por defecto P 
+  // en este contecto req.params.id es idmaeedo
+  if (req.params.id) req.query.idmaeedo = req.params.id;
+
   req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
   next();
 }
 
-// Detalle de implementación
-function getDocumentosPendientesDePago(req, res, next) {
-    req.query.tipoDocumento = ['BLV','BSV','BLX','FCV','FDB','FDV','FDX','FDZ','FEV','FVL','FVT','FVX','FXV','FYV','FVZ','RIN','ESC','FEE','FDE','NCC','NCB' ];
+function traeDeuda(req, res, next) {
+    req.query.tido = ['BLV','BSV','BLX','FCV','FDB','FDV','FDX','FDZ','FEV','FVL','FVT','FVX','FXV','FYV','FVZ','RIN','ESC','FEE','FDE','NCC','NCB' ];
     req.query.espgdo = 'P';
     req.query.nudonodefi = 0;
     req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
@@ -26,19 +26,32 @@ function getDocumentosQuerySQL(){
   return `
   -->> select
  SELECT 
-   EDO.IDMAEEDO,EDO.EMPRESA, EDO.TIDO, EDO.NUDO, EDO.ENDO, EDO.SUENDO, 
-   EDO.MODO, EDO.TIMODO, EDO.TAMODO, EDO.ESPGDO, EDO.FEULVEDO, 
-   ROUND(EDO.VABRDO,2) AS VABRDO, ROUND(EDO.VAABDO,2) AS VAABDO, 
-   ROUND(EDO.VAIVARET,2) AS VAIVARET, ROUND(EDO.VAIVDO,2) AS VAIVDO, 
-   ROUND(EDO.VANEDO,2) AS VANEDO,EDO.BLOQUEAPAG  
+   EDO.IDMAEEDO,
+   EDO.EMPRESA, 
+   TRIM(EDO.TIDO) as TIDO, 
+   TRIM(EDO.NUDO) as NUDO, 
+   TRIM(EDO.ENDO) as ENDO, 
+   TRIM(EDO.SUENDO) as SUENDO, 
+   TRIM(EDO.MODO) as MODO, 
+   EDO.TIMODO, 
+   EDO.TAMODO, 
+   EDO.ESPGDO, 
+   EDO.FEULVEDO, 
+   ROUND(EDO.VABRDO,2) AS VABRDO, 
+   ROUND(EDO.VAABDO,2) AS VAABDO, 
+   ROUND(EDO.VAIVARET,2) AS VAIVARET, 
+   ROUND(EDO.VAIVDO,2) AS VAIVDO, 
+   ROUND(EDO.VANEDO,2) AS VANEDO,
+   EDO.BLOQUEAPAG  
  -->> from
  FROM 
    MAEEDO AS EDO  
  -->> where
  WHERE 1=1
-   and EDO.EMPRESA = '01'--<< idEmpresa
-   and EDO.ENDO='001gino'--<< koen
-   and EDO.TIDO IN ('BLV','BSV','BLX','FCV','FDB','FDV','FDX','FDZ','FEV','FVL','FVT','FVX','FXV','FYV','FVZ','RIN','ESC','FEE','FDE','NCC','NCB')--<< tipoDocumento
+   and EDO.IDMAEEDO = '12354'--<< idmaeedo
+   and EDO.EMPRESA in ('01')--<< empresa
+   and EDO.ENDO in ('001gino')--<< koen
+   and EDO.TIDO IN ('BLV','BSV','BLX','FCV','FDB','FDV','FDX','FDZ','FEV','FVL','FVT','FVX','FXV','FYV','FVZ','RIN','ESC','FEE','FDE','NCC','NCB')--<< tido
    AND EDO.ESPGDO = 'P'--<< espgdo
    AND EDO.NUDONODEFI = 0--<< nudonodefi
  -->> order  
