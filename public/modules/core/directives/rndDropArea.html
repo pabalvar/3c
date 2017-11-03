@@ -1,18 +1,19 @@
-<!-- params: output.setModo, output.modo, MDA.load, MDA.onChange, output.toExcel, setMediaType --> 
+<!-- params: output.setModo, output.modo, MDA.load, MDA.onChange, output.toExcel, setMediaType -->
 <section>
     <div class="input-group">
         <span class="input-group-btn ">
-            <button ng-click="service.setModo('edit')" 
-                ng-show="service.modo.id=='replace'" 
-                type="button" class="btn btn-default">
+            <button ng-click="service.setModo('edit')"
+                    ng-show="service.modo.id=='replace'"
+                    type="button"
+                    class="btn btn-default">
                 <i class="fa fa-retweet"></i>
             </button>
-            <button ng-click="service.setModo('replace')" 
-                ng-show="service.modo.id=='edit'" 
-                type="button" 
-                class="btn btn-default">
+            <button ng-click="service.setModo('replace')"
+                    ng-show="service.modo.id=='edit'"
+                    type="button"
+                    class="btn btn-default">
                 <i class="fa fa-pencil"></i>
-            </button>         
+            </button>
         </span>
 
         <textarea rows="1"
@@ -23,5 +24,7 @@
                   ng-change="onChange()" />
 
     </div>
-    <label class="text-sm text-muted">Modo: <em>{{service.modo.label}}</em></label>
+    <label class="text-sm text-muted">Modo:
+        <em>{{service.modo.label}}</em>
+    </label>
 </section>

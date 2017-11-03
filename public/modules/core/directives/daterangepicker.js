@@ -1,12 +1,12 @@
 'use strict';
 /**
  * @ngdoc directive
- * @name randomStack.directive:daterangepicker
+ * @name core.directive:daterangepicker
  * @description
  * # daterangepicker
  */
 
-angular.module('randomStack')
+angular.module('core')
     .directive('daterangepicker', function () {
         return {
             restrict: 'A',
@@ -28,10 +28,10 @@ angular.module('randomStack')
 
     /**
      * @ngdoc function
-     * @name randomStack.controller:DaterangepickerCtrl
+     * @name core.controller:DaterangepickerCtrl
      * @description
      * # DaterangepickerCtrl
-     * Controller of the randomStack
+     * Datepicker custom
      */
     .controller('DaterangepickerjsCtrl', function ($scope, $rootScope, $moment/*, rrhhServiceContratosFilter*/) {
         // Inicializar local scope

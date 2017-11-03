@@ -13,6 +13,7 @@
                type="text"
                style="width: 100%;"
                class="{{line.$estado.$isOpen?'':'b-0 bg-white'}} rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+    
                placeholder="búsqueda por RUT o nombre"
                uib-typeahead="x.RUT as x.searchString for x in (column.source($viewValue))"
                typeahead-loading="loadingLocations"
@@ -35,11 +36,12 @@
         <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
         <select ng-model="buffer.tmpInput"
                 ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in _rtablas[column.tabla].data track by item[column.options.returnClient]"
+    
                 style="width: 100%;"
                 class="rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                 ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                 ng-required="column.required">
-         </select>
+        </select>
     </div>
 
     <!-- date -->
@@ -62,10 +64,11 @@
                        datepicker-append-to-body="true"
                        datepicker-popup-template-url="modules/core/directives/rndInput-date.html" />
                 <span class="form-control rndinput"
-                      ng-show="dateCtrl.isDateInfinite"
-                      >{{line[key]|monitor:column }} </span>
+                      ng-show="dateCtrl.isDateInfinite">{{line[key]|monitor:column }} </span>
                 <span class="input-group-btn">
-                    <button type="button" class="ml-5 p-0 b-0 btn btn-default" ng-click="dateCtrl.toggleOpen()">
+                    <button type="button"
+                            class="ml-5 p-0 b-0 btn btn-default"
+                            ng-click="dateCtrl.toggleOpen()">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
                 </span>
@@ -91,6 +94,7 @@
                type="text"
                style="width: 95%;"
                class="rndinput form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+    
                ng-readonly="(column.readOnly && (column.pk && lineMeta.$action!='N' ))  || !line.$estado.$isOpen"
                ng-required="column.required">
     </div>
@@ -98,7 +102,8 @@
 </div>
 
 <!-- mostrar input si no está en modo edit -->
-<span ng-show="false && !line.$estado.$isOpen && type.datatype!='dialog'" class="pl-5">
+<span ng-show="false && !line.$estado.$isOpen && type.datatype!='dialog'"
+      class="pl-5">
     {{line[key]| monitor:column:rtablas}}
 </span>
 

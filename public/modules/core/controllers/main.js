@@ -5,7 +5,7 @@
  * @name core.controller:rdmMainCtrl
  * @description
  * # rdmMainCtrl
- * Controlador principal de la aplicación
+ * Controlador de la ventana principal de la aplicación
  */
 
 angular.module('core')

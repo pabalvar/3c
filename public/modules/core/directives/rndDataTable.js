@@ -16,7 +16,7 @@ angular.module('core')
             controller: 'rndDatatable'
         }
     })
-    .controller("rndDatatable", ['$scope', 'rndDialog' , 'rndDatatableFactory', function ($scope, rndDialog, rndDatatableFactory) {
+    .controller("rndDatatable", ['$scope', 'rndDialog', 'rndDatatableFactory', function ($scope, rndDialog, rndDatatableFactory) {
 
         // Convertir en funcióon que entrega array
         if (angular.isArray($scope.source)) {
@@ -77,15 +77,15 @@ angular.module('core')
         var defaultButtons = [
             { name: 'create', onClick: 'createLine', icon: 'fa fa-plus', description: 'crear nuevo registro' }
         ]
-        $scope.options.buttons = $scope.options.buttons||[];
+        $scope.options.buttons = $scope.options.buttons || [];
         $scope.options.buttons.forEach(function (b) {
             var ix = defaultButtons.findIndex(i => i.name == b);
             if (ix >= 0) $scope.buttons.push(defaultButtons[ix]);
         })
 
-        
-        $scope.createLine = function(){ 
-            var tmp = {data:[]}
+
+        $scope.createLine = function () {
+            var tmp = { data: [] }
             rndDialog.createLine(tmp, $scope.meta);
             $scope.tabla.instance.DataTable.row.add(tmp.data[0]);
             $scope.tabla.instance.DataTable.draw();

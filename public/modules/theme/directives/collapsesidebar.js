@@ -2,58 +2,59 @@
 
 /**
  * @ngdoc directive
- * @name randomStack.directive:collapseSidebarSm
+ * @name core.directive:collapseSidebarSm
  * @description
  * # collapseSidebarSm
  */
 
-angular.module('randomStack').directive('collapseSidebar', function ($rootScope) {
+angular.module('core')
+  .directive('collapseSidebar', function ($rootScope) {
     return {
       restrict: 'A',
       link: function postLink(scope, element) {
 
         var app = angular.element('.appWrapper'),
-            $window = angular.element(window),
-            width = $window.width();
+          $window = angular.element(window),
+          width = $window.width();
 
-        var removeRipple = function() {
+        var removeRipple = function () {
           angular.element('#sidebar').find('.ink').remove();
         };
 
-        var collapse = function() {
+        var collapse = function () {
           app.addClass('sidebar-sm');
-        /*
-          width = $window.width();
-
-          if (width < 992) {
-            console.log("yapo")
-            app.addClass('sidebar-sm');
-          } else {
-            app.removeClass('sidebar-sm sidebar-xs');
-          }
-
-          if (width < 768) {
-            app.removeClass('sidebar-sm').addClass('sidebar-xs');
-          } else if (width > 992){
-            app.removeClass('sidebar-sm sidebar-xs');
-          } else {
-            app.removeClass('sidebar-xs').addClass('sidebar-sm');
-          }
-
-          if (app.hasClass('sidebar-sm-forced')) {
-            app.addClass('sidebar-sm');
-          }
-
-          if (app.hasClass('sidebar-xs-forced')) {
-            app.addClass('sidebar-xs');
-        }*/
+          /*
+            width = $window.width();
+  
+            if (width < 992) {
+              console.log("yapo")
+              app.addClass('sidebar-sm');
+            } else {
+              app.removeClass('sidebar-sm sidebar-xs');
+            }
+  
+            if (width < 768) {
+              app.removeClass('sidebar-sm').addClass('sidebar-xs');
+            } else if (width > 992){
+              app.removeClass('sidebar-sm sidebar-xs');
+            } else {
+              app.removeClass('sidebar-xs').addClass('sidebar-sm');
+            }
+  
+            if (app.hasClass('sidebar-sm-forced')) {
+              app.addClass('sidebar-sm');
+            }
+  
+            if (app.hasClass('sidebar-xs-forced')) {
+              app.addClass('sidebar-xs');
+          }*/
 
         };
 
         collapse();
 
-        $window.resize(function() {
-          if(width !== $window.width()) {
+        $window.resize(function () {
+          if (width !== $window.width()) {
             var t;
             clearTimeout(t);
             t = setTimeout(collapse, 300);
@@ -61,7 +62,7 @@ angular.module('randomStack').directive('collapseSidebar', function ($rootScope)
           }
         });
 
-        element.on('click', function(e) {
+        element.on('click', function (e) {
           if (app.hasClass('sidebar-sm')) {
             app.removeClass('sidebar-sm').addClass('sidebar-xs');
           }

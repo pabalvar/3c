@@ -2,27 +2,27 @@
 
 /**
  * @ngdoc directive
- * @name randomStack.directive:chartMorris
+ * @name core.directive:chartMorris
  * @description
+ * directiva para usar gráficos
  * # chartMorris
  * https://github.com/jasonshark/ng-morris/blob/master/src/ngMorris.js
  */
 
-angular.module('randomStack')
-
-.directive('rndMorrisLine', function(){
+angular.module('core')
+  .directive('rndMorrisLine', function () {
 
     return {
       restrict: 'A',
       scope: {
         params: '=',
       },
-      link: function (scope, elem, attrs){
+      link: function (scope, elem, attrs) {
         var morris;
 
-        scope.$watch('params', function(){
-          if(scope.params){
-            if(!morris) {
+        scope.$watch('params', function () {
+          if (scope.params) {
+            if (!morris) {
               morris = new Morris.Line({
                 element: elem,
                 data: scope.params.data,
@@ -32,36 +32,36 @@ angular.module('randomStack')
                 lineColors: scope.params.colors || ['#0b62a4', '#7a92a3', '#4da74d', '#afd8f8', '#edc240', '#cb4b4b', '#9440ed'],
                 lineWidth: scope.params.lineWidth || '4',
                 fillOpacity: scope.params.fillOpacity || '0.8',
-                grid: (scope.params.showGrid==false)?false:true,
-                hideHover:true,
-                smooth: scope.params.smoot||false,
+                grid: (scope.params.showGrid == false) ? false : true,
+                hideHover: true,
+                smooth: scope.params.smoot || false,
                 //parseTime: scope.params.parseTime || false,
-                events:scope.params.events||[],
+                events: scope.params.events || [],
                 resize: true
               });
             } else {
-              morris.options.events = scope.params.events||[];
+              morris.options.events = scope.params.events || [];
               morris.setData(scope.params.data);
             }
           }
-        },true);
+        }, true);
       }
     };
   })
 
-  .directive('morrisAreaChart', function(){
+  .directive('morrisAreaChart', function () {
 
     return {
       restrict: 'A',
       scope: {
         params: '=',
       },
-      link: function (scope, elem, attrs){
+      link: function (scope, elem, attrs) {
         var morris;
 
-        scope.$watch('params', function(){
-          if(scope.params){
-            if(!morris) {
+        scope.$watch('params', function () {
+          if (scope.params) {
+            if (!morris) {
               morris = new Morris.Area({
                 element: elem,
                 data: scope.params.data,
@@ -72,34 +72,34 @@ angular.module('randomStack')
                 lineWidth: scope.params.lineWidth || '0',
                 fillOpacity: scope.params.fillOpacity || '0.8',
                 grid: scope.params.showGrid || false,
-                hideHover:true,
+                hideHover: true,
                 //parseTime: scope.params.parseTime || false,
-                events:scope.params.events||[],
+                events: scope.params.events || [],
                 resize: true
               });
             } else {
-              morris.options.events = scope.params.events||[];
+              morris.options.events = scope.params.events || [];
               morris.setData(scope.params.data);
             }
           }
-        },true);
+        }, true);
       }
     };
   })
 
-  .directive('morrisBarChart', function(){
+  .directive('morrisBarChart', function () {
     return {
       restrict: 'A',
       scope: {
-        params : '=',
+        params: '=',
       },
-      link: function(scope, elem, attrs){
+      link: function (scope, elem, attrs) {
 
         var morris;
-        
-        scope.$watch('params', function(){
-          if(scope.params){
-            if(!morris) {
+
+        scope.$watch('params', function () {
+          if (scope.params) {
+            if (!morris) {
               morris = new Morris.Bar({
                 element: elem,
                 data: scope.params.data,
@@ -110,7 +110,7 @@ angular.module('randomStack')
                 xLabelMargin: 2,
                 resize: true,
                 stacked: scope.params.stacked,
-                hideHover:true,
+                hideHover: true,
                 //hoverCallback: function (index, options, content, row) {
                 //    return '<a href="#!/app/.../funcionarios">'+content+'</a>' ;
                 //} // ASI se agregaría un link al popup
@@ -120,22 +120,22 @@ angular.module('randomStack')
             }
           }
           //elem.on('click', function(i,row){console.log("Aca un link a todo el chart",i,row);});
-        },true);
+        }, true);
       }
     };
   })
 
-  .directive('morrisDonutChart', function(){
+  .directive('morrisDonutChart', function () {
     return {
       restrict: 'A',
       scope: {
-        params : '=',
+        params: '=',
       },
-      link: function(scope, elem, attrs){
+      link: function (scope, elem, attrs) {
         var morris;
-        scope.$watch('params', function(){
-          if(scope.params){
-            if(!morris) {
+        scope.$watch('params', function () {
+          if (scope.params) {
+            if (!morris) {
               morris = new Morris.Donut({
                 element: elem,
                 data: scope.params.data,
@@ -147,7 +147,7 @@ angular.module('randomStack')
               morris.setData(scope.params.data);
             }
           }
-        },true);
+        }, true);
       }
     };
   });

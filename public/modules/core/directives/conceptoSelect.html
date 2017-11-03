@@ -14,7 +14,11 @@
 
 <div class="input-group">
     <!-- botón buscar -->
-    <span class="input-group-btn"><button class="btn btn-default btn-sm"><i class="fa fa-cubes"></i></button></span>
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-sm">
+            <i class="fa fa-cubes"></i>
+        </button>
+    </span>
     <!-- /botón buscar -->
 
     <!-- barra de texto -->
@@ -24,7 +28,8 @@
         <div class="stackable ml-5 mr-5 bg-white pl-10 pr-10 rnd-b-round-dk"
              ng-repeat="concept in output.selected">
             <p class="mb-0">
-                <i class="fa fa-cube mr-5"></i>{{concept.NOKOCO}} <span ng-click="ITEMS.onRemove($index)"
+                <i class="fa fa-cube mr-5"></i>{{concept.NOKOCO}}
+                <span ng-click="ITEMS.onRemove($index)"
                       class="pull-right ml-5">✖</span>
             </p>
         </div>
