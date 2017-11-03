@@ -24,8 +24,7 @@
 
       <!-- Entidad -->
       <rnd-profile meta="metaEntidad"
-                   options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente para revisar su deuda</p>', title:'Datos entidad'}"
-    
+                   options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente</p>', title:'Datos entidad'}"
                    source="pasoEntidad"
                    rtablas="rtablas">
       </rnd-profile>
@@ -34,9 +33,7 @@
 
       <!-- Deuda -->
       <rnd-datatable ng-if="pasoEntidad.length"
-                     options="{showReload:false, showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
-    
-                     dataset="pasoDeuda"
+                     options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
                      meta="metaDeuda"
                      source="traeDeuda"
                      rtablas="rtablas"
@@ -49,6 +46,7 @@
       <!-- Pagos -->
       <rnd-datatable ng-if="pasoEntidad.length"
                      options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos registrados', buttons: ['create']}"
+    
                      dataset="pasoPago"
                      meta="metaPago"
                      source="traePago"

@@ -1,12 +1,71 @@
 'use strict';
+/**
+* @ngdoc directive 
+* @name core.directive:rndDatatable 
+* @restrict 'E'
+* @scope
+* @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
+* @param {Object} meta Objeto de metadatos de datos de source 
+* @param {Object} rtablas Objeto rtabla para enmascarar datos
+* @param {Object} options Objeto de opciones. (recomendado poblar en html)
+* @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
+* @param {string} options.title título a mostrar sobre la tabla
+* @element ANY
+* @description
+* Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.<br>
+* <img src="img/rndDatatable.jpg" alt="rndDatatable">
+* @example
+* <pre>   
+<script>
 
+// Metadatos 
+$scope.metaDeuda = [
+ { field: "IDMAEEDO", name: "IDMAEEDO", visible: false, pk: true },
+ { field: "EMPRESA", name: "Emp.", description:"Empresa", visible: true },
+ { field: "TIDO", name: "DP", description:"Tipo documento", visible: true },
+ { field: "NUDO", name: "Número", visible: true },
+ { field: "SUENDO", name: "Suc.", visible: false },
+ { field: "TIMODO", name: "Timodo", visible: false },
+ { field: "TAMODO", name: "Tamodo", visible: false },
+ { field: "ESPGDO", name: "Estado doc.", visible: true, datatype: 'rtabla', tabla: 'EstadoPago', options: { returnSrv: "id", returnClient: "name" } },
+ { field: "FEULVEDO", name: "Fecha venc.", visible: true, datatype: 'date' },
+ { field: "MODO", name: "M", description:"Moneda", visible: true },
+ { field: "VABRDO", name: "Valor doc.", visible: true, datatype: 'number' },
+ { field: "VAABDO", name: "Saldo ant.", visible: true, datatype: 'number' },
+ { field: "VAIVARET", name: "Valor IVA ret.", visible: false, datatype: 'number' },
+ { field: "VAIVDO", name: "Valor IVA doc.", visible: false, datatype: 'number' },
+ { field: "VANEDO", name: "Valor neto doc.", visible: false, datatype: 'number' },
+ { field: "BLOQUEAPAG", name: "Bloquea pago", visible: false }
+]
+
+// Instancia tabla (para reload)
+$scope.apiDeuda = {}
+
+// Función (promesa en este caso) que pide datos
+$scope.traeDeuda = function(query){
+    return documentos.traeDeuda.get({ 
+        fields: $scope.metaDeuda.map(m => m.field), 
+        koen: $scope.pasoEntidad.map(e => e.KOEN), 
+        empresa: rndEmpresa.get(), 
+        size: 10, 
+        order: 'FEULVEDO' 
+    });
+</script>
+
+<rnd-datatable meta="metaDeuda"
+   options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
+   source="traeDeuda"
+   rtablas="rtablas"
+   instance="apiDeuda">
+</rnd-datatable>
+</pre>
+**/
 angular.module('core')
     .directive("rndDatatable", function () {
         return {
             restrict: 'E',
             scope: {
                 options: "=",
-                dataset: "=",
                 source: "=",
                 meta: "=",
                 rtablas: "=?rtablas",
@@ -49,7 +108,6 @@ angular.module('core')
             source: $scope.sourceP,
             meta: $scope.meta,
             rtablas: $scope.rtablas,
-            dataset: $scope.dataset,
             ws: $scope.options.ws
         }, $scope);
 

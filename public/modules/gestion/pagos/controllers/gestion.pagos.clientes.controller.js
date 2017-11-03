@@ -1,4 +1,11 @@
 'use strict';
+
+/**
+ * @ngdoc controller
+ * @name gestion.controller:gestionPagosClientesController
+ * @description
+ * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
+ */
 angular.module('gestion').controller('gestionPagosClientesController', ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa',
     function ($scope, entidades, pagos, documentos, rndEmpresa) {
 
@@ -10,7 +17,9 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "SUEN", name: "Suc.", visible: true, pk: true }
         ]
         $scope.pasoEntidad = [];
-        $scope.traeEntidad = (query) => entidades.get({ fields: $scope.metaEntidad.map(m => m.field), search: query.search, size: 10, order: 'NOKOEN' });
+        $scope.traeEntidad = function(query){
+            return entidades.get({ fields: $scope.metaEntidad.map(m => m.field), search: query.search, size: 10, order: 'NOKOEN' });
+        }
 
         /** Trae PAGO */
         $scope.metaPago = [

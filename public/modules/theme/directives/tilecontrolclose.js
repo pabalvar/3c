@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc directive
- * @name core.directive:TileControlClose
+ * @name theme.directive:TileControlClose
  * @description
  * cierra un tile
  * # TileControlClose
  */
 
-angular.module('core').directive('tileControlClose', function () {
+angular.module('theme').directive('tileControlClose', function () {
   return {
     restrict: 'A',
     link: function postLink(scope, element) {

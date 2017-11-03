@@ -1,6 +1,12 @@
 'use strict';
-
-angular.module('core')
+/**
+ * @ngdoc service
+ * @name liberp.entidades
+ * @requires $resource
+ * @requires auth_service
+ * @description trae las entidades
+**/
+angular.module('liberp')
 	.factory('entidades', ['$resource', 'auth_service', function ($resource, auth_service) {
 		return $resource('/entidades/:id', { id: '@id' }, {
 			get: {

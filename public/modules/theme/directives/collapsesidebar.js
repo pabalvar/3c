@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc directive
- * @name core.directive:collapseSidebarSm
+ * @name theme.directive:collapseSidebarSm
  * @description
  * # collapseSidebarSm
  */
 
-angular.module('core')
+angular.module('theme')
   .directive('collapseSidebar', function ($rootScope) {
     return {
       restrict: 'A',
