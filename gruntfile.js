@@ -18,10 +18,15 @@ module.exports = function (grunt) {
                 presets: ['env']
             },
             dist: {
-                files: {
-                    'dist/app.js': 'src/app.js'
-                }
-            }
+                files: [{
+                  expand: true,     // Enable dynamic expansion.
+                  cwd: 'public/modules',      // Src matches are relative to this path.
+                  src: ['**/*.js'],
+                  dest: 'build/',   // Destination path prefix.
+                  ext: '.js',   // Dest filepaths will have this extension.
+                  extDot: 'first'   // Extensions in filenames begin after the first dot
+                }]
+              },
         },
         connect: {
             server: {
@@ -35,6 +40,7 @@ module.exports = function (grunt) {
     });
 
     // ngdocs
+    grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-ngdocs');
     grunt.loadNpmTasks('grunt-contrib-connect');
     // Default task(s).
