@@ -17,8 +17,8 @@ function getPagos(req, res, next) {
         case 'simple':
             req.query.variante = "AND (DPCE.ESPGDP<> 'N' AND DPCE.ESASDP = 'P')" + '/noquote';
             break;
-        case 'general':
-            req.query.variante = "AND ((DPCE.ESPGDP<> 'N' AND DPCE.ESASDP = 'P') OR ( DPCE.ESPGDP = 'P' OR DPCE.ESPGDP = 'R' ))" + '/noquote';
+        case 'deuda':
+            req.query.variante = "( DPCE.ESPGDP = 'P' OR DPCE.ESPGDP = 'R' ))" + '/noquote'; // Pendiente o pRotestado
             break;
         default:
             req.query.variante = ''; // Necesario para que no inyecten SQL
@@ -36,14 +36,14 @@ DPCE.IDMAEDPCE,
 DPCE.EMPRESA,
 DPCE.TIDP, 
 DPCE.NUDP, 
-TRIM(DPCE.ENDP) AS ENDP, 
-TRIM(DPCE.EMDP) AS EMDP, 
-TRIM(DPCE.SUEMDP) AS SUEMDP,
-TRIM(DPCE.CUDP) AS CUDP,
-TRIM(DPCE.NUCUDP) AS NUCUDP, 
+LTRIM(RTRIM(DPCE.ENDP)) AS ENDP, 
+LTRIM(RTRIM(DPCE.EMDP)) AS EMDP, 
+LTRIM(RTRIM(DPCE.SUEMDP)) AS SUEMDP,
+LTRIM(RTRIM(DPCE.CUDP)) AS CUDP,
+LTRIM(RTRIM(DPCE.NUCUDP)) AS NUCUDP, 
 DPCE.FEEMDP, 
 DPCE.FEVEDP, 
-TRIM(DPCE.MODP) AS MODP,
+LTRIM(RTRIM(DPCE.MODP)) AS MODP,
 DPCE.TIMODP, 
 DPCE.TAMODP,
 DPCE.VADP, 
@@ -51,8 +51,8 @@ DPCE.VAABDP,
 DPCE.VAASDP, 
 DPCE.VAVUDP, 
 DPCE.ESPGDP, 
-TRIM(DPCE.REFANTI) AS REFANTI, 
-TRIM(DPCE.ARCHIRSD) AS ARCHIRSD, 
+LTRIM(RTRIM(DPCE.REFANTI)) AS REFANTI, 
+LTRIM(RTRIM(DPCE.ARCHIRSD)) AS ARCHIRSD, 
 DPCE.IDRSD
 -->> from
 FROM 

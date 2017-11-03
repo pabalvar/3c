@@ -8,17 +8,17 @@ function getEmpresasQuerySQL() {
     return `
 -->> select
 SELECT
-TRIM(EMPRESA) as EMPRESA,
-TRIM(RAZON) as Razon, 
-TRIM(RUT) as RUT, 
-TRIM(NCORTO) as NombreCorto,
-TRIM(DIRECCION) as Direccion,
-TRIM(COMUNA) as Comuna,
-TRIM(CIUDAD) as Ciudad,
-TRIM(PAIS) as Pais, 
-TRIM(TELEFONOS) as Fono, 
-TRIM(GIRO) as Giro,
-TRIM(RAZONAMP) as RazonAmpliada
+LTRIM(RTRIM(EMPRESA)) as EMPRESA,
+LTRIM(RTRIM(RAZON)) as Razon, 
+LTRIM(RTRIM(RUT)) as RUT, 
+LTRIM(RTRIM(NCORTO)) as NombreCorto,
+LTRIM(RTRIM(DIRECCION)) as Direccion,
+LTRIM(RTRIM(COMUNA)) as Comuna,
+LTRIM(RTRIM(CIUDAD)) as Ciudad,
+LTRIM(RTRIM(PAIS)) as Pais, 
+LTRIM(RTRIM(TELEFONOS)) as Fono, 
+LTRIM(RTRIM(GIRO)) as Giro,
+LTRIM(RTRIM(RAZONAMP)) as RazonAmpliada
 -->> from
 FROM
 CONFIGP
