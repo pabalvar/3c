@@ -1,48 +1,69 @@
 <ncy-breadcrumb></ncy-breadcrumb>
+<div rnd-tile>
 
-<div class="row m-0">
-  <div class="col-sm-12 col-md-10 col-lg-8 p-0"
-       rnd-tile-widget>
+  <!-- Título -->
+  <div rnd-tile-header>
+    <h1 class="custom-font">
+      <strong>Pago </strong> a clientes</h1>
+  </div>
+  <!-- /Título -->
 
-    <!-- Entidad -->
-    <rnd-searchbox options="{placeholder:'buscar entidad'}"
-                   meta="metaEntidad"
-                   dataset="pasoEntidad"
-                   source="traeEntidad"
-                   rtablas="rtablas">
-    </rnd-searchbox>
+  <div rnd-widget
+       class="row">
+    <div class="col-md-9 col-lg-8 b-r">
 
-    <rnd-datatable options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente para revisar su deuda</p>'}"
-  
-                   meta="metaEntidad"
+      <!-- Busca Entidad -->
+      <rnd-searchbox options="{placeholder:'buscar entidad'}"
+                     meta="metaEntidad"
+                     dataset="pasoEntidad"
+                     source="traeEntidad"
+                     rtablas="rtablas">
+      </rnd-searchbox>
+      <hr>
+      <!-- /Busca Entidad -->
+
+      <!-- Entidad -->
+      <rnd-profile meta="metaEntidad"
+                   options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente para revisar su deuda</p>', title:'Datos entidad'}"
+    
                    source="pasoEntidad"
                    rtablas="rtablas">
-    </rnd-datatable>
-    <!-- /Entidad -->
+      </rnd-profile>
+      <hr>
+      <!-- Entidad -->
 
-    <!-- Pagos -->
-    <rnd-datatable ng-if="pasoEntidad.length"
-                   options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>'}"
-                   dataset="pasoPago"
-                   meta="metaPago"
-                   source="traePago"
-                   rtablas="rtablas"
-                   instance="apiPago">
-    </rnd-datatable>
-    <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago">{{item}}</p></pre>
-    <!-- /Pagos -->
+      <!-- Deuda -->
+      <rnd-datatable ng-if="pasoEntidad.length"
+                     options="{showReload:false, showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
+    
+                     dataset="pasoDeuda"
+                     meta="metaDeuda"
+                     source="traeDeuda"
+                     rtablas="rtablas"
+                     instance="apiDeuda">
+      </rnd-datatable>
+      <hr>
+      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda">{{item}}</p></pre>-->
+      <!-- /Deuda -->
 
-    <!-- Deuda -->
-    <rnd-datatable ng-if="pasoEntidad.length"
-                   options="{showReload:false, showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>'}"
-                   dataset="pasoDeuda"
-                   meta="metaDeuda"
-                   source="traeDeuda"
-                   rtablas="rtablas"
-                   instance="apiDeuda">
-    </rnd-datatable>
-    <!-- /Deuda -->
+      <!-- Pagos -->
+      <rnd-datatable ng-if="pasoEntidad.length"
+                     options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos registrados', buttons: ['create']}"
+                     dataset="pasoPago"
+                     meta="metaPago"
+                     source="traePago"
+                     rtablas="rtablas"
+                     instance="apiPago">
+      </rnd-datatable>
+      <hr>
+      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago">{{item}}</p></pre>-->
+      <!-- /Pagos -->
+    </div>
+    <div class="col-md-4">
+      <!-- Cruce -->
 
+      <!-- /Creuce -->
+    </div>
 
   </div>
 </div>
