@@ -16,9 +16,9 @@ angular.module('core')
             controller: 'rndDatatable'
         }
     })
-    .controller("rndDatatable", ['$scope', 'rndDatatableFactory', function ($scope, rndDatatableFactory) {
+    .controller("rndDatatable", ['$scope', 'rndDialog' , 'rndDatatableFactory', function ($scope, rndDialog, rndDatatableFactory) {
 
-        // Convertir en funciüon que entrega array
+        // Convertir en funcióon que entrega array
         if (angular.isArray($scope.source)) {
             // Si es array: entrega función que entrega promesa que retorna el mismo array
             $scope.sourceP = function () {
@@ -70,6 +70,25 @@ angular.module('core')
             } else {
                 $scope.emptyHintHtml = '<h2>Ingresa datos</h2><p>para seguir</p>'
             }
+        }
+
+        // Botones por defecto
+        $scope.buttons = [];
+        var defaultButtons = [
+            { name: 'create', onClick: 'createLine', icon: 'fa fa-plus', description: 'crear nuevo registro' }
+        ]
+        $scope.options.buttons = $scope.options.buttons||[];
+        $scope.options.buttons.forEach(function (b) {
+            var ix = defaultButtons.findIndex(i => i.name == b);
+            if (ix >= 0) $scope.buttons.push(defaultButtons[ix]);
+        })
+
+        
+        $scope.createLine = function(){ 
+            var tmp = {data:[]}
+            rndDialog.createLine(tmp, $scope.meta);
+            $scope.tabla.instance.DataTable.row.add(tmp.data[0]);
+            $scope.tabla.instance.DataTable.draw();
         }
     }])
 

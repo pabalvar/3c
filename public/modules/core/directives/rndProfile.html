@@ -1,0 +1,21 @@
+<div ng-repeat="linea in source">
+    <div>
+        <div ng-if="options.title">
+            <p class="text-uppercase text-strong mb-0 custom-font">{{options.title}}</p>
+        </div>
+        <h3 class="mt-0 mb-10">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
+    </div>
+    <ul class="list-unstyled text-default lt">
+        <span ng-repeat="m in meta">
+            <div ng-if="m.visible && !$first">
+                <li>
+                    <strong class="inline-block w-xs">{{m.name}}:</strong> {{linea[m.field] | monitor:m:rtablas}}
+                </li>
+            </div>
+        </span>
+    </ul>
+</div>
+<div class="text-center"
+     ng-show="!source.length"
+     ng-bind-html="options.showEmpty | trust">
+</div>
