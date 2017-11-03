@@ -1,6 +1,15 @@
 'use strict';
 angular.module("core")
-
+/**
+* @ngdoc directive
+* @name core.directive:rndConceptoSelect 
+* @restrict 'E'
+* @element any 
+* @param {object} load No me acuerdo la estructura
+* @param {object=} output Objeto que retorna
+* @scope
+* @description permite elegir un concepto
+**/
 .directive("rndConceptoSelect", function() {
     return {
         restrict: 'E',

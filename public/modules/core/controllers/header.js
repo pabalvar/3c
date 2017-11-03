@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name randomStack.controller:FullwidthlayoutCtrl
+ * @name core.controller:rdmHeaderCtlr
  * @description
- * # FullwidthlayoutCtrl
- * Controller of the randomStack
+ * # rdmHeaderCtlr
+ * Controlador de la barra header
  */
 
 angular.module('core')

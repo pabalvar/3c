@@ -2,13 +2,14 @@
 
 /**
  * @ngdoc function
- * @name randomStack.controller:NavCtrl
+ * @name core.controller:rdmNavCtrl
  * @description
- * # NavCtrl
- * Controller of the randomStack
+ * # rdmNavCtrl
+ * Controlador de la barra lateral (menu)
  */
 
-angular.module('randomStack').controller('rdmNavCtrl', ['$scope', 'auth_service', '$state', function ($scope, auth_service, $state) {
+angular.module('core')
+.controller('rdmNavCtrl', ['$scope', 'auth_service', '$state', function ($scope, auth_service, $state) {
 	$scope.oneAtATime = false;
 
 	var estados = $state.get();
@@ -17,8 +18,6 @@ angular.module('randomStack').controller('rdmNavCtrl', ['$scope', 'auth_service'
 	var menuItems = estados.filter(o=>(o.ncyBreadcrumb||{}).menuLevel==1 );
 	$scope.menuItems = 
 	menuItems.sort((a,b) => (a.ncyBreadcrumb||{}).menuPrio > (b.ncyBreadcrumb||{}).menuPrio);
-	//console.log("items",$scope.menuItems );
-
 
 	$scope.status = {
 		isFirstOpen: true

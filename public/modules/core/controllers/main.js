@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc function
- * @name randomStack.controller:MainCtrl
+ * @name core.controller:rdmMainCtrl
  * @description
- * # MainCtrl
- * Controller of the randomStack
+ * # rdmMainCtrl
+ * Controlador principal de la aplicación
  */
 
 angular.module('core')
   .controller('rdmMainCtrl',
-  function ($scope, $rootScope, $http, $window, $translate, toastr, auth_service, rndEmpresa) {
+  function ($scope, $rootScope, $http, $window, $translate, auth_service, rndEmpresa) {
 
     angular.extend($scope, {
       //Variables de login
