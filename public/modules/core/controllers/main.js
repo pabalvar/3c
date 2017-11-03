@@ -1,7 +1,6 @@
 'use strict';
 
 /**
- * @ngdoc function
  * @name core.controller:rdmMainCtrl
  * @description
  * # rdmMainCtrl

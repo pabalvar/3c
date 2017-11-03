@@ -1,9 +1,43 @@
 angular.module('core')
+/**
+* @ngdoc directive 
+* @name core.directive:rndSearchbox 
+* @restrict 'E'
+* @scope
+* @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
+* @param {Object} meta Objeto de metadatos de datos de source 
+* @element ANY
+* @description
+* Directiva que permite seleccionar elemento mientras se escribe. Requiere una promesa o un array, además de un objeto metadatos.<br>
+* <img src="img/rndSearchbox.jpg" alt="rndSearchbox">
+* @example
+* <pre>   
+<script> 
+// Metadatos
+ $scope.metaEntidad = [
+  { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize' },
+  { field: "KOEN", name: "Código", visible: true, pk: true },
+  { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
+  { field: "SUEN", name: "Suc.", visible: true, pk: true }
+ ]
+ // Array para guardar el dato seleccionado
+ $scope.pasoEntidad = [];
+ // Función (promesa en este caso) que pide datos
+ $scope.traeEntidad = (query) => entidades.get({ fields: $scope.metaEntidad.map(m => m.field), search: query.search, size: 10, order: 'NOKOEN' });
+</script>
 
+<rnd-searchbox options="{placeholder:'buscar entidad'}"
+    meta="metaEntidad"
+    dataset="pasoEntidad"
+    source="traeEntidad"
+    rtablas="rtablas">
+</rnd-searchbox>
+</pre>
+**/
     .directive('rndSearchbox', [
         function () {
             return {
-                restrict: 'EA',
+                restrict: 'E',
                 scope: {
                     source: '=',
                     options: '=?options',
@@ -33,7 +67,8 @@ angular.module('core')
 
                     // callback al seleccionar
                     $scope.onSelectLocal = onSelectLocal;
-
+                    /** @ngdoc method
+                     * esta huea */
                     function onSelectLocal($item, $model, $label, $event) {
                         // deshacer apéndice "$model" que se anexó eventualmente en controlador parent
                         delete ($item.$meta);

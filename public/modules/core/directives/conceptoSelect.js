@@ -1,7 +1,6 @@
 'use strict';
 angular.module("core")
 /**
-* @ngdoc directive
 * @name core.directive:rndConceptoSelect 
 * @restrict 'E'
 * @element any 

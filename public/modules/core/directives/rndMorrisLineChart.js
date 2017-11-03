@@ -1,7 +1,6 @@
 'use strict';
 
 /**
- * @ngdoc directive
  * @name core.directive:chartMorris
  * @description
  * directiva para usar gráficos

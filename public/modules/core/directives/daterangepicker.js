@@ -1,6 +1,5 @@
 'use strict';
 /**
- * @ngdoc directive
  * @name core.directive:daterangepicker
  * @description
  * # daterangepicker
@@ -27,7 +26,6 @@ angular.module('core')
     })
 
     /**
-     * @ngdoc function
      * @name core.controller:DaterangepickerCtrl
      * @description
      * # DaterangepickerCtrl
