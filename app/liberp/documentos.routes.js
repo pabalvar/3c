@@ -5,6 +5,7 @@ var documentos = require('./documentos.js');
 var globals = require('../lib/globals/controllers/globals.js');
 
 module.exports = function (app) {
+    
     app.route('/documentos/traeDeuda')
         .get(
         documentos.traeDeuda,
@@ -18,8 +19,5 @@ module.exports = function (app) {
         driver.executeListQuery(app),
         globals.queryOut
         );
-
-
-
 
 }

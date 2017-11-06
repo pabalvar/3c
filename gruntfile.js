@@ -8,7 +8,7 @@ module.exports = function (grunt) {
                 dest: 'docu'
             },
             api: {
-                src: ['public/modules/core/**/*.js'],
+                src: ['public/modules/**/*.js'],
                 title: 'API Documentation'
             }
         },

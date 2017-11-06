@@ -1,7 +1,7 @@
 'use strict';
 
 var empresasDB = require('../queries/empresas.queries.js');
-var preferencesDB = require('../../preferences/controllers/preferences.controller.js');//D:\dev\random.html\app\random.3c\app\lib\
+var preferencesDB = require('../../preferences/controllers/preferences.controller.js');
 
 exports.getEmpresas = getEmpresas;
 

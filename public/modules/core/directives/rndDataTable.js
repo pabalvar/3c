@@ -9,7 +9,10 @@
 * @param {Object} rtablas Objeto rtabla para enmascarar datos
 * @param {Object} options Objeto de opciones. (recomendado poblar en html)
 * @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
-* @param {string} options.title título a mostrar sobre la tabla
+* @param {string} options.title título a mostrar sobre la tabla (acepta html)
+* @param {boolean} options.info muestra paginación
+* @param {boolean} options.search muestra campo de texto de búsqueda local
+* @param {boolean} options.pagination muestra controles de paginación (local)
 * @element ANY
 * @description
 * Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.<br>
@@ -41,6 +44,12 @@ $scope.metaDeuda = [
 // Instancia tabla (para reload)
 $scope.apiDeuda = {}
 
+// Opciones de tabla
+$scope.optDeuda = {
+    showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', 
+    title:'Documentos pendientes'
+}
+
 // Función (promesa en este caso) que pide datos
 $scope.traeDeuda = function(query){
     return documentos.traeDeuda.get({ 
@@ -53,7 +62,7 @@ $scope.traeDeuda = function(query){
 </script>
 
 <rnd-datatable meta="metaDeuda"
-   options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
+   options="optDeuda"
    source="traeDeuda"
    rtablas="rtablas"
    instance="apiDeuda">
@@ -183,7 +192,7 @@ angular.module('core')
 
             ret = ret.withDataProp('data')
                 .withOption('responsive', { details: { renderer: rendererResponsive(scope) } })
-                .withOption('info', options.info) // mostrar "Mostrando registros xx al yy". por defecto true
+                .withOption('info', options.info) // mostrar "Mostrando registros xx al yy".
                 .withOption('processing', true)
                 .withOption('bFilter', options.search) // campo búsqueda
                 .withOption('bPaginate', options.pagination) // mostrar paginación abajo
