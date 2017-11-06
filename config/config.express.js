@@ -98,7 +98,8 @@ module.exports = function (config) {
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
     }
-
+    // Ruta a la documentación
+    app.use('/docu', express.static(path.resolve('./docu')));
     // Setting the app router and static folder
     app.use(express.static(path.resolve('./public')));
 
