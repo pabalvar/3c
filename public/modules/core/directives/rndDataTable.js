@@ -172,9 +172,7 @@ angular.module('core')
             return ret;
         }
 
-        /** Crea opciones
-         * @params 
-         */
+        // Inicializa tabla
         function initOptions(params, scope) {
             var options = params.options || {}
             var ret;
@@ -185,8 +183,6 @@ angular.module('core')
                     .withOption('ajax', adaptResource(params))
                     .withOption('serverSide', true)
             } else {
-                // Convertir a promesa si ya no lo es
-                //var p = (angular.isArray(params.source)) ? new Promise((r) => r(params.source)) : params.source;
                 ret = DTOptionsBuilder.fromFnPromise(params.source);
             }
 
@@ -214,9 +210,6 @@ angular.module('core')
             return ret;
         }
 
-        /** entrega objeto columns.
-         * @params : 
-         */
         function initColumns(params, scope) {
             var cols = []
             var rtablasfn;
