@@ -2,9 +2,7 @@
 
 var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
-/** GET **/
 exports.getTrazaDocu = getTrazaDocu;
-
 
 // Detalles de implementación
 function getTrazaDocu(req, res, next) {
