@@ -117,7 +117,7 @@ angular.module('core')
             source: $scope.sourceP,
             meta: $scope.meta,
             rtablas: $scope.rtablas,
-            ws: $scope.options.ws
+            ws: $scope.options.ws // ToDO: Implementación paginación por servidor
         }, $scope);
 
         // Conectar botón reload
@@ -139,24 +139,6 @@ angular.module('core')
             }
         }
 
-        // Botones por defecto
-        $scope.buttons = [];
-        var defaultButtons = [
-            { name: 'create', onClick: 'createLine', icon: 'fa fa-plus', description: 'crear nuevo registro' }
-        ]
-        $scope.options.buttons = $scope.options.buttons || [];
-        $scope.options.buttons.forEach(function (b) {
-            var ix = defaultButtons.findIndex(i => i.name == b);
-            if (ix >= 0) $scope.buttons.push(defaultButtons[ix]);
-        })
-
-
-        $scope.createLine = function () {
-            var tmp = { data: [] }
-            rndDialog.createLine(tmp, $scope.meta);
-            $scope.tabla.instance.DataTable.row.add(tmp.data[0]);
-            $scope.tabla.instance.DataTable.draw();
-        }
     }])
 
     .factory('rndDatatableFactory', function (DTOptionsBuilder, DTColumnBuilder, $compile, getDatatype, $filter) {
@@ -190,6 +172,7 @@ angular.module('core')
                 .withOption('responsive', { details: { renderer: rendererResponsive(scope) } })
                 .withOption('info', options.info) // mostrar "Mostrando registros xx al yy".
                 .withOption('processing', true)
+                .withOption('select',true)
                 .withOption('bFilter', options.search) // campo búsqueda
                 .withOption('bPaginate', options.pagination) // mostrar paginación abajo
                 .withPaginationType('numbers')
@@ -210,32 +193,46 @@ angular.module('core')
             return ret;
         }
 
+        /** Inicializar las columnas */
         function initColumns(params, scope) {
             var cols = []
-            var rtablasfn;
+
+            // Loop sobre los metadatos
             params.meta.forEach(function (m) {
+
+                // Inicializar objeto a retornar: col
                 var col = DTColumnBuilder.newColumn(m.field);
-                col = col.withTitle(m.name); // opción title
+
+                // Título se usa una función de render
+                col = col.withTitle(headerRenderer(m));
+
+                // Calcular align derecha o izquierda
                 var align = $filter('alignment')(m.datatype);
-                col = col.withClass('dt-body-' + align);
-                col = m.visible ? col : col.notVisible(); // opción visible
+                if (align) col = col.withClass('dt-body-' + align);
+
+                // opción visible
+                if (!m.visible) col = col.notVisible();
+
+                // Render tipo columna
                 if (m.field == "$estado") {
                     col = col.notSortable();
                     col = col.withOption('width', 15);
                     col = col.renderWith(dialogRenderer(params, scope));
-                } else {
-                    col = col.renderWith(renderer(m, params, scope)); // opción renderer
+                } else { // todo el resto de tipos
+                    col = col.renderWith(renderer(m, params, scope));
                 }
+
+                // Entregar resultado
                 cols.push(col)
             });
+
+            // Loop sobre botones (incorporados en options.buttons)
             ((params.buttons) || []).forEach(function (b) {
                 var col = DTColumnBuilder.newColumn(null);
                 col = col.withTitle(b.name); // opción title
                 col = col.notSortable();
                 col = col.withOption('width', 10);
-                col = col.renderWith(buttonRenderer(b, params, scope)); // opción renderer
-                //col = m.visible ? col : col.notVisible(); // opción visible
-                //col = col.renderWith(renderer(m, params.rtablas)); // opción renderer
+                col = col.renderWith(buttonRenderer(b, params, scope));
                 cols.push(col)
             })
 
@@ -282,8 +279,6 @@ angular.module('core')
                 return `<span rnd-dialog linea="${row.$estado.$id}"></span>`
             }
         }
-
-
 
         function renderer(datatype, params, scope) {
             var rtablas = params.rtablas;
@@ -335,15 +330,42 @@ angular.module('core')
             }
         }
 
+        function headerRenderer(meta) {
+            // obtener título desde meta.name
+            var innerHtml = meta.name;
+            var cssClass = [];
+            var tooltip = [];
+
+            // Agregar descripción si viene
+            if (meta.description) tooltip.push(meta.description);
+
+            // Si es requerido agregar asterisco
+            if (meta.required) {
+                cssClass.push('fieldRequired');
+                tooltip.push('(* Requerido)')
+            }
+            // Si es llave primaria agregar llave
+            if (meta.pk) {
+                cssClass.push('fieldPrimaryKey');
+                innerHtml = '<i class="fa fa-key mr-10"></i>' + innerHtml;
+                tooltip.push('(Llave primaria)')
+            }
+
+            return `<div title="${tooltip.join(' ')}"  class="${cssClass.join(' ')}">${innerHtml}</div>`;
+        }
+
         function rowCallback(params, scope) {
             return function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 // Unbind first in order to avoid any duplicate handler (see https://github.com/l-lin/angular-datatables/issues/87)
                 $('td', nRow).unbind('click');
                 $('td', nRow).bind('click', function (event) {
                     //console.log(event)
+                    console.log("hay params", params, scope)
                     scope.$apply(function () {
                         //console.log("aData", aData, params.ws.res.data);
                     });
+                    var selected = scope.tabla.instance.DataTable.rows('.selected');
+                    if (selected) selected.deselect();
                     $(nRow).toggleClass('selected');
                 });
 

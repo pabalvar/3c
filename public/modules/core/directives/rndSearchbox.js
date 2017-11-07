@@ -1,54 +1,54 @@
 angular.module('core')
-/**
-* @ngdoc directive 
-* @name core.directive:rndSearchbox 
-* @restrict 'E'
-* @scope
-* @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
-* @param {Object} meta Objeto de metadatos de datos de source 
-* @param {Array} dataset (retorno) Datos seleccionados 
-* @param {Object} rtablas Objeto rtabla para enmascarar datos
-* @param {Object} options Objeto de opciones. (recomendado poblar en html)
-* @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
-* @element ANY
-* @description
-* Directiva que permite seleccionar elemento mientras se escribe. Requiere una promesa o un array, además de un objeto metadatos.<br>
-* <img src="img/rndSearchbox.jpg" alt="rndSearchbox">
-* @example
-* <pre>   
-<script>
-
-// Metadatos
- $scope.metaEntidad = [
-  { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize' },
-  { field: "KOEN", name: "Código", visible: true, pk: true },
-  { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
-  { field: "SUEN", name: "Suc.", visible: true, pk: true }
- ]
-
- // Array para guardar el dato seleccionado
- $scope.pasoEntidad = [];
-
- // Función (promesa en este caso) que pide datos
-$scope.traeEntidad = function(query){
- return entidades.get({ 
-     fields: $scope.metaEntidad.map(m => m.field), 
-     search: query.search, 
-     size: 10, 
-     order: 'NOKOEN' 
- });
-}
-
-</script>
-
-<rnd-searchbox options="{placeholder:'buscar entidad'}"
-    meta="metaEntidad"
-    dataset="pasoEntidad"
-    source="traeEntidad"
-    rtablas="rtablas">
-</rnd-searchbox>
-</pre>
-**/
+    /**
+    * @ngdoc directive 
+    * @name core.directive:rndSearchbox 
+    * @restrict 'E'
+    * @scope
+    * @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
+    * @param {Object} meta Objeto de metadatos de datos de source 
+    * @param {Array} dataset (retorno) Datos seleccionados 
+    * @param {Object} rtablas Objeto rtabla para enmascarar datos
+    * @param {Object} options Objeto de opciones. (recomendado poblar en html)
+    * @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
+    * @element ANY
+    * @description
+    * Directiva que permite seleccionar elemento mientras se escribe. Requiere una promesa o un array, además de un objeto metadatos.<br>
+    * <img src="img/rndSearchbox.jpg" alt="rndSearchbox">
+    * @example
+    * <pre>   
+    <script>
+    
+    // Metadatos
+     $scope.metaEntidad = [
+      { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize' },
+      { field: "KOEN", name: "Código", visible: true, pk: true },
+      { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
+      { field: "SUEN", name: "Suc.", visible: true, pk: true }
+     ]
+    
+     // Array para guardar el dato seleccionado
+     $scope.pasoEntidad = [];
+    
+     // Función (promesa en este caso) que pide datos
+    $scope.traeEntidad = function(query){
+     return entidades.get({ 
+         fields: $scope.metaEntidad.map(m => m.field), 
+         search: query.search, 
+         size: 10, 
+         order: 'NOKOEN' 
+     });
+    }
+    
+    </script>
+    
+    <rnd-searchbox options="{placeholder:'buscar entidad'}"
+        meta="metaEntidad"
+        dataset="pasoEntidad"
+        source="traeEntidad"
+        rtablas="rtablas">
+    </rnd-searchbox>
+    </pre>
+    **/
     .directive('rndSearchbox', [
         function () {
             return {
@@ -66,7 +66,6 @@ $scope.traeEntidad = function(query){
 
                     // convertir el $resource en una función que acepta "texto", usada por la directiva
                     $scope.sourceP = function (texto) {
-
                         // ejecutar la promesa
                         return $scope.source({ search: texto }).$promise
                             .then(function (res) {

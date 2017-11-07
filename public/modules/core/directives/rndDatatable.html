@@ -19,30 +19,22 @@
     <div ng-if="options.title">
         <p class="text-uppercase text-strong mb-0 custom-font">
             <span>{{options.title}} </span>
-            <!-- botones -->
-            <span class="pull-right">
-                <span ng-repeat="button in buttons">
-                    <button uib-tooltip="button.description"
-                            ng-click="createLine()"
-                            type="button"
-                            class="btn btn-default btn-rounded-20 btn-sm">
-                        <i ng-class="button.icon"></i>
-                    </button>
-                </span>
-            </span>
-            <!-- /botones -->
         </p>
     </div>
-    <table class="table table-condensed hideextra table-custom inputable dt-responsive dt-right"
-           datatable=""
-           dt-disable-deep-watchers="true"
-           dt-columns="tabla.columns"
-           dt-options="tabla.options"
-           dt-instance="tabla.instance">
-    </table>
+    <div class="rnd-b">
+        <table class="table table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right"
+               datatable=""
+               dt-disable-deep-watchers="true"
+               dt-columns="tabla.columns"
+               dt-options="tabla.options"
+               dt-instance="tabla.instance">
+        </table>
+    </div>
 </div>
+
+<!-- texto vacío -->
 <div class="text-center"
      ng-show="!tabla.instance.DataTable.data().length && !busy"
      ng-bind-html="emptyHintHtml | trust">
 </div>
-<pre>{{dataset}}</pre>
+<!-- /texto vacío -->
