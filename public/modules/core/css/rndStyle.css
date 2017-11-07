@@ -12,6 +12,11 @@ table.inputable tbody tr td{ padding-top: 0px; padding-bottom: 0px;}
   width: 95%;
 }
 
+/* PAD: Header gris en datatables */
+table.headerdark thead{
+  background-color: #f5f5f5;
+}
+
 /* PAD: Parche para que contador de datatable quede más a la derecha */
 .dataTables_length{
   padding-left: 15px;
