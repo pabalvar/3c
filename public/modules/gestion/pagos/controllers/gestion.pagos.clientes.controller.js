@@ -6,8 +6,8 @@
  * @description
  * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
  */
-angular.module('gestion').controller('gestionPagosClientesController', ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa',
-    function ($scope, entidades, pagos, documentos, rndEmpresa) {
+angular.module('gestion').controller('gestionPagosClientesController', ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws',
+    function ($scope, entidades, pagos, documentos, rndEmpresa, ws) {
 
         /** Trae ENTIDAD **/
         $scope.metaEntidad = [
@@ -17,14 +17,19 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "SUEN", name: "Suc.", visible: true, pk: true }
         ]
         $scope.pasoEntidad = [];
-        $scope.traeEntidad = function(query){
-            return entidades.get({ fields: $scope.metaEntidad.map(m => m.field), search: query.search, size: 10, order: 'NOKOEN' });
+        $scope.traeEntidad = function (query) {
+            return ws(entidades.get, {
+                fields: $scope.metaEntidad.map(m => m.field),
+                search: query.search,
+                size: 10,
+                order: 'NOKOEN'
+            });
         }
 
         /** Trae PAGO */
         $scope.metaPago = [
             { field: "IDMAEDPCE", name: "IDMAEDPCE", visible: false, pk: true },
-            { field: "EMPRESA", name: "Empresa", visible: false },
+            { field: "EMPRESA", readOnly: true, name: "Empresa", visible: false },
             { field: "TIDP", name: "TD", description: "Tipo documento", visible: true },
             { field: "NUDP", name: "Número", description: "Número documento de pago", visible: true },
             { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", visible: false },
@@ -47,25 +52,31 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "IDRSD", name: "IDRSD", visible: false }
         ]
         $scope.apiPago = {}
-        $scope.pasoPago = [];
-        $scope.traePago = (query) => pagos.get(
-            { fields: $scope.metaPago.map(m => m.field), koen: $scope.pasoEntidad.map(e => e.KOEN),  empresa: rndEmpresa.get(), variante: 'simple', size: 10, order: 'FEEMDP' },
-            function(res){$scope.pasoPago = res.data; $scope.pasoPago.forEach(function(e){e.$estado = {}})}
-        );
+        $scope.pasoPago = {};
+        $scope.traePago = function (query) {
+            return ws(pagos.get, {
+                fields: $scope.metaPago.map(m => m.field),
+                koen: $scope.pasoEntidad.map(e => e.KOEN),
+                empresa: rndEmpresa.get(),
+                variante: 'simple',
+                size: 10,
+                order: 'FEEMDP'
+            }, $scope.pasoPago);
+        };
 
 
         /** Trae DEUDA */
         $scope.metaDeuda = [
             { field: "IDMAEEDO", name: "IDMAEEDO", visible: false, pk: true },
-            { field: "EMPRESA", name: "Emp.", description:"Empresa", visible: true },
-            { field: "TIDO", name: "DP", description:"Tipo documento", visible: true },
+            { field: "EMPRESA", name: "Emp.", description: "Empresa", visible: true },
+            { field: "TIDO", name: "DP", description: "Tipo documento", visible: true },
             { field: "NUDO", name: "Número", visible: true },
             { field: "SUENDO", name: "Suc.", visible: false },
             { field: "TIMODO", name: "Timodo", visible: false },
             { field: "TAMODO", name: "Tamodo", visible: false },
             { field: "ESPGDO", name: "Estado doc.", visible: true, datatype: 'rtabla', tabla: 'EstadoPago', options: { returnSrv: "id", returnClient: "name" } },
             { field: "FEULVEDO", name: "Fecha venc.", visible: true, datatype: 'date' },
-            { field: "MODO", name: "M", description:"Moneda", visible: true },
+            { field: "MODO", name: "M", description: "Moneda", visible: true },
             { field: "VABRDO", name: "Valor doc.", visible: true, datatype: 'number' },
             { field: "VAABDO", name: "Saldo ant.", visible: true, datatype: 'number' },
             { field: "VAIVARET", name: "Valor IVA ret.", visible: false, datatype: 'number' },
@@ -74,12 +85,16 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "BLOQUEAPAG", name: "Bloquea pago", visible: false }
         ]
         $scope.apiDeuda = {}
-        $scope.pasoDeuda = [];
-        $scope.traeDeuda = (query) => documentos.traeDeuda.get(
-            { fields: $scope.metaDeuda.map(m => m.field), koen: $scope.pasoEntidad.map(e => e.KOEN), empresa: rndEmpresa.get(), size: 10, order: 'FEULVEDO' },
-            (res)=>$scope.pasoDeuda = res.data
-        );
-
+        $scope.pasoDeuda = {};
+        $scope.traeDeuda = function (query) {
+            return documentos.traeDeuda.get({
+                fields: $scope.metaDeuda.map(m => m.field),
+                koen: $scope.pasoEntidad.map(e => e.KOEN),
+                empresa: rndEmpresa.get(),
+                size: 10,
+                order: 'FEULVEDO'
+            }, $scope.pasoDeuda);
+        }
 
         /* Constantes */
         $scope.rtablas = {
@@ -90,16 +105,13 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
         /* Cruce pagos */
 
 
+
         /** Lógica */
         // Si cambia entidad volver a cargar deuda y pagos
-        $scope.$watch('pasoEntidad', function(n,o){ 
-            $scope.apiPago.reload ? $scope.apiPago.reload():'';
-            $scope.apiDeuda.reload ? $scope.apiDeuda.reload():'';
+        $scope.$watch('pasoEntidad', function (n, o) {
+            $scope.apiPago.reload ? $scope.apiPago.reload() : '';
+            $scope.apiDeuda.reload ? $scope.apiDeuda.reload() : '';
         }, true);
-
-
-
-
 
 
     }

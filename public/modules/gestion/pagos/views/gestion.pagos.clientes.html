@@ -3,7 +3,7 @@
 
   <!-- Título -->
   <div rnd-tile-header>
-    <h1 class="custom-font">
+    <h1 class="custom-font text-default dker">
       <strong>Pago </strong> a clientes</h1>
   </div>
   <!-- /Título -->
@@ -19,7 +19,6 @@
                      source="traeEntidad"
                      rtablas="rtablas">
       </rnd-searchbox>
-      <hr>
       <!-- /Busca Entidad -->
 
       <!-- Entidad -->
@@ -28,33 +27,30 @@
                    source="pasoEntidad"
                    rtablas="rtablas">
       </rnd-profile>
-      <hr>
       <!-- Entidad -->
 
       <!-- Deuda -->
       <rnd-datatable ng-if="pasoEntidad.length"
-                     options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
                      meta="metaDeuda"
+                     options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
                      source="traeDeuda"
                      rtablas="rtablas"
                      instance="apiDeuda">
       </rnd-datatable>
-      <hr>
-      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda">{{item}}</p></pre>-->
+      <br>
+      <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda.data">{{item}}</p></pre>
       <!-- /Deuda -->
 
       <!-- Pagos -->
       <rnd-datatable ng-if="pasoEntidad.length"
-                     options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos registrados', buttons: ['create']}"
-    
-                     dataset="pasoPago"
+                     options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos registrados'}"
                      meta="metaPago"
                      source="traePago"
                      rtablas="rtablas"
                      instance="apiPago">
       </rnd-datatable>
-      <hr>
-      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago">{{item}}</p></pre>-->
+      <br>
+      <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago.data">{{item}}</p></pre>
       <!-- /Pagos -->
     </div>
     <div class="col-md-4">

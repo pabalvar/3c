@@ -23,7 +23,17 @@ angular.module('gestion').config(['$stateProvider',
                     icon: 'fa fa-money',
                     menuLevel:1,
                     menuPrio: 20
-                }
+                }, resolve: {
+                    plugins: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'scripts/vendor/datatables/Responsive/dataTables.responsive.css',
+                            'scripts/vendor/datatables/Responsive/dataTables.responsive.js',
+                            'scripts/vendor/datatables/datatables.bootstrap.min.css',
+                            'scripts/vendor/datatables/ColumnFilter/jquery.dataTables.columnFilter.js',
+                            'scripts/vendor/datatables/Select/js/dataTables.select.min.js'
+                        ]);
+                    }]
+                },
             })
     }
 ]);
