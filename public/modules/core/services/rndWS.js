@@ -77,12 +77,12 @@ angular.module('core')
     /* Version portable del semaforo. Debe existir objeto store */
     .service('ws', function () {
         return function (fn, params, store, thenFn, errorFn) {
-
-            // Salir si está ocupado el sevicio salir
+            store = store || {};
+            /* PAD: se comenta porque funciona con promesas
             if (store.busy) {
                 console.warn("service is busy. Request ignored");
                 return;
-            }
+            }*/
 
             // semáforos: reiniciar error, y dejar busy
             if (store) {
@@ -92,18 +92,18 @@ angular.module('core')
             }
 
             // Ejecutar petición
-            fn(params,
+            return fn(params,
 
                 // Callback (si éxito)
                 function (res, headers) {
                     // Referenciar respuesta en store
-                    store = res;
+                    angular.extend(store, res);
 
                     // semáforos: borrar busy y dejar ready en verdadero
                     store.busy = false;
                     store.$ready = (new Date()).valueOf();
                     store.$readylatch = store.$ready;
-                    
+
                     // Llamar función calback de usuario
                     if (thenFn) {
                         if (typeof (thenFn) == 'function')
