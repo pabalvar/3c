@@ -5,7 +5,7 @@ angular.module('core')
     * @restrict 'E'
     * @scope
     * @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
-    * @param {Object} meta Objeto de metadatos de datos de source 
+    * @param {Array} meta Objeto de metadatos de datos de source 
     * @param {Array} dataset (retorno) Datos seleccionados 
     * @param {Object} rtablas Objeto rtabla para enmascarar datos
     * @param {Object} options Objeto de opciones. (recomendado poblar en html)

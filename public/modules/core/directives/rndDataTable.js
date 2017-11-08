@@ -287,11 +287,11 @@ angular.module('core')
                 scope._res = params.ws.res
                 scope[row.$estado.$id] = row;
                 var ret = `<rnd-input
-                 data="_res"
+                 source="_res"
                  line="${row.$estado.$id}"
                  key="'${datatype.field}'"
                  index-by="UIDXCONTRAT"
-                 columns="meta"
+                 meta="meta"
                  rtablas="ws.getRtablas"
                  ></rnd-input>`
                 //var ret =  $filter('monitor')(data, datatype, rtablas);

@@ -1,4 +1,8 @@
 const _SEPARATOR_ = '➙'; // ojo, se usa en rndInput.html tb. 
+function isTypeNumeric(input) {
+	return ((input||'').match(/currency|date|number/)) ? true : false;
+}
+
 
 angular.module('core')
 	/** inserta html desde controlador */
@@ -22,15 +26,17 @@ angular.module('core')
 	.filter('alignment', function ($filter) {
 		return function (input) {
 			var ret = 'left';
-
-			if (typeof (input) != 'undefined') {
-				if (input.match(/currency|date|number/)) {
-					ret = 'right';
-				}
-				return ret;
-			} else if (typeof (input) == 'object') {
-
+			switch (typeof (input)) {
+				case 'string':
+					if (isTypeNumeric(input)) ret = 'right';
+					break;
+				case 'object':
+					if (isTypeNumeric(input.datatype)) ret = 'right';
+					break;
+				default:
+					break;
 			}
+			return ret;
 		}
 
 	})
@@ -167,7 +173,7 @@ angular.module('core')
 				} else if (type.variant == 'd') {
 					value = $moment(value, format).utc().format('YYYY-MM-DD');
 				}
-			} else if (type.datatype.match(/currency|date|number/)) {
+			} else if (isTypeNumeric(type.datatype)) {
 				// Si viene opción inicializar, inicializar como número
 				if (initialize) { value = 0 }
 			} else {
@@ -236,9 +242,9 @@ angular.module('core')
 				}
 			}
 			// string
-			else if (type.datatype == 'string'){
+			else if (type.datatype == 'string') {
 				//si viene variante usar directamente
-				if (type.variant=='capitalize') ret = $filter('capitalize')(input);
+				if (type.variant == 'capitalize') ret = $filter('capitalize')(input);
 			}
 
 			return ret;

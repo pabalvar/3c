@@ -28,6 +28,7 @@ angular.module("core")
             createLine: createLine,
             initLine: initLine,
             initDataset: initDataset,
+            isLineHidden: isLineHidden,
             onChange: onChange,
 
             validateCell: validateCell,
@@ -37,6 +38,11 @@ angular.module("core")
 
 
         };
+
+        function isLineHidden(linea) {
+            var $estado = linea.$estado || {};
+            return $estado.hidden ? true : false;
+        }
 
         function initDataset(res) {
             res.data.forEach(function (l) {
@@ -186,7 +192,7 @@ angular.module("core")
         }
 
         function validateCell(Data, i, meta) {
-            console.log("$dialog.validateCell");
+            //console.log("rndDialog: validateCell");
             // descartar validación si la columna se llama $estado (o cualquier cosa con $)
             if (meta.field[0] == '$') return true;
 
@@ -227,7 +233,7 @@ angular.module("core")
          hotChange/rndChange -> meta.onValueChange -> cell.onValueChange
          hotValidation/rndValidation -> meta.validations -> cell.validations */
         function onChange(Data, i, meta, oldval, hot) { //(Data, i, meta, hot)
-            console.log("$dialog.onChange");
+            //console.log("rndDialog: onChange");
 
             // Hacer el cambio dado por la directiva
             if (hot) {

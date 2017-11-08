@@ -10,17 +10,19 @@
     </span>
 </div>
 
-<md-progress-linear ng-if="!tabla.instance || busy"
-                    md-mode="indeterminate"
-                    ng-disabled="true">
-</md-progress-linear>
+<div ng-show="(alwaysShow || tabla.instance.DataTable.data().length)">
 
-<div ng-show="(alwaysShow || tabla.instance.DataTable.data().length) && !busy">
     <div ng-if="options.title">
         <p class="text-uppercase text-strong mb-0 custom-font">
             <span>{{options.title}} </span>
         </p>
     </div>
+
+    <md-progress-linear ng-if="!tabla.instance || busy"
+                        md-mode="indeterminate"
+                        ng-disabled="true">
+    </md-progress-linear>
+
     <div class="rnd-b">
         <table class="table table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right"
                datatable=""
@@ -30,6 +32,7 @@
                dt-instance="tabla.instance">
         </table>
     </div>
+    
 </div>
 
 <!-- texto vacío -->

@@ -1,4 +1,38 @@
 'use strict';
+/**
+* @ngdoc directive 
+* @name core.directive:rndInput 
+* @restrict 'E'
+* @scope
+* @param {Object} source Objeto que contiene los datos
+* @param {Array} source.data Colección de objetos de datos
+* @param {Object} line Objecto que contiene el dato
+* @param {String} key Nombre del campo en <code>line</code> del dato a editar
+* @param {Meta[]} meta Array de metadatos de datos de <code>source.data</source>
+* @param {String} meta.field Nombre del campo 
+* @param {String} meta.name Nombre visible campo 
+* @param {String?} meta.description Descripción campo (para tooltip)
+* @param {String?} meta.datatype Tipo de dato (number|date|rtabla|typeahead)
+* @param {function?} meta.onValueChange Función a llamar cuando se hace un cambio en el campo. Se llama con los parámetros <code>(source, i, meta, oldval)</code>
+* @param {Object?} rtablas Objeto rtabla para enmascarar datos
+* @param {Object} dialogXX Objeto con funciones para regular lógica
+* @param {function} dialogXX.selectRowXX función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
+* @element ANY
+* @description
+* Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.
+*
+* <img style="margin-right:10px;" src="img/rndInput.date.png" alt="rndInput.date"> <img src="img/rndInput.rtabla.png" alt="rndInput.rtabla">
+* @example
+* <pre>   
+<rnd-input 
+  source="source"
+  line="fila"
+  key="m.field"
+  meta="meta"
+  rtablas="rtablas">
+</rnd-input>
+</pre>
+**/
 angular.module("core")
   .directive("rndInput", function () {
     return {
@@ -6,11 +40,14 @@ angular.module("core")
       , templateUrl: 'modules/core/directives/rndInput.html'
       , transclude: true
       , scope: {
-        columns: '=',
-        data: '=',
+        columns: '=', // deprecado, usa meta
+        meta: '=',
+        data: '=', // deprecado usa source
+        source: '=',
         line: '=',
         key: '=',
         rtablas: '=',
+        dialog:'=?',
         indexBy: '@'
       }, controller: ['$timeout', '$scope', 'getDatatype', '$moment', 'decodeRtabla', 'rndDialog',
         /** Al hacer un cambio se ejecutan las siguientes funciones: 
@@ -18,19 +55,26 @@ angular.module("core")
          * scope.column.onValueChange
           */
         function ($timeout, $scope, getDatatype, $moment, decodeRtabla, rndDialog) {
-          console.log("rndInput: me crearon");
+
+          // Revisar deprecado
+          console.log("rndInput: creación objeto");
+          if ($scope.columns) console.warn("rndInput: columns va a ser deprecado. Use meta");
+          var meta = $scope.columns || $scope.meta; // backwards compatibile columns ahora se llama meta
+
+          if ($scope.data) console.warn("rndInput: data va a ser deprecado. Use source");
+          var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
 
           // Scope variables
           $scope.line.$estado = $scope.line.$estado || {}; // init $estado (lineMeta)
           $scope.line.$estado[$scope.key] = $scope.line.$estado[$scope.key] || {}; // init cellMeta
           $scope.lineMeta = $scope.line.$estado; // alias line meta
           $scope.cellMeta = $scope.line.$estado[$scope.key]; // alias cellMeta
-          $scope.column = $scope.columns.find(o => o.field == $scope.key);//  modelo de la columna
+          $scope.column = meta.find(o => o.field == $scope.key);//  modelo de la columna
           $scope.type = getDatatype($scope.column);
           $scope.buffer = {};
 
           // variables
-          var hooks = []; // Array de funciones 
+          var hooks = []; // Array de funciones a aplicar al haber cambios
           const DateInfinite = new Date('3001-01-01');
           const DateInfiniteThreshold = new Date('3000-01-01');
           var indexBy = $scope.indexBy; // alias
@@ -42,14 +86,13 @@ angular.module("core")
           var lineMeta = $scope.lineMeta
           var rtablas = $scope.rtablas;
           var buffer = $scope.buffer; // alias
-          var Data = $scope.data;
-          var $dialog = rndDialog;
 
           // Start-up
           init(type);
 
           // Crear watcher
           $scope.$watch('buffer.tmpInput', updateBuffer, true);
+
 
           // Implementation details
 
@@ -69,8 +112,9 @@ angular.module("core")
           /** Función que llama al actualizar valores */
           function updateBuffer(newVal, oldVal) {
 
+            // Descartar si no hay cambio (o se está inicializando watcher)
             if ((newVal == oldVal) || typeof (newVal) == 'undefined') return;
-            //console.log("cambio", oldVal, '>', newVal);
+
             // Aplica pre Hooks internos
             if (hooks.length) {
               hooks.forEach(function (fn) {
@@ -81,18 +125,34 @@ angular.module("core")
               line[key] = newVal;
             }
 
-            // dejar que servicio $dialog maneje el resto del cambio
-            // obtener row number buscando por index
-            var row = Data.data.findIndex(d => d[indexBy] == line[indexBy]);
-            $dialog.onChange(Data, row, column, oldVal);
-            $dialog.setCellDirty(Data, row, column);
-            $dialog.setLineModified(Data.data[row]);
-            $dialog.validateCell(Data, row, column);
+            // obtener row number buscando por index,  si no, buscar igual
+            var rowIx = -1;
+            if (indexBy) {
+              // si viene indexBy (es decir, un ID de linea basado en dato)
+              rowIx = Data.data.findIndex(d => d[indexBy] == line[indexBy]);
+            } else {
+              // Si no viene, intentar comparar objetos que sean iguales
+              rowIx = Data.data.findIndex(l => l === $scope.line);
+            }
+
+            // dejar que servicio rndDialog maneje el resto del cambio
+            if ($scope.dialog.onChange) {
+              //console.log("rndInput: onChange")
+              $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column );
+            }
+
+
+            // Ejecutar cambios incluidos en metadata.onValueChange
+            rndDialog.onChange(Data, rowIx, column, oldVal);
+
+            rndDialog.setCellDirty(Data, rowIx, column);
+            rndDialog.setLineModified(Data.data[rowIx]);
+            rndDialog.validateCell(Data, rowIx, column);
           }
 
           /** Función que hace cargo de cuando el input es de tipo rtabla. */
           function initRtabla() {
-            $scope._rtablas = (typeof(rtablas)=='function')?rtablas():rtablas; // instanciar si es función
+            $scope._rtablas = (typeof (rtablas) == 'function') ? rtablas() : rtablas; // instanciar si es función
             buffer.tmpInput = decodeRtabla(line[key], $scope._rtablas[column.tabla], column.options).data
             // Anexar hook para cambiar la tabla
             hooks.push(updateInputRtabla);

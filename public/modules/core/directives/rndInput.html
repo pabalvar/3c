@@ -1,7 +1,8 @@
 <!-- scope: type, line, column, rtablas, dialog, key, indexBy -->
 <!-- small><pre><small>{{line}} </small></pre></small> -->
 
-<div ng-if="true || line.$estado.$isOpen">
+<!-- modo EDIT -->
+<div ng-if="line.$estado.$isOpen && !column.readOnly">
     <!-- debug 
     <pre>pre: {{line[key]}}</pre>-->
 
@@ -12,22 +13,26 @@
         <input ng-model="buffer.tmpInput"
                type="text"
                style="width: 100%;"
-               class="{{line.$estado.$isOpen?'':'b-0 bg-white'}} rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-    
                placeholder="búsqueda por RUT o nombre"
                uib-typeahead="x.RUT as x.searchString for x in (column.source($viewValue))"
                typeahead-loading="loadingLocations"
                typeahead-no-results="noResults"
                ng-required="column.required"
                ng-disabled="(line.$estado.$action!='N' && column.readOnly) || !line.$estado.$isOpen"
-               typeahead-editable="false">
+               typeahead-editable="false"
+               class="{{line.$estado.$isOpen?'':'b-0 bg-white'}} rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}">
+
         <md-progress-linear ng-show="loadingLocations"
                             md-mode="indeterminate"
-                            ng-disabled="true"></md-progress-linear>
+                            ng-disabled="true">
+        </md-progress-linear>
+
         <div ng-show="noResults">
             <i class="glyphicon glyphicon-remove"></i>No se encontraron resultados
         </div>
+
     </div>
+    <!-- /autocomplete -->
 
     <!-- rtabla -->
     <div ng-if="type.datatype=='rtabla'"
@@ -35,14 +40,14 @@
          uib-dropdown>
         <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
         <select ng-model="buffer.tmpInput"
-                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in _rtablas[column.tabla].data track by item[column.options.returnClient]"
-    
                 style="width: 100%;"
                 class="rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                 ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
-                ng-required="column.required">
+                ng-required="column.required"
+                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in _rtablas[column.tabla].data track by item[column.options.returnClient]">
         </select>
     </div>
+    <!-- /rtabla -->
 
     <!-- date -->
     <div ng-if="type.datatype=='date'"
@@ -75,6 +80,7 @@
             </p>
         </div>
     </div>
+    <!-- /date -->
 
     <!-- numérico -->
     <div ng-if="type.datatype=='number'||type.datatype=='currency'"
@@ -86,6 +92,7 @@
                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                ng-required="column.required">
     </div>
+    <!-- /numérico -->
 
     <!-- texto -->
     <div ng-if="type.datatype=='string'"
@@ -93,19 +100,21 @@
         <input ng-model="buffer.tmpInput"
                type="text"
                style="width: 95%;"
-               class="rndinput form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-    
                ng-readonly="(column.readOnly && (column.pk && lineMeta.$action!='N' ))  || !line.$estado.$isOpen"
-               ng-required="column.required">
+               ng-required="column.required"
+               class="rndinput form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}">
     </div>
+    <!-- /texto -->
 
 </div>
+<!-- /modo EDIT -->
 
-<!-- mostrar input si no está en modo edit -->
-<span ng-show="false && !line.$estado.$isOpen && type.datatype!='dialog'"
+<!-- modo READ -->
+<span ng-show="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='dialog'"
       class="pl-5">
     {{line[key]| monitor:column:rtablas}}
 </span>
+<!-- /modo READ -->
 
 <!-- Estado -->
 <div ng-if="type.datatype=='dialog'"
