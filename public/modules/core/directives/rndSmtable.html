@@ -1,0 +1,41 @@
+<div ng-if="options.title">
+    <p class="text-uppercase text-strong mb-0 custom-font">
+        <span>{{options.title}} </span>
+    </p>
+</div>
+<md-progress-linear ng-if="source.busy"
+                    md-mode="indeterminate"
+                    ng-disabled="true">
+</md-progress-linear>
+<div class="rnd-b">
+    <table st-safe-src="source.data"
+           st-table="displayedCollection"
+           class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow">
+        <thead>
+            <tr>
+                <th ng-repeat="m in meta | filter: {visible:true}"
+                    st-sort="{{m.field}}">
+                    {{m.name}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr st-select-row="dialog.selectRow?fila:''"
+                ng-click="selectRow(fila)"
+                ng-repeat="fila in displayedCollection track by $index ">
+                <td ng-repeat="m in meta | filter: {visible:true}"
+                    class="text-{{m | alignment}}">
+                    <rnd-input ng-if="isLineVisible(fila)"
+                               source="source"
+                               line="fila"
+                               key="m.field"
+                               meta="meta"
+                               rtablas="rtablas"
+                               dialog="dialog">
+                    </rnd-input>
+                    <!--{{fila[m.field] | monitor:m:rtablas }}-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
