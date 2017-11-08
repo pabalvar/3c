@@ -17,7 +17,8 @@ exports.setDebugLevel = setDebugLevel;
 function saveConnection(app) {
     return function (req, res) {
         var connectionFile = path.resolve(app.locals.config.sql.connectionFile);
-        fse.writeJsonSync(connectionFile, app.locals.config.sql.connection);
+        //fse.writeJsonSync(connectionFile, app.locals.config.sql.connection);
+        fse.writeJsonSync(connectionFile, req.newConfig);
         res.status(200).send({
             message: 'Se guardo la conexion con exito',
             config: req.newConfig
