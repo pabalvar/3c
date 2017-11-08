@@ -19,44 +19,74 @@
                      source="traeEntidad"
                      rtablas="rtablas">
       </rnd-searchbox>
+      <br>
       <!-- /Busca Entidad -->
 
       <!-- Entidad -->
-      <rnd-profile meta="metaEntidad"
+      <rnd-smtable meta="metaEntidad"
                    options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente</p>', title:'Datos entidad'}"
-                   source="pasoEntidad"
+                   source="{data:pasoEntidad}"
                    rtablas="rtablas">
-      </rnd-profile>
-      <!-- Entidad -->
+      </rnd-smtable>
+      <br>
+      <!-- /Entidad -->
+
+      <!-- /Pagos -->
+      <rnd-smtable meta="metaPago"
+                   options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos disponibles'}"
+                   source="pasoPago"
+                   rtablas="rtablas"
+                   dialog="{selectRow:selectRow}">
+      </rnd-smtable>
+      <br>
+      <!-- /Pagos -->
 
       <!-- Deuda -->
-      <rnd-datatable ng-if="pasoEntidad.length"
-                     meta="metaDeuda"
-                     options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
-                     source="traeDeuda"
-                     rtablas="rtablas"
-                     instance="apiDeuda">
-      </rnd-datatable>
+      <rnd-smtable meta="metaDeuda"
+                   options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
+                   source="pasoDeuda"
+                   dialog="{selectRow:selectRow}"
+                   rtablas="rtablas">
+      </rnd-smtable>
       <br>
-      <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda.data">{{item}}</p></pre>
+      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda.data">{{item}}</p></pre>-->
       <!-- /Deuda -->
 
-      <!-- Pagos -->
-      <rnd-datatable ng-if="pasoEntidad.length"
-                     options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos registrados'}"
-                     meta="metaPago"
-                     source="traePago"
-                     rtablas="rtablas"
-                     instance="apiPago">
-      </rnd-datatable>
-      <br>
-      <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoPago.data">{{item}}</p></pre>
-      <!-- /Pagos -->
     </div>
-    <div class="col-md-4">
-      <!-- Cruce -->
 
-      <!-- /Creuce -->
+    <div class="col-md-3 col-lg-4 b-r">
+      <rnd-smtable meta="metaCruce"
+                   options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Asignación'}"
+                   source="pasoCruce"
+                   dialog="{onChange:onChange}">
+      </rnd-smtable>
+       <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>
+
+      <!-- Cruce 
+      <div class="rnd-b">
+        <table st-safe-src="pasoDeuda.data"
+               st-table="displayedCollection"
+               class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow">
+          <thead>
+            <tr>
+              <th ng-repeat="m in metaDeuda | filter: {visible:true}"
+                  st-sort="{{m.field}}">
+                  {{m.name}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr st-select-row="fila"
+                ng-repeat="fila in displayedCollection track by $index">
+              <td ng-repeat="m in metaDeuda  | filter: {visible:true} ">
+                {{fila[m.field] | monitor:m:rtablas }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- /Cruce -->
+
     </div>
 
   </div>
