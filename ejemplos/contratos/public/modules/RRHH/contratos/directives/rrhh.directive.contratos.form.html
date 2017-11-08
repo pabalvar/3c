@@ -79,11 +79,11 @@
                     <div class="form-group mb-0">
                         <label class="col-md-4 text-right-md text-default lt">RUT: </label>
                         <div class="col-md-8">
-                            <rnd-input data="contratos"
+                            <rnd-input source="contratos"
                                        line="contrato"
                                        key="'RUT'"
                                        index-by="UIDXCONTRAT"
-                                       columns="model"
+                                       meta="model"
                                        rtablas="contratos.rtablas"></rnd-input>
                         </div>
                     </div>
@@ -91,11 +91,11 @@
                          class="form-group mb-0">
                         <label class="col-md-4 text-right-md text-default lt">{{m.name}}:</label>
                         <div class="col-md-8">
-                            <rnd-input data="contratos"
+                            <rnd-input source="contratos"
                                        line="contrato"
                                        key="m.field"
                                        index-by="UIDXCONTRAT"
-                                       columns="model"
+                                       meta="model"
                                        rtablas="contratos.rtablas"></rnd-input>
                         </div>
                     </div>
