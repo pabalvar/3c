@@ -57,6 +57,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-apidoc');
     // Default task(s).
     grunt.registerTask('default', ['ngdocs']);
-    grunt.registerTask('docu', ['ngdocs', 'apidoc', 'connect']);
+    grunt.registerTask('docu', ['ngdocs', 'apidoc']);
 
 };
