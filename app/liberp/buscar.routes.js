@@ -20,7 +20,7 @@ module.exports = function (app) {
      * @apiParam {String} search <i>search</i>: Condición por defecto, texto contenido en la concatenación de todos los campos <code>"WHERE CONCAT(<i>f</i>) like '%search%'</code>
      *
      * @apiExample Ejemplo de uso (copy paste en browser):
-     * <a href="http://localhost:3000/buscar?t=MAEEN&search=PRODUCTOS&f=NOKOEN&f=KOEN&o=KOEN"></a>
+     * http://localhost:3000/buscar?t=MAEEN&search=PRODUCTOS&f=NOKOEN&f=KOEN&o=KOEN
      *
      * @apiSuccess {String}   object  ="list" indica que el objeto es una lista
      * @apiSuccess {Array}    data    Array en que cada línea de resultado es un objecto
