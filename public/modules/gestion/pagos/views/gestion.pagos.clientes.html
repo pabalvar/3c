@@ -36,7 +36,9 @@
                    options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Pagos disponibles'}"
                    source="pasoPago"
                    rtablas="rtablas"
-                   dialog="{selectRow:selectRow}">
+                   dialog="{selectRow:selectRow}"
+                   api="apiPago"
+                   >
       </rnd-smtable>
       <br>
       <!-- /Pagos -->
@@ -46,47 +48,23 @@
                    options="{showEmpty:'<h2>¡Todo pagado!</h2><p>no tiene deuda</p>', title:'Documentos pendientes'}"
                    source="pasoDeuda"
                    dialog="{selectRow:selectRow}"
-                   rtablas="rtablas">
+                   rtablas="rtablas"
+                   api="apiDeuda">
       </rnd-smtable>
       <br>
-      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoDeuda.data">{{item}}</p></pre>-->
       <!-- /Deuda -->
 
     </div>
 
     <div class="col-md-3 col-lg-4 b-r">
+      <!-- Cruce -->
       <rnd-smtable meta="metaCruce"
                    options="{showEmpty:'<h2>¡No hay pagos!</h2><p> ingrese medios de pago</p>', title:'Asignación'}"
                    source="pasoCruce"
                    dialog="{onChange:onChange}">
       </rnd-smtable>
-       <pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>
-
-      <!-- Cruce 
-      <div class="rnd-b">
-        <table st-safe-src="pasoDeuda.data"
-               st-table="displayedCollection"
-               class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow">
-          <thead>
-            <tr>
-              <th ng-repeat="m in metaDeuda | filter: {visible:true}"
-                  st-sort="{{m.field}}">
-                  {{m.name}}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr st-select-row="fila"
-                ng-repeat="fila in displayedCollection track by $index">
-              <td ng-repeat="m in metaDeuda  | filter: {visible:true} ">
-                {{fila[m.field] | monitor:m:rtablas }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>-->
       <!-- /Cruce -->
-
     </div>
 
   </div>

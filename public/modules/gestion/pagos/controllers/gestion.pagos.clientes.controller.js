@@ -31,27 +31,29 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "IDMAEDPCE", name: "IDMAEDPCE", visible: false, pk: true },
             { field: "EMPRESA", readOnly: true, name: "Empresa", visible: false },
             { field: "TIDP", name: "TD", description: "Tipo documento", visible: true },
-            { field: "NUDP", name: "Número", description: "Número documento de pago", visible: true },
+            { field: "NUDP", name: "Número", description: "Número documento de pago", visible: false },
             { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", visible: false },
             { field: "EMDP", name: "Emisor", description: "Emisor documento de pago (banco)", visible: false },
             { field: "SUEMDP", name: "Sucursal", description: "Plaza", visible: false },
             { field: "CUDP", name: "Cuenta", description: "Cuenta de banco", visible: false },
-            { field: "NUCUDP", name: "Número documento", description: "Número del cheque", visible: false },
-            { field: "FEEMDP", name: "Emisión", visible: true, datatype: 'date' },
-            { field: "FEVEDP", name: "Vencimiento", visible: true, datatype: 'date' },
+            { field: "NUCUDP", name: "Número", description: "Número de cheque o transferencia", visible: true },
+            { field: "FEEMDP", name: "F. Emisión", visible: true, datatype: 'date' },
+            { field: "FEVEDP", name: "F. Vencim.", visible: true, datatype: 'date' },
             { field: "MODP", name: "M", description: "Moneda", visible: true },
             { field: "TIMODP", name: "Tipo moneda", description: "Nacional (N) o extranjera (E)", visible: false },
             { field: "TAMODP", name: "Tasa de cambio", visible: false },
             { field: "VADP", name: "Monto", visible: true, datatype: 'number' },
             { field: "VAABDP", name: "Abono", description: "Valor abonado al documento de pago", visible: false, datatype: 'number' },
             { field: "VAASDP", name: "Asignado", description: "Valor asignado a otros documentos", visible: true, datatype: 'number' },
+            { field: "SALDO", name: "Disponible", description: "Disponible sin asignar", visible: true, datatype: 'number' },
             { field: "ASIG", name: "Asignado nuevo", description: "Valor asignado nuevo", visible: true, datatype: 'number' },
-            { field: "VAVUDP", name: "Vuelto", description: "Vuelto", visible: true, datatype: 'number' },
+            { field: "VAVUDP", name: "Vuelto", description: "Vuelto", visible: false, datatype: 'number' },
             { field: "ESPGDP", name: "Estado", description: "Estado de pago del documento de pago (Pendiente,Cancelado,Nulo)", visible: false },
-            { field: "REFANTI", name: "Referencia", visible: true },
+            { field: "REFANTI", name: "Referencia", visible: false },
             { field: "ARCHIRSD", name: "ARCHIRSD", visible: false },
             { field: "IDRSD", name: "IDRSD", visible: false }
         ]
+        $scope.apiPago = {}
         $scope.pasoPago = { data: [] };
         $scope.traePago = function (query) {
             return ws(pagos.get, {
@@ -61,8 +63,9 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
                 variante: 'simple',
                 size: 10,
                 order: 'FEEMDP'
-            }, $scope.pasoPago, creaCruce);
+            }, $scope.pasoPago, [onReload, clickRow($scope.apiPago, 0)]);
         };
+
 
 
         /** Trae DEUDA */
@@ -85,6 +88,7 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "BLOQUEAPAG", name: "Bloquea pago", visible: false },
             { field: "ASIG", name: "Pagandose", visible: true, datatype: 'number' }
         ]
+        $scope.apiDeuda = {}
         $scope.pasoDeuda = { data: [] };
         $scope.traeDeuda = function (query) {
             return ws(documentos.traeDeuda.get, {
@@ -93,7 +97,7 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
                 empresa: rndEmpresa.get(),
                 size: 10,
                 order: 'FEULVEDO'
-            }, $scope.pasoDeuda, creaCruce);
+            }, $scope.pasoDeuda, [onReload, clickRow($scope.apiDeuda, 0)]);
         }
 
 
@@ -105,7 +109,7 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             { field: "IDMAEEDO", name: "IDMAEEDO", visible: false, readOnly: true, pk: true },
             { field: "TIDO", name: "DP", description: "Tipo documento", readOnly: true, visible: true },
             { field: "NUDO", name: "Número", readOnly: true, visible: true },
-            { field: "ASIGNADO", name: "Asignado al documento", visible: true, datatype: 'number' },
+            { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number' },
         ]
         $scope.pasoCruce = { data: [] }
 
@@ -116,11 +120,26 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             EstadoPago: { data: [{ id: "P", name: "Pendiente" }] }
         }
 
-        /** Lógica */
+        /* Lógica */
+
+        /** Función a llamar cuando se traen nuevos datos del servidor. Tareas:
+         * crear pasoCruce, calculaSaldos, selecciona primera fila
+         */
+        function onReload() {
+            creaPasoCruce();
+            calculaSaldos();
+        }
+        
+        /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
+        function clickRow(api, row) {
+            return function (res) {
+                if (res.data[0]) api.clickRow(row);
+            }
+        }
 
         /** Esta función guarda en pasoCruce una matriz que es el cruce de 
          * pasoPagos y pasoDeuda y guarda el dato de abono */
-        function creaCruce(res) {
+        function creaPasoCruce(res) {
 
             // Inicializar variables
             var cruce = [];
@@ -139,6 +158,7 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
 
                     // agregar propiedades de diálogo, 
                     obj.$estado = { $isOpen: true }
+                    obj.ASIGNADO = 0; // inicializar en 0 la asignación
 
                     // insertar al array
                     cruce.push(obj);
@@ -150,31 +170,32 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
         }
 
         /** Función que actualiza los saldos en pasoDeuda, pasoPago y pasoCruce */
-        function actualizaSaldo(newVal, oldVal, linea, Data, rowIx, key, column) {
-            actualizaDeuda();
-            actualizaPagos();
+        function calculaSaldos(newVal, oldVal, linea, Data, rowIx, key, column) {
+            calculaDeuda();
+            calculaPagos();
         }
-        $scope.onChange = actualizaSaldo;
+        $scope.onChange = calculaSaldos;
 
         /** Calcular la suma de asignaciones para cada pago */
-        function actualizaPagos(){
+        function calculaPagos() {
             $scope.pasoPago.data.forEach(function (d) {
                 d.ASIG = $scope.pasoCruce.data
-                .filter(c=>c.$pago===d) 
-                .reduce(function (total, cruce) {
-                    return total += (cruce.ASIGNADO||0);
-                }, 0);
+                    .filter(c => c.$pago === d)
+                    .reduce(function (total, cruce) {
+                        return total += (cruce.ASIGNADO || 0);
+                    }, 0);
+                d.SALDO = d.VADP - d.VAASDP - d.ASIG;
             })
         }
 
         /** Calcular la suma de asignaciones para cada documento */
-        function actualizaDeuda(){
+        function calculaDeuda() {
             $scope.pasoDeuda.data.forEach(function (d) {
                 d.ASIG = $scope.pasoCruce.data
-                .filter(c=>c.$deuda===d)
-                .reduce(function (total, cruce) {
-                    return total += (cruce.ASIGNADO||0);
-                }, 0);
+                    .filter(c => c.$deuda === d)
+                    .reduce(function (total, cruce) {
+                        return total += (cruce.ASIGNADO || 0);
+                    }, 0);
             })
         }
 
@@ -201,18 +222,12 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
         // Conectar a la vista
         $scope.selectRow = filtraLineas;
 
-        /** Recalcula los saldos en  */
-        function recalcula() {
-
-        }
-
         // Si cambia entidad volver a cargar deuda y pagos
         $scope.$watch('pasoEntidad', function (n, o) {
             if (!n.length) return;
             $scope.traePago();
             $scope.traeDeuda();
         }, true);
-
 
     }
 ])
