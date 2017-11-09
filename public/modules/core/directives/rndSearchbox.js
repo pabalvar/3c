@@ -63,15 +63,21 @@ angular.module('core')
                 },
                 templateUrl: 'modules/core/directives/rndSearchbox.html',
                 controller: ['$scope', function ($scope) {
+                    $scope.$offline = false;
 
                     // convertir el $resource en una función que acepta "texto", usada por la directiva
                     $scope.sourceP = function (texto) {
                         // ejecutar la promesa
                         return $scope.source({ search: texto }).$promise
                             .then(function (res) {
+                                $scope.$offline = false;
                                 // incluir una referencia en cada línea a metadatos y rtablas (se necesita para renderizar opciones)
                                 res.data.forEach(function (d) { d.$meta = $scope.meta; d.$rtablas = $scope.rtablas })
                                 return res.data
+                            })
+                            .catch(function (err){
+                                $scope.$offline = true;
+                                console.log("error", err)
                             })
                     };
 

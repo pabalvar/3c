@@ -22,9 +22,18 @@
                     md-mode="indeterminate"
                     ng-disabled="true">
 </md-progress-linear>
-<div ng-show="noResults">
-    <strong class="mr-5">&empty;</strong> No se encontraron resultados
+
+<!-- Sin resultados -->
+<div ng-if="noResults && !$offline">
+   <h5 class="dimmed"> <span class="mr-5">&empty;</span> No se encontraron resultados</h5>
 </div>
+<!-- /Sin resultados -->
+
+<!-- Offline -->
+<div ng-if="$offline">
+       <h5 class="m-10 text-danger busy"> <i class="fa fa-exclamation-triangle"></i> Error de conexión</h5>
+</div>
+<!-- /Offline -->
 
 <!-- script de popoup-->
 <script type="text/ng-template"

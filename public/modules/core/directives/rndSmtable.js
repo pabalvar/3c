@@ -13,6 +13,8 @@
 * @param {string} options.showEmpty texto a mostrar si no hay datos  (acepta html)
 * @param {Object} dialog Objeto con funciones para regular lógica
 * @param {function} dialog.selectRow función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
+* @param {Object} api Objeto de salida que expone el controlador de la tabla
+* @param {function} api.clickRow función que permite simular un click sobre una línea. Paramétro: <code>rowIx</code>
 * @element ANY
 * @description
 * Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.<br>
@@ -89,54 +91,56 @@ angular.module('core')
             controller: 'rndSmtable'
         }
     })
-    .controller("rndSmtable", ['$scope', 'rndDialog', 'rndORM', '$timeout', 
-    function ($scope, rndDialog, rndORM, $timeout) {
-        // ID aleatorio al objeto <table>
-        $scope.id = rndORM.newRandomString()();
+    .controller("rndSmtable", ['$scope', 'rndDialog', 'rndORM', '$timeout',
+        function ($scope, rndDialog, rndORM, $timeout) {
 
-        // Anexar instancia
-        $scope.api = $scope.api || {};
-        $scope.api.clickRow = clickRow;
+            // Inicialización
 
-        /** Función que simula un click en una línea */
-        function clickRow(rowIx){
+            /* Asignar un id al DOM en la tabla*/
+            $scope.id = rndORM.newRandomString()();
 
-            // definir el selector como ".id tr:nth-child(rowIx)"
-            var selector = `.${$scope.id} tbody tr:nth-child(${rowIx+1})`;
-
-            // Obtener objeto del DOM
-            
-
-            // aplicar trigger (en diferido)
-            $timeout(function(){
-                var el = angular.element(selector);
-                console.log("el: ", el);
-                el.trigger('click')
-            }, 0);
-        }
-
-        /* Función utilizada para ocultar líneas por controlador */
-        $scope.isLineVisible = function (line) { return !rndDialog.isLineHidden(line) };
-
-        // Select row
-        $scope.selectRow = function (linea) {
-            //console.log("click en: ", linea)
-            if (($scope.dialog || {}).selectRow) {
-                $scope.dialog.selectRow(linea, $scope.source, $scope.meta, $scope.rtablas);
-            }
-        }
-
-        // Show empty: si es true se muestra la tabla vacía, false no, texto se agrega
-        if ($scope.options.showEmpty === true) $scope.alwaysShow = true;
-        else {
-            if (typeof ($scope.options.showEmpty) == 'string') {
-                $scope.emptyHintHtml = $scope.options.showEmpty;
+            /* Opción showEmpty. Si es trueShow empty: si es true se muestra la tabla vacía, false no, texto se agrega */
+            if ($scope.options.showEmpty === true) {
+                $scope.alwaysShow = true;
             } else {
-                $scope.emptyHintHtml = '<h2>Ingresa datos</h2><p>para seguir</p>'
+                if (typeof ($scope.options.showEmpty) == 'string') {
+                    $scope.emptyHintHtml = $scope.options.showEmpty;
+                } else {
+                    $scope.emptyHintHtml = '<h2>Ingresa datos</h2><p>para seguir</p>'
+                }
             }
-        }
+
+            // Anexar instancia
+            $scope.api = $scope.api || {};
+            $scope.api.clickRow = clickRow;
+
+            /** Función que simula un click en una línea */
+            function clickRow(rowIx) {
+
+                // definir el selector como ".id tr:nth-child(rowIx)"
+                var selector = `.${$scope.id} tbody tr:nth-child(${rowIx + 1})`;
+
+                // aplicar trigger (en diferido para asegurar esté renderizado)
+                $timeout(function () {
+                    // Obtener objeto del DOM
+                    var el = angular.element(selector);
+                    el.trigger('click')
+                });
+            }
+
+            /* Función utilizada para ocultar líneas por controlador */
+            $scope.isLineVisible = function (line) { return !rndDialog.isLineHidden(line) };
+
+            /** Función llamada al hacer click en línea. Llama a su vez a selectRow del controlador (si existe) */
+            $scope.selectRow = function (linea) {
+                if (($scope.dialog || {}).selectRow) {
+                    $scope.dialog.selectRow(linea, $scope.source, $scope.meta, $scope.rtablas);
+                }
+            }
 
 
 
 
-    }])
+
+
+        }])

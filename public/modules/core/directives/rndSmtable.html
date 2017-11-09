@@ -3,10 +3,12 @@
         <span>{{options.title}} </span>
     </p>
 </div>
+
 <md-progress-linear ng-if="source.busy"
                     md-mode="indeterminate"
                     ng-disabled="true">
 </md-progress-linear>
+
 <div class="rnd-b">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
@@ -33,9 +35,22 @@
                                rtablas="rtablas"
                                dialog="dialog">
                     </rnd-input>
-                    <!--{{fila[m.field] | monitor:m:rtablas }}-->
                 </td>
             </tr>
         </tbody>
+        <tfoot ng-if="!source.data.length && !source.$offline">
+                <tr>
+                    <td colspan="500" class="text-center">
+                        <div><h3 class="m-10 text-default lter ">No hay registros en esta tabla</h3></div>
+                    </td>
+                </tr>
+        </tfoot>
+        <tfoot ng-if="source.$offline">
+                <tr>
+                    <td colspan="500" class="text-center">
+                        <div><h3 class="m-10 text-danger busy"> <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3></div>
+                    </td>
+                </tr>
+        </tfoot>
     </table>
 </div>
