@@ -177,12 +177,16 @@ select.htInvalid{
 
 
 /* PAD: para opacar tiles busy */
-div.busy {
+.busy {
     filter: grayscale(50%);
-    opacity: 0.5;
+    opacity: 0.6;
     pointer-events: none;
 }
- 
+
+.dimmed{
+  opacity: 0.6;  
+}
+
 div.dead {
 
   border-radius: 0px;
