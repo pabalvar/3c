@@ -10,7 +10,7 @@
 <div class="rnd-b">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
-           class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow">
+           class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow {{id}}">
         <thead>
             <tr>
                 <th ng-repeat="m in meta | filter: {visible:true}"
@@ -20,13 +20,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr st-select-row="dialog.selectRow?fila:''"
+            <tr ng-if="isLineVisible(fila)"
+                st-select-row="dialog.selectRow?fila:''"
                 ng-click="selectRow(fila)"
                 ng-repeat="fila in displayedCollection track by $index ">
                 <td ng-repeat="m in meta | filter: {visible:true}"
                     class="text-{{m | alignment}}">
-                    <rnd-input ng-if="isLineVisible(fila)"
-                               source="source"
+                    <rnd-input source="source"
                                line="fila"
                                key="m.field"
                                meta="meta"

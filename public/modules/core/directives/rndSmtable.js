@@ -82,13 +82,40 @@ angular.module('core')
                 source: "=",
                 meta: "=",
                 rtablas: "=?rtablas",
-                dialog: "=?dialog"
+                dialog: "=?dialog",
+                api: "=?api"
             },
             templateUrl: 'modules/core/directives/rndSmtable.html',
             controller: 'rndSmtable'
         }
     })
-    .controller("rndSmtable", ['$scope', 'rndDialog', function ($scope, rndDialog) {
+    .controller("rndSmtable", ['$scope', 'rndDialog', 'rndORM', '$timeout', 
+    function ($scope, rndDialog, rndORM, $timeout) {
+        // ID aleatorio al objeto <table>
+        $scope.id = rndORM.newRandomString()();
+
+        // Anexar instancia
+        $scope.api = $scope.api || {};
+        $scope.api.clickRow = clickRow;
+
+        /** Función que simula un click en una línea */
+        function clickRow(rowIx){
+
+            // definir el selector como ".id tr:nth-child(rowIx)"
+            var selector = `.${$scope.id} tbody tr:nth-child(${rowIx+1})`;
+
+            // Obtener objeto del DOM
+            
+
+            // aplicar trigger (en diferido)
+            $timeout(function(){
+                var el = angular.element(selector);
+                console.log("el: ", el);
+                el.trigger('click')
+            }, 0);
+        }
+
+        /* Función utilizada para ocultar líneas por controlador */
         $scope.isLineVisible = function (line) { return !rndDialog.isLineHidden(line) };
 
         // Select row
@@ -108,6 +135,8 @@ angular.module('core')
                 $scope.emptyHintHtml = '<h2>Ingresa datos</h2><p>para seguir</p>'
             }
         }
+
+
 
 
     }])
