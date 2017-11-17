@@ -16,14 +16,15 @@ angular.module('gestion').config(['$stateProvider',
                 onEnter: ['auth_service', function (auth_service) { auth_service.checkLoggedIn(); }],
                 url: '/clientes',
                 templateUrl: 'modules/gestion/pagos/views/gestion.pagos.clientes.html',
-                controller:'gestionPagosClientesController',
+                controller: 'gestionPagosClientesController',
                 ncyBreadcrumb: {
                     parent: 'app.home',
                     label: 'Pagos',
                     icon: 'fa fa-money',
-                    menuLevel:1,
+                    menuLevel: 1,
                     menuPrio: 20
                 }, resolve: {
+                    // metaEntidad: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'entidades' })], // Así se inyectaría metadatos
                     plugins: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
                             'scripts/vendor/datatables/Responsive/dataTables.responsive.css',
