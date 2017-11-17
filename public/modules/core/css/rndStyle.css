@@ -1,15 +1,113 @@
+/* Caja (tile) */
+.caja {
+  background-color: white;
+  margin-bottom:20px;
+}.caja.sombra{
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2); 
+}
+.caja.borde{
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: thin; 
+}
+.caja .caja-header {
+  padding: 8px 15px;
+  display: table;
+  width:100%;
+  /*background-color:rgba(200,200,200,1);*/
+  }
+  .caja .caja-header.borde {
+    border-bottom: thin solid rgba(0, 0, 0, 0.2);
+    }
+  .caja .caja-header h1,
+  .caja .caja-header h2,
+  .caja .caja-header h3,
+  .caja .caja-header h4 {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px; }
+  .caja .caja-header h2 {
+    font-size: 18px; }
+  .caja .caja-header h3 {
+    font-size: 16px; }
+  .caja .caja-header h4 {
+    font-size: 14px; }
+  .caja .caja-body {
+    position: relative;
+    padding: 15px; }
+
+    .borde{
+      border-color: rgba(0, 0, 0, 0.2);
+      border-style: solid;
+      border-width: thin; 
+    }
+
+
+.btn-transparent{
+  background-color:transparent;
+}
+
+input.form-control.md{
+  width:240px;
+}
+input.form-control.lg{
+  width:280;
+}
+input.form-control.xl{
+  width:360px;
+}
+
+button.redondo{
+ border-radius:50%;
+}
+
+
+/* Specify styling for tooltip contents */
+.tooltip.danger .tooltip-inner {
+  color: #fff;
+  background-color: #d9534f;
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+/* Hide arrow */
+.tooltip.danger .tooltip-arrow {
+  display: none;
+}
+
 /* Forzar texto en tabla a una línea por row */
 .hideextra { white-space: nowrap; overflow: hidden; text-overflow:ellipsis; }
+
+/* Poco borde */
 table.inputable tbody tr td{ padding-top: 0px; padding-bottom: 0px;}
-.rndinput {
+
+input.rndinputd{
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left : 0px;
   padding-right: 0px;
+
   margin-top: 2px;
   margin-bottom: 2px;
+
+}
+
+.v-align-middle{
+  vertical-align: middle;
+}
+.rndinput {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+  /*padding-left : 0px;
+  padding-right: 0px;
+  /*margin-top: 2px;
+  margin-bottom: 2px;
   height: 1.3em;
-  width: 95%;
+  width: 95%;*/
 }
 
 /* PAD: Header gris en datatables */
@@ -126,17 +224,19 @@ table tbody tr.linked {
 
 /* PAD: floating right */
 .float-right{
-  display: inline-block;
+  /*display: inline-block;*/
   float: right;
 
 }
 .float-left{
-  display: inline-block;
+  /*display: inline-block;*/
   float: left;
 }
 
+
+
 .stackable{
-   display: inline-block; 
+    display: inline-block; 
 }
 
 /* PAD: agregar caracterización de campos */

@@ -1,11 +1,6 @@
-<div class="input-group">
-    <span class="input-group-btn">
-        <button ng-disabled="true"
-                type="button"
-                class="btn btn-default">
-            <i class="fa fa-search"></i>
-        </button>
-    </span>
+<span class="input-group">
+
+    <!-- input -->
     <input type="text"
            ng-model="selected"
            placeholder="{{options.placeholder}}"
@@ -15,23 +10,39 @@
            typeahead-wait-ms="200"
            typeahead-template-url="rndSearchBox.popup.html"
            typeahead-on-select="onSelectLocal($item, $meta, $label)"
-           class="form-control">
+           class="form-control xl">
+    <!-- /input -->
 
-</div>
+    <!-- ícono lupa -->
+    <span class="input-group-btn btn-rounded">
+        <button ng-disabled="true"
+                type="button"
+                class="btn btn-default ">
+            <i class="fa fa-search "></i>
+        </button>
+    </span>
+    <!-- /ícono lupa -->
+</span>
+
+<!-- spinner -->
 <md-progress-linear ng-if="loadingLocations"
                     md-mode="indeterminate"
                     ng-disabled="true">
 </md-progress-linear>
+<!-- /spinner -->
 
 <!-- Sin resultados -->
-<div ng-if="noResults && !$offline">
-   <h5 class="dimmed"> <span class="mr-5">&empty;</span> No se encontraron resultados</h5>
-</div>
+<span ng-if="noResults && !$offline">
+    <h5 class="dimmed">
+        <span class="mr-5">&empty;</span> No se encontraron resultados
+    </h5>
+</span>
 <!-- /Sin resultados -->
 
 <!-- Offline -->
 <div ng-if="$offline">
-       <h5 class="m-10 text-danger busy"> <i class="fa fa-exclamation-triangle"></i> Error de conexión</h5>
+    <h5 class="m-10 text-danger busy">
+        <i class="fa fa-exclamation-triangle"></i> Error de conexión</h5>
 </div>
 <!-- /Offline -->
 

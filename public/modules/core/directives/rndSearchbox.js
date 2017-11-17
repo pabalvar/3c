@@ -5,11 +5,12 @@ angular.module('core')
     * @restrict 'E'
     * @scope
     * @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
-    * @param {Array} meta Objeto de metadatos de datos de source 
+    * @param {rndMeta} meta Objeto de metadatos de datos de source 
     * @param {Array} dataset (retorno) Datos seleccionados 
-    * @param {Object} rtablas Objeto rtabla para enmascarar datos
+    * @param {rndRtabla} rtablas Objeto rtabla para enmascarar datos
     * @param {Object} options Objeto de opciones. (recomendado poblar en html)
     * @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
+    * @param {boolean} options.keep Guarda selecciones en dataset (por defecto reemplaza con la última)
     * @element ANY
     * @description
     * Directiva que permite seleccionar elemento mientras se escribe. Requiere una promesa o un array, además de un objeto metadatos.<br>
@@ -75,7 +76,7 @@ angular.module('core')
                                 res.data.forEach(function (d) { d.$meta = $scope.meta; d.$rtablas = $scope.rtablas })
                                 return res.data
                             })
-                            .catch(function (err){
+                            .catch(function (err) {
                                 $scope.$offline = true;
                                 console.log("error", err)
                             })
@@ -87,8 +88,7 @@ angular.module('core')
 
                     // callback al seleccionar
                     $scope.onSelectLocal = onSelectLocal;
-                    /** @ngdoc method
-                     * esta huea */
+
                     function onSelectLocal($item, $model, $label, $event) {
                         // deshacer apéndice "$model" que se anexó eventualmente en controlador parent
                         delete ($item.$meta);
@@ -98,8 +98,13 @@ angular.module('core')
                         var ret = angular.copy($scope.selected);
                         $scope.selected = undefined;
 
-                        // Si se pasó un arreglo, hacer push del valor
-                        if (angular.isArray($scope.dataset)) $scope.dataset.push(ret);
+                        // Si se pasó un arreglo entregar valor
+                        if (angular.isArray($scope.dataset)) {
+                            // Opción keep -> push
+                            if ($scope.options.keep) $scope.dataset.push(ret);
+                            // sin opción keep -> reemplaza valor por el actual
+                            else $scope.dataset[0] = ret;
+                        }
 
                         // llamar al callback de parent controlador
                         if (typeof ($scope.onSelect) == "function") {

@@ -1,12 +1,11 @@
-<div ng-if="source.length"
-     class="mt-20">
+<div ng-if="source.data.length">
 
     <div ng-if="options.title">
         <p class="text-uppercase text-strong mb-0 custom-font">{{options.title}}</p>
     </div>
 
     <div class="tile rnd-b"
-         ng-repeat="linea in source">
+         ng-repeat="linea in source.data">
         <div class="tile-widget">
             <h3 class="mt-0 mb-10 text-default dker">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
             <ul class="list-unstyled text-default lt">
@@ -22,7 +21,7 @@
         </div>
     </div>
 </div>
-<div ng-if="!source.length"
+<div ng-if="!source.data.length"
      class="text-center"
      ng-bind-html="options.showEmpty | trust">
 </div>

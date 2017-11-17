@@ -4,10 +4,10 @@
 * @name core.directive:rndSmtable 
 * @restrict 'E'
 * @scope
-* @param {Object} source Objeto que contiene los datos
+* @param {rndResource} source Objeto que contiene los datos
 * @param {Array} source.data Colección de objetos de datos
-* @param {Object} meta Objeto de metadatos de datos de <code>source</source> 
-* @param {Object} rtablas Objeto rtabla para enmascarar datos
+* @param {rndMeta} meta Objeto de metadatos de datos de <code>source</source> 
+* @param {rndRtabla} rtablas Objeto rtabla para enmascarar datos
 * @param {Object} options Objeto de opciones. (recomendado poblar en vista)
 * @param {string} options.title título a mostrar sobre la tabla
 * @param {string} options.showEmpty texto a mostrar si no hay datos  (acepta html)
@@ -15,6 +15,7 @@
 * @param {function} dialog.selectRow función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
 * @param {Object} api Objeto de salida que expone el controlador de la tabla
 * @param {function} api.clickRow función que permite simular un click sobre una línea. Paramétro: <code>rowIx</code>
+* @param {function} api.redraw función recrea los objetos rnd-input de la tabla en estado edición
 * @element ANY
 * @description
 * Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.<br>
@@ -113,6 +114,22 @@ angular.module('core')
             // Anexar instancia
             $scope.api = $scope.api || {};
             $scope.api.clickRow = clickRow;
+            $scope.api.redraw = redraw;
+            $scope.api.addRow = addRow;
+
+            /* Función que inicializa y crea una nueva línea */
+            function addRow(){
+                var obj = rndORM.createObject($scope.meta, 0, $scope.rtablas);
+                rndDialog.setLineOpen(obj);
+                $scope.source.data.push(obj);
+                // Llamar al controlador si se pasó onAddRow
+                var rowIx = $scope.source.data.length -1;
+                if ($scope.dialog.onAddRow){
+                    $scope.dialog.onAddRow(obj,$scope.source,rowIx);
+                }
+            }
+
+            
 
             /** Función que simula un click en una línea */
             function clickRow(rowIx) {
@@ -126,6 +143,12 @@ angular.module('core')
                     var el = angular.element(selector);
                     el.trigger('click')
                 });
+            }
+
+            /* Función que fuerza el redibujado de la tabla */
+            function redraw(){
+                $scope.blink=true;
+                $timeout(function(){$scope.blink=false});
             }
 
             /* Función utilizada para ocultar líneas por controlador */

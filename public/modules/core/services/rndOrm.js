@@ -1,37 +1,78 @@
-(function(){
+
 'use strict';
 angular.module("core")
     .service('rndORM', ['rndUuid', function (rndUuid) {
 
-        var vm = {};
+        var vm = {
+            createObject: createObject,
+            createEstado: createEstado,
+            newUuid: newUuid,
+            newString: newString,
+            newRandomString: newRandomString,
+            newDate, newDate
+        };
 
-        vm.createObject = function (Data, model, input) {
-            //if (!data) data = $scope.Personas.data;
-            var obj = model.reduce(function (t, m) { t[m.field] = m.onInit ? m.onInit() : ''; return t }, {});
+        function initByType(meta, rtablas) {
+            var ret;
+            switch (meta.datatype) {
+                case 'rtabla':
+                    var tabla = rtablas[meta.tabla].data;
+                    // Inicializar como la primera opción
+                    ret = tabla[0][meta.options.returnSrv];
+                    break;
+                case 'number':
+                    ret = 0;
+                    break;
+                case 'date':
+                    ret = newDate()();
+                    break;
+                default:
+                    ret = '';
+                    break;
+            }
+            return ret;
+
+        }
+        function createObject(model, input, rtablas) {
+
+            // Crear objeto a partir de rutina de inicialización de metadato
+            var obj = model.reduce(function (t, m) {
+                // si tiene función onInit llamarla
+                if (m.onInit) {
+                    t[m.field] = m.onInit();
+                } else {
+                    // Si no, inicializar el constructor por defecto del tipo
+                    t[m.field] = initByType(m, rtablas);
+
+                }
+                return t
+            }, {});
+
+            // Agregar datos adicionales si vienen
             if (input) {
                 angular.extend(obj, input);
             }
             return obj;
         }
 
-        vm.createEstado = function () {
+        function createEstado() {
             return {
                 $action: 'N',
                 $isOpen: true
             }
         }
 
-        vm.newUuid = function () {
+        function newUuid() {
             return rndUuid();
         }
-        vm.newString = function (input) {
+        function newString(input) {
             return function () {
                 var ret = '';
                 if (typeof (input) != 'undefined') ret = input;
                 return ret;
             }
         }
-        vm.newRandomString = function (input) {
+        function newRandomString(input) {
             return function () {
                 var ret = '';
                 var prefix = 'ITEM';
@@ -40,7 +81,7 @@ angular.module("core")
                 return ret;
             }
         }
-        vm.newDate = function (input) {
+        function newDate(input) {
             return function () {
                 var ret = input;
                 if (!input) ret = (new Date()).toISOString().substr(0, 10);
@@ -50,5 +91,5 @@ angular.module("core")
         return vm
 
     }]);
-})()
+
 

@@ -12,11 +12,14 @@
 <div class="rnd-b">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
-           class="st-table table table-striped table-condensed hideextra table-custom inputable headerdark dt-responsive dt-right shadow {{id}}">
+           class="st-table table table-striped table-custom headerdark table-bordered inputable {{id}}"
+           xxclass="st-table table table-striped table-condensed xtable-bordered hideextra table-custom inputable headerdark dt-responsive dt-right shadow ">
         <thead>
             <tr>
                 <th ng-repeat="m in meta | filter: {visible:true}"
-                    st-sort="{{m.field}}">
+                    st-sort="{{m.field}}"
+                    style="{{m.length?'':'x-'}}width:{{m.length||1}}%;"
+                    class="text-center">
                     {{m.name}}
                 </th>
             </tr>
@@ -27,8 +30,10 @@
                 ng-click="selectRow(fila)"
                 ng-repeat="fila in displayedCollection track by $index ">
                 <td ng-repeat="m in meta | filter: {visible:true}"
-                    class="text-{{m | alignment}}">
-                    <rnd-input source="source"
+                    class="text-{{m | alignment}}"
+                    style="vertical-align:middle;">
+                    <rnd-input ng-if="!blink || m.readOnly"
+                               source="source"
                                line="fila"
                                key="m.field"
                                meta="meta"
@@ -38,19 +43,31 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot ng-if="!source.data.length && !source.$offline">
-                <tr>
-                    <td colspan="500" class="text-center">
-                        <div><h3 class="m-10 text-default lter ">No hay registros en esta tabla</h3></div>
-                    </td>
-                </tr>
+        <tfoot ng-if="!source.$offline">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div>
+                        <h3 ng-if="!source.data.length"
+                            class="m-10 text-default lter ">{{options.showEmpty}}</h3>
+                        <h4 ng-if="options.canCreate"
+                            ng-click="api.addRow()"
+                            class="m-5 text-default lter">
+                            <i class="fa fa-plus-circle"></i> {{options.textCreate}}</h4>
+                    </div>
+                </td>
+            </tr>
         </tfoot>
         <tfoot ng-if="source.$offline">
-                <tr>
-                    <td colspan="500" class="text-center">
-                        <div><h3 class="m-10 text-danger busy"> <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3></div>
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div>
+                        <h3 class="m-10 text-danger busy">
+                            <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
+                    </div>
+                </td>
+            </tr>
         </tfoot>
     </table>
 </div>

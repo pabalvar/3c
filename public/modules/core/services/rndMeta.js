@@ -1,14 +1,16 @@
 'use strict';
-
+/**
+ * @ngdoc service
+ * @name core.meta
+ * @requires $resource
+ * @requires auth_service
+ * @description permite ejecutar una consulta SQL remotamente
+**/
 angular.module('core')
-    .service('rndMeta', [function () {
-
-        function rndMeta(meta, rtablas) {
-            return function (res) {
-                res.data.forEach(function (d) { d.$meta = meta; d.$rtablas = rtablas })
-                return res.data;
-            }
-        }
-        return rndMeta;
-    }
-    ])
+	.factory('rndMeta', ['$resource', 'auth_service', function ($resource, auth_service) {
+		return $resource('/meta/:id', { id: '@id' },{
+			get: {
+				method: 'GET'
+			}
+		});
+	}])

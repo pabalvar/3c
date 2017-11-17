@@ -5,8 +5,8 @@
 * @restrict 'E'
 * @scope
 * @param {Promise|Array} source Array de objeto con datos o bien función que entrega una promesa
-* @param {Object} meta Objeto de metadatos de datos de source 
-* @param {Object} rtablas Objeto rtabla para enmascarar datos
+* @param {rndMeta} meta Objeto de metadatos de datos de source 
+* @param {rndRtabla} rtablas Objeto rtabla para enmascarar datos
 * @param {Object} options Objeto de opciones. (recomendado poblar en html)
 * @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
 * @param {string} options.title título a mostrar sobre la tabla (acepta html)

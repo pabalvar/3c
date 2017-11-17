@@ -34,9 +34,6 @@ angular.module("core")
             validateCell: validateCell,
             validateLine: validateLine,
             validateAll: validateAll,
-
-
-
         };
 
         function isLineHidden(linea) {
@@ -104,7 +101,7 @@ angular.module("core")
 
         /** Función que debería pertenecer al modelo. Crea una nueva instancia del modelo. Input hace merge */
         function createLine(Data, model, input) {
-            var obj = rndORM.createObject(Data, model, input);
+            var obj = rndORM.createObject(model, input);
 
             Data.data.unshift(obj); //(line, columns, Data, hot, row) 
             validateLine(Data, model, 0);
@@ -206,10 +203,11 @@ angular.module("core")
             }
 
             // Si no pasa las validaciones marcar dato como invalido
-            var isValid = validArr.every(r => r);
-
+            var isValid = validArr.every(r => r===true);
+            var msg;
+            if (!isValid) msg = validArr.filter(r => typeof(r)=='string' ).join(' ');
             // Marcar estado validación
-            setCellValid(Data, i, meta, isValid); // $estado.APPP.$invalid = true/false
+            setCellValid(Data, i, meta, isValid, msg); // $estado.APPP.$invalid = true/false
 
             return isValid;
         }
@@ -259,12 +257,21 @@ angular.module("core")
             //vm.edit = set;
         }
 
-        function setCellValid(Data, i, meta, isValid) {
+        function setCellValid(Data, i, meta, isValid, msg) {
             var line = Data.data[i];
             var key = meta.field;
             line.$estado = line.$estado || {};
             line.$estado[key] = line.$estado[key] || {};
             line.$estado[key].$invalid = !isValid;
+            // Si  es válido borrar mensajes, si no, asignar msg (es Array)
+            if (isValid) line.$estado[key].$message = undefined;
+            else {
+                if (msg){
+                    line.$estado[key].$message = msg;
+                }else{
+                    line.$estado[key].$message = undefined;
+                }
+            }
         }
 
         function setCellDirty(Data, i, meta) {

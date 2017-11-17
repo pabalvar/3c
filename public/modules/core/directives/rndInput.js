@@ -8,15 +8,15 @@
 * @param {Array} source.data Colección de objetos de datos
 * @param {Object} line Objecto que contiene el dato
 * @param {String} key Nombre del campo en <code>line</code> del dato a editar
-* @param {Meta[]} meta Array de metadatos de datos de <code>source.data</source>
+* @param {rndMeta} meta Array de metadatos de datos de <code>source.data</source>
 * @param {String} meta.field Nombre del campo 
 * @param {String} meta.name Nombre visible campo 
-* @param {String?} meta.description Descripción campo (para tooltip)
-* @param {String?} meta.datatype Tipo de dato (number|date|rtabla|typeahead)
-* @param {function?} meta.onValueChange Función a llamar cuando se hace un cambio en el campo. Se llama con los parámetros <code>(source, i, meta, oldval)</code>
-* @param {Object?} rtablas Objeto rtabla para enmascarar datos
-* @param {Object} dialogXX Objeto con funciones para regular lógica
-* @param {function} dialogXX.selectRowXX función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
+* @param {String=} meta.description Descripción campo (para tooltip)
+* @param {String=} meta.datatype Tipo de dato (number|currency|date|rtabla|typeahead)
+* @param {function=} meta.onValueChange Función a llamar cuando se hace un cambio en el campo. Se llama con los parámetros <code>(source, i, meta, oldval)</code>
+* @param {function|function[]=} meta.validations Función o array de funciones que se ejecutan depués de hechos 
+los cambios. Si retorna ===true el dato es válido si no inválido. Si retorna un string se muestra el mensaje de error. 
+* @param {rndRtabla=} rtablas Objeto rtabla para enmascarar datos
 * @element ANY
 * @description
 * Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.
@@ -92,6 +92,22 @@ angular.module("core")
 
           // Crear watcher
           $scope.$watch('buffer.tmpInput', updateBuffer, true);
+          // Anexar cellClick si lo tiene el meta
+          if (column.onClick){
+            $scope.cellClick = function(line,column,source){
+              console.log("hizo click en la celda", line);
+              // llamar a la función de meta
+              column.onClick(line,column,source);/*
+              console.log("line.key",line[key], key)
+              $scope.buffer.tmpInput = line[key];
+              init(type);
+              line.$estado.$isOpen = false;
+              updateBuffer(line[column.field]);
+              $timeout(function(){line.$estado.$isOpen=true;},3000);*/
+              //buffer.tmpInput = line[key];
+              //updateBuffer(line[column.field]);
+            }
+          }
 
 
           // Implementation details
@@ -144,7 +160,6 @@ angular.module("core")
 
             // Ejecutar cambios incluidos en metadata.onValueChange
             rndDialog.onChange(Data, rowIx, column, oldVal);
-
             rndDialog.setCellDirty(Data, rowIx, column);
             rndDialog.setLineModified(Data.data[rowIx]);
             rndDialog.validateCell(Data, rowIx, column);
