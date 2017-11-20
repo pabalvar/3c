@@ -1,21 +1,22 @@
-<section id="header" 
-		 data-ng-controller="rdmHeaderCtlr"
-		 data-ng-include="'modules/core/views/header.html'"  
-		 class="{{main.settings.navbarHeaderColor}}">
+<section id="header"
+         ng-controller="coreMainHeaderController"
+         ng-include="'modules/core/views/header.html'"
+         class="{{main.settings.navbarHeaderColor}}">
 </section>
 
 <div id="controls">
-
-  <aside id="sidebar"
-  		 data-ng-controller="rdmNavCtrl"
-  		 data-ng-include="'modules/core/views/sidebar-izq.html'" 
-		 class="{{main.settings.sidebarColor}}" 
-		 data-ng-class="{'aside-fixed':main.settings.asideFixed}">
-   </aside>
-
+	<aside id="sidebar"
+	       ng-controller="coreMainNavController"
+	       ng-include="'modules/core/views/sidebar-izq.html'"
+	       class="{{main.settings.sidebarColor}}"
+	       ng-class="{'aside-fixed':main.settings.asideFixed}">
+	</aside>
 </div>
 
-<!--*************Content Dinamic***********-->
-<div class="view-container" ui-view-container>
-  <section ui-view id="content" autoscroll="false"></section>
+<div class="view-container"
+     ui-view-container>
+	<section ui-view
+	         id="content"
+	         autoscroll="false">
+	</section>
 </div>
