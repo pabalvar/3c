@@ -18,16 +18,28 @@ var globals = require('../lib/globals/controllers/globals.js');
  * @apiParam {String} [search] <i>search</i>: Condición por defecto, texto contenido en la concatenación de todos los campos <code>"WHERE CONCAT(<i>f</i>) like '%search%'</code>
  *
  * @apiExample Ejemplo de uso (copy paste en browser):
- * <a href="http://localhost:3000/entidades?tien=A"></a>
+ * http://localhost:3000/entidades?tien=A
  *
  * @apiSuccess {String}   object  ="list" indica que el objeto es una lista
  * @apiSuccess {Array}    data    Array en que cada línea de resultado es un objecto
  */
 module.exports = function (app) {
+    
     app.route('/entidades/:id*?') // id=KOEN
         .get(
         entidades.getEntidades,
         driver.executeListQuery(app),
         globals.queryOut
         )
+
+    app.route('/meta/entidades') // metadatos
+        .get(
+        entidades.getMetaEntidades,
+        driver.executeListQuery(app),
+        globals.queryOut
+        )
 }
+
+
+
+

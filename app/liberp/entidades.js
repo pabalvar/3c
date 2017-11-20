@@ -3,6 +3,7 @@
 var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
 exports.getEntidades = getEntidades;
+exports.getMetaEntidades = getMetaEntidades;
 
 
 // Detalle de implementación
@@ -42,4 +43,16 @@ WHERE 1=1
 ORDER BY 
   KOEN, SUEN 
  `;
+}
+
+// Entrega metadatos
+function getMetaEntidades(req, res, next) {
+  req.resultados = req.resultados||{};
+  req.resultados.meta = [
+    { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize' },
+    { field: "KOEN", name: "Código", visible: true, pk: true },
+    { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
+    { field: "SUEN", name: "Suc.", visible: true, pk: true }
+  ];
+  next();
 }
