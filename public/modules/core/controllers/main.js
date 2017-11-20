@@ -1,14 +1,13 @@
 'use strict';
 
 /**
- * @name core.controller:rdmMainCtrl
+ * @ngdoc controller
+ * @name core.controller:coreMainController
  * @description
- * # rdmMainCtrl
- * Controlador de la ventana principal de la aplicación
+ * Controlador principal
  */
-
 angular.module('core')
-  .controller('rdmMainCtrl',
+  .controller('coreMainController', ['$scope', '$rootScope', '$http', '$window', '$translate', 'auth_service', 'rndEmpresa',
   function ($scope, $rootScope, $http, $window, $translate, auth_service, rndEmpresa) {
 
     angular.extend($scope, {
@@ -21,8 +20,8 @@ angular.module('core')
         settings: {
           navbarHeaderColor: 'scheme-light',// 'scheme-default',
           sidebarColor: 'scheme-light',//'scheme-default',
-          brandingColor: 'scheme-greensea', //'scheme-default',
-          activeColor: 'scheme-greensea',//'default-scheme-color',
+          brandingColor: 'scheme-light', //'scheme-default',
+          activeColor: 'scheme-light',//'default-scheme-color',
           headerFixed: true,
           asideFixed: true,
           rightbarShow: false
@@ -37,7 +36,7 @@ angular.module('core')
       $scope.iframeWidth = $window.innerWidth;
       $scope.iframeHeight = $window.innerHeight;
       $scope.$digest();
-    });  
+    });
 
     /*--------------------Variables y funciones asociadas a cambio de Lenguaje-----------------------*/
     $scope.languages = [
@@ -53,7 +52,7 @@ angular.module('core')
     $scope.currentLanguage = $translate.proposedLanguage() || $translate.use();
 
     /** Empresa */
-    $scope.$watch(rndEmpresa.get, function(n,o){
+    $scope.$watch(rndEmpresa.get, function (n, o) {
       $scope.empresaSelected = n;
       $scope.empresas = rndEmpresa.getEmpresas();
     });
@@ -64,4 +63,4 @@ angular.module('core')
       $scope.containerClass = newValue;
     })
 
-  });
+  }]);

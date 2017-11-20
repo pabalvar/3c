@@ -1,14 +1,13 @@
 'use strict';
 
 /**
- * @name core.controller:rdmHeaderCtlr
+ * @ngdoc controller
+ * @name core.controller:coreMainHeaderController
  * @description
- * # rdmHeaderCtlr
- * Controlador de la barra header
+ * Controlador principal
  */
-
 angular.module('core')
-	.controller('rdmHeaderCtlr', ['$scope', 'auth_service',
+	.controller('coreMainHeaderController', ['$scope', 'auth_service',
 		function ($scope, auth_service) {
 
 			//auth_service para manejar Usuario logeado 
