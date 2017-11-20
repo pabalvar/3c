@@ -9,7 +9,7 @@ module.exports = function (grunt) {
             },
             api: {
                 src: ['public/modules/**/*.js'],
-                title: 'API Documentation'
+                title: 'Aplicación cliente Random3c'
             }
         },
         babel: { // es6 a es2015
