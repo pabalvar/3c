@@ -187,3 +187,26 @@ exports.validateFields = function(arr,tr){
     });
     return arr;
 }
+
+
+
+
+/**
+ * @api {get} /meta/ Meta
+ * @apiName meta
+ * @apiGroup liberp
+ * @apiSampleRequest http://localhost:3000/meta
+ *
+ * @apiDescription Equivalente a Trae cliente
+ *
+ * @apiParam {String[]} [koen] Código de la entidad
+ * @apiParam {String[]} [tien] Tipo de entidad (C)liente|(P)roveedor|(A)mbos
+ * @apiParam {String[]} [tiposuc] Tipo de sucursal (P)???
+ * @apiParam {String} [search] <i>search</i>: Condición por defecto, texto contenido en la concatenación de todos los campos <code>"WHERE CONCAT(<i>f</i>) like '%search%'</code>
+ *
+ * @apiExample Ejemplo de uso (copy paste en browser):
+ * http://localhost:3000/meta/entidades
+ *
+ * @apiSuccess {String}   object  ="list" indica que el objeto es una lista
+ * @apiSuccess {Array}    data    Array en que cada línea de resultado es un objecto
+ */

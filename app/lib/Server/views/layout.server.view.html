@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-controller="rdmMainCtrl"
+<html ng-controller="coreMainController"
       class="no-js"
       data-ng-class="containerClass">
 
@@ -23,7 +23,7 @@
       <meta name="description"
             content="{{description}}">
 
-      <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+      <!-- Favicon -->
       <link rel="icon"
             type="image/ico"
             href="favicon.ico" />
@@ -33,17 +33,12 @@
       <link rel="stylesheet"
             href="{{cssFile}}"> {% endfor %}
 
-      <!-- endbuild -->
 </head>
 
 <body id="minovate"
-      data-ng-class="[ main.settings.navbarHeaderColor, main.settings.activeColor, containerClass, 'header-fixed aside-fixed appWrapper', 
-                         {'header-fixed': main.settings.headerFixed, 
-                           'header-static': !main.settings.headerFixed, 
-                           'aside-fixed': main.settings.asideFixed, 
-                           'aside-static': !main.settings.asideFixed}
-                        ]">
+      data-ng-class="[ main.settings.navbarHeaderColor, main.settings.activeColor, containerClass, 'header-fixed aside-fixed appWrapper', {'header-fixed': main.settings.headerFixed, 'header-static': !main.settings.headerFixed, 'aside-fixed': main.settings.asideFixed,  'aside-static': !main.settings.asideFixed} ]">
 
+      <!-- block content -->
       {% block content %}{% endblock %}
 
       <!--Embedding The User Object-->
@@ -51,18 +46,11 @@
             var user = {{ user | json | safe }};
       </script>
 
+      <!--Embedding jsFiles-->
       {% for jsFile in jsFiles %}
       <script type="text/javascript"
               src="{{jsFile}}">
-      </script>
-      {% endfor %} 
-
-      <!-- extra development -->
-      {% if process.env.NODE_ENV === 'development' %}
-      <!--Livereload script rendered -->
-      <!-- <script type="text/javascript" src="http://{{request.hostname}}:35729/livereload.js"></script> -->
-      {% endif %}
-      <!-- extra development -->
+            </script> {% endfor %}
 
 </body>
 
