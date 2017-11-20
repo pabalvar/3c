@@ -6,78 +6,43 @@
  * @description
  * # collapseSidebarSm
  */
-
 angular.module('theme')
   .directive('collapseSidebar', function ($rootScope) {
     return {
       restrict: 'A',
       link: function postLink(scope, element) {
 
-        var app = angular.element('.appWrapper'),
-          $window = angular.element(window),
-          width = $window.width();
+        // obtener objetos
+        var app = angular.element('.appWrapper');
+        var $window = angular.element(window);
+        var width = $window.width();   
 
-        var removeRipple = function () {
-          angular.element('#sidebar').find('.ink').remove();
-        };
-
-        var collapse = function () {
-          app.addClass('sidebar-sm');
-          /*
-            width = $window.width();
-  
-            if (width < 992) {
-              console.log("yapo")
-              app.addClass('sidebar-sm');
-            } else {
-              app.removeClass('sidebar-sm sidebar-xs');
-            }
-  
-            if (width < 768) {
-              app.removeClass('sidebar-sm').addClass('sidebar-xs');
-            } else if (width > 992){
-              app.removeClass('sidebar-sm sidebar-xs');
-            } else {
-              app.removeClass('sidebar-xs').addClass('sidebar-sm');
-            }
-  
-            if (app.hasClass('sidebar-sm-forced')) {
-              app.addClass('sidebar-sm');
-            }
-  
-            if (app.hasClass('sidebar-xs-forced')) {
-              app.addClass('sidebar-xs');
-          }*/
-
-        };
-
-        collapse();
+        // agregar clase "sidebar-sm" al app-wrapper al iniciar
+        redraw();
 
         $window.resize(function () {
           if (width !== $window.width()) {
             var t;
             clearTimeout(t);
-            t = setTimeout(collapse, 300);
-            removeRipple();
+            t = setTimeout(redraw, 300);
           }
         });
 
         element.on('click', function (e) {
-          if (app.hasClass('sidebar-sm')) {
-            app.removeClass('sidebar-sm').addClass('sidebar-xs');
-          }
-          else if (app.hasClass('sidebar-xs')) {
-            app.removeClass('sidebar-xs');
-          }
-          else {
-            app.addClass('sidebar-sm');
-          }
-
-          app.removeClass('sidebar-sm-forced sidebar-xs-forced');
-          app.parent().removeClass('sidebar-sm sidebar-xs');
-          removeRipple();
+          app.toggleClass('no-sidebar')
           e.preventDefault();
         });
+
+        function redraw() {
+          var width = $window.width();
+          if (width > 768){
+            app.removeClass('no-sidebar');
+
+          }else{
+            app.addClass('no-sidebar');
+          }
+
+        };
 
       }
     };
