@@ -1,82 +1,71 @@
-<ncy-breadcrumb></ncy-breadcrumb>
+<!-- #ROW: Breadcrumb -->
+<rnd-breadcrumb>
+  <!-- search box -->
+  <rnd-searchbox options="{placeholder:'buscar entidad'}"
+                 meta="metaEntidad"
+                 dataset="pasoEntidad"
+                 source="traeEntidad"
+                 rtablas="rtablas">
+  </rnd-searchbox>
+  <!-- /search box -->
+</rnd-breadcrumb>
 
 
-
-<div class="row m-0 mt-20">
-
-  <div class="col-md-6">
-    <div class="tile rnd-b tile-shadow"
-         fullscreen="tileListadoPersonas">
-
-      <!-- widget header -->
-      <div class="tile-header dvd dvd-btm p-0 ">
-
-        <ul class="controls float-left btn-sm">
-          <rnd-reload reload="refresh"
-                      is-busy="[PersonasWS, PERsaveWS]">
-          </rnd-reload>
-        </ul>
-
-        <p class="m-0 text-center text-lg custom-font">
-          <small>Listado de
-            <strong>personas </strong>coincidentes</small>
-        </p>
-
-        <ul class="controls btn-sm">
-          <rnd-excel data="Personas.data"
-                     model="Model"></rnd-excel>
-          <rnd-minimizar></rnd-minimizar>
-          <rnd-fullscreen></rnd-fullscreen>
-        </ul>
-
-      </div>
-      <!-- /widget header -->
-
-      <div class="tile-body">
-
-        <!-- Entidad -->
-        <rnd-smtable meta="metaEntidad"
-                     options="{showEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente</p>', title:'Datos entidad'}"
-                     source="{data:pasoEntidad}"
-                     rtablas="rtablas">
-        </rnd-smtable>
-        <!-- /Entidad -->
-        <br>
-        <!-- /Pagos -->
-        <rnd-smtable meta="metaPago"
-                     options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', canCreate:true, textCreate:'Ingresar un documento de pago'}"
-      
-                     source="pasoPago"
-                     rtablas="rtablas"
-                     dialog="{selectRow:selectRow,onChange:cambiaPago, onAddRow:onAddRowPago}"
-                     api="apiPago">
-        </rnd-smtable>
-        <!-- /Pagos -->
-        <br>
-        <!-- Deuda -->
-        <rnd-smtable meta="metaDeuda"
-                     options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta'}"
-                     source="pasoDeuda"
-                     dialog="{selectRow:selectRow}"
-                     rtablas="rtablas"
-                     api="apiDeuda">
-        </rnd-smtable>
-        <!-- /Deuda -->
-        <br>
-        <!-- Cruce -->
-        <rnd-smtable ng-if="pasoCruce.data.length"
-                     meta="metaCruce"
-                     options="{showEmpty:'Vacío', title:'Asignación'}"
-                     source="pasoCruce"
-                     dialog="{onChange:onChange}"
-                     api="apiCruce">
-        </rnd-smtable>
-        <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>-->
-        <!-- /Cruce -->
-        <br>
-      </div>
-
-
-    </div>
+<!-- #ROW: Entidad -->
+<div class="row p-outer b-b rnd-white"
+     ng-show="pasoEntidad.length">
+  <div class="col-xs-4 p-inner">
+    <!-- Entidad -->
+    <rnd-profile meta="metaEntidad"
+                 options="{xshowEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente</p>', xtitle:'Datos entidad'}"
+                 source="{data:pasoEntidad}"
+                 rtablas="rtablas">
+    </rnd-profile>
+    <!-- /Entidad -->
   </div>
+  <div class="col-xs-8 p-inner">
+    <!-- totales -->
+    <rnd-tile-simple source="{value:2,name:'total selección'}"></rnd-tile-simple>
+    <rnd-tile-simple source="{value:1,name:'total pagos'}"></rnd-tile-simple>
+    <!-- /totales -->
+  </div>
+</div>
+
+
+<!-- #ROW: Pagos -->
+<div class="row p-outer b-b rnd-gray"
+     ng-show="pasoEntidad.length">
+
+  <!-- /Pagos -->
+  <rnd-smtable meta="metaPago"
+               options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', canCreate:true, textCreate:'Ingresar un documento de pago'}"
+
+               source="pasoPago"
+               rtablas="rtablas"
+               dialog="{selectRow:selectRow,onChange:cambiaPago, onAddRow:onAddRowPago}"
+               api="apiPago">
+  </rnd-smtable>
+  <!-- /Pagos -->
+  <br>
+  <!-- Deuda -->
+  <rnd-smtable meta="metaDeuda"
+               options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta'}"
+               source="pasoDeuda"
+               dialog="{selectRow:selectRow}"
+               rtablas="rtablas"
+               api="apiDeuda">
+  </rnd-smtable>
+  <!-- /Deuda -->
+  <br>
+  <!-- Cruce -->
+  <rnd-smtable ng-if="pasoCruce.data.length"
+               meta="metaCruce"
+               options="{showEmpty:'Vacío', title:'Asignación'}"
+               source="pasoCruce"
+               dialog="{onChange:onChange}"
+               api="apiCruce">
+  </rnd-smtable>
+  <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>-->
+  <!-- /Cruce -->
+
 </div>
