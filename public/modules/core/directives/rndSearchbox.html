@@ -1,6 +1,7 @@
-<span class="input-group">
+<!--<div class="input-group">
 
     <!-- input -->
+<span style="display:inline-block;">
     <input type="text"
            ng-model="selected"
            placeholder="{{options.placeholder}}"
@@ -10,11 +11,17 @@
            typeahead-wait-ms="200"
            typeahead-template-url="rndSearchBox.popup.html"
            typeahead-on-select="onSelectLocal($item, $meta, $label)"
-           class="form-control xl">
+           style="display:inline-block;"
+           class="form-control xl search">
     <!-- /input -->
+    <span class="input-icon">
+        <i class="fa fa-search "></i>
+    </span>
 
-    <!-- ícono lupa -->
-    <span class="input-group-btn btn-rounded">
+</span>
+
+<!-- ícono lupa --
+    <span class="input-group-btn btn-rounded" style="display:inline;" >
         <button ng-disabled="true"
                 type="button"
                 class="btn btn-default ">
@@ -22,12 +29,13 @@
         </button>
     </span>
     <!-- /ícono lupa -->
-</span>
+<!--</div>-->
 
 <!-- spinner -->
 <md-progress-linear ng-if="loadingLocations"
                     md-mode="indeterminate"
-                    ng-disabled="true">
+                    ng-disabled="true"
+                    class="pl-10 pr-10">
 </md-progress-linear>
 <!-- /spinner -->
 

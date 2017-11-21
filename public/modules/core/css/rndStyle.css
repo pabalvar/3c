@@ -1,3 +1,4 @@
+
 /* Caja (tile) */
 .caja {
   background-color: white;
@@ -57,7 +58,7 @@ input.form-control.lg{
   width:280;
 }
 input.form-control.xl{
-  width:360px;
+  width: 320px;
 }
 
 button.redondo{

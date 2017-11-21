@@ -4,15 +4,15 @@
         <p class="text-uppercase text-strong mb-0 custom-font">{{options.title}}</p>
     </div>
 
-    <div class="tile rnd-b"
+    <div class="pageheader"
          ng-repeat="linea in source.data">
-        <div class="tile-widget">
-            <h3 class="mt-0 mb-10 text-default dker">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
+        <div class="page-title">
+            <h3 class="mb-10">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
             <ul class="list-unstyled text-default lt">
                 <span ng-repeat="m in meta">
                     <div ng-if="m.visible && !$first">
                         <li>
-                            <strong class="inline-block w-xs">{{m.name}}:</strong>
+                            <span class="inline-block w-xs">{{m.name}}:</span>
                             <span class="text-default dker">{{linea[m.field] | monitor:m:rtablas}}</span>
                         </li>
                     </div>

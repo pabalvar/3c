@@ -1,18 +1,26 @@
-<div class="pageheader mb-0 b-b">
+<!--<div class="pageheader mb-0 b-b">
 	<div class="page-bar">
-		<div class="bg-tr-black lter">
-			<!--<pre>{{steps|json}}</pre>-->
-			<ol class="page-breadcrumb">
-				<li ng-repeat="step in steps track by $index" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">
-					<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">
-						<i class="ml-5 mr-5" ng-if="step.ncyBreadcrumb.icon" ng-class="step.ncyBreadcrumb.icon"></i> {{step.ncyBreadcrumbLabel}}
-					</a>
-					<span class="pl-10" ng-switch-when="true">
-						<i class="ml-5 mr-5" ng-class="step.ncyBreadcrumb.icon" ></i>{{step.ncyBreadcrumbLabel}}
-					</span>
-				</li>
-			</ol>
+		<div class="bg-tr-black lter">-->
 
+<ol class="page-breadcrumb" style="display:inline-block;">
+	<li ng-repeat="step in steps track by $index"
+	    ng-class="{active: $last}"
+	    ng-switch="$last || !!step.abstract">
+		<a ng-switch-when="false"
+		   href="{{step.ncyBreadcrumbLink}}"
+		   class="pl-0">
+			<i class="ml-0 mr-5"
+			   ng-if="step.ncyBreadcrumb.icon"
+			   ng-class="step.ncyBreadcrumb.icon"></i> {{step.ncyBreadcrumbLabel}}
+		</a>
+		<span class="pl-10"
+		      ng-switch-when="true">
+			<i class="ml-5 mr-5"
+			   ng-class="step.ncyBreadcrumb.icon"></i>{{step.ncyBreadcrumbLabel}}
+		</span>
+	</li>
+</ol>
+<!--
 			<div ng-controller="DaterangepickerjsCtrl" class="page-toolbar mr-10" data-ng-show="showDateRangePicker">
 				<span class="mr-10"><small>ventana de tiempo : </small></span>
 				<a href="javascript:;" class="pr-0 bg-slategray" ng-click="dateBack()">
@@ -28,4 +36,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div>-->
