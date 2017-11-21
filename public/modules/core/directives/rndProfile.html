@@ -4,21 +4,18 @@
         <p class="text-uppercase text-strong mb-0 custom-font">{{options.title}}</p>
     </div>
 
-    <div class="pageheader"
-         ng-repeat="linea in source.data">
-        <div class="page-title">
-            <h3 class="mb-10">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
-            <ul class="list-unstyled text-default lt">
-                <span ng-repeat="m in meta">
-                    <div ng-if="m.visible && !$first">
-                        <li>
-                            <span class="inline-block w-xs">{{m.name}}:</span>
-                            <span class="text-default dker">{{linea[m.field] | monitor:m:rtablas}}</span>
-                        </li>
-                    </div>
-                </span>
-            </ul>
-        </div>
+    <div ng-repeat="linea in source.data">
+        <h3 class="mt-0 mb-10 text-slategray dk">{{linea[meta[0].field] | monitor:meta[0]:rtablas}}</h3>
+        <ul class="list-unstyled text-default lt compact text-small">
+            <span ng-repeat="m in meta">
+                <div ng-if="m.visible && !$first">
+                    <li>
+                        <span class="inline-block w-xs">{{m.name}}:</span>
+                        <span class="text-default dk">{{linea[m.field] | monitor:m:rtablas}}</span>
+                    </li>
+                </div>
+            </span>
+        </ul>
     </div>
 </div>
 <div ng-if="!source.data.length"

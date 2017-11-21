@@ -6,6 +6,12 @@ function isTypeNumeric(input) {
 
 angular.module('core')
 	/** inserta html desde controlador */
+	.filter("trustedUrl", ['$sce', function ($sce) {
+		return function (url) {
+			return $sce.trustAsResourceUrl(url);
+		}
+	}])
+	/** inserta html desde controlador */
 	.filter("trust", ['$sce', function ($sce) {
 		return function (htmlCode) {
 			return $sce.trustAsHtml(htmlCode);

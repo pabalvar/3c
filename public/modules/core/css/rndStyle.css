@@ -1,50 +1,10 @@
-
-/* Caja (tile) */
-.caja {
-  background-color: white;
-  margin-bottom:20px;
-}.caja.sombra{
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2); 
+.rnd-gray{
+  background-color:rgb(233, 233, 233);
 }
-.caja.borde{
-  border-color: rgba(0, 0, 0, 0.2);
-  border-style: solid;
-  border-width: thin; 
+.rnd-white{
+  background-color:white;
 }
-.caja .caja-header {
-  padding: 8px 15px;
-  display: table;
-  width:100%;
-  /*background-color:rgba(200,200,200,1);*/
-  }
-  .caja .caja-header.borde {
-    border-bottom: thin solid rgba(0, 0, 0, 0.2);
-    }
-  .caja .caja-header h1,
-  .caja .caja-header h2,
-  .caja .caja-header h3,
-  .caja .caja-header h4 {
-    padding: 0;
-    margin: 0;
-    display: inline-block;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 26px; }
-  .caja .caja-header h2 {
-    font-size: 18px; }
-  .caja .caja-header h3 {
-    font-size: 16px; }
-  .caja .caja-header h4 {
-    font-size: 14px; }
-  .caja .caja-body {
-    position: relative;
-    padding: 15px; }
 
-    .borde{
-      border-color: rgba(0, 0, 0, 0.2);
-      border-style: solid;
-      border-width: thin; 
-    }
 
 
 .btn-transparent{

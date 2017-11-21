@@ -1,7 +1,6 @@
-<!--<div class="input-group">
+<span style="display:inline-block;">
 
     <!-- input -->
-<span style="display:inline-block;">
     <input type="text"
            ng-model="selected"
            placeholder="{{options.placeholder}}"
@@ -14,22 +13,14 @@
            style="display:inline-block;"
            class="form-control xl search">
     <!-- /input -->
+
+    <!-- lupa -->
     <span class="input-icon">
-        <i class="fa fa-search "></i>
+        <i class="fa fa-search"></i>
     </span>
+    <!-- /lupa -->
 
 </span>
-
-<!-- ícono lupa --
-    <span class="input-group-btn btn-rounded" style="display:inline;" >
-        <button ng-disabled="true"
-                type="button"
-                class="btn btn-default ">
-            <i class="fa fa-search "></i>
-        </button>
-    </span>
-    <!-- /ícono lupa -->
-<!--</div>-->
 
 <!-- spinner -->
 <md-progress-linear ng-if="loadingLocations"
