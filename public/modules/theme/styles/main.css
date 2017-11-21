@@ -1,10 +1,20 @@
 @charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Dosis:300,700|Ubuntu+Mono|Lato:300,400,700,300italic,400italic&subset=latin,latin-ext);
+
+/* PAGE: Borde responsivo */
+
 .page {
-    padding: 20px;
-    padding-top: 5px;
-    /* PAD: agrega para que no esté tan lejos del top */
+    padding: 10px;
     background-color: #f2f2f2;
+}
+
+
+/* Aumenta borde si la pantalla es grande */
+
+@media only screen and (min-width: 769px) {
+    .page {
+        padding: 20px;
+    }
 }
 
 .page-full {
@@ -30,40 +40,48 @@
     padding: 25px 0;
     margin-left: 0;
     list-style: none;
-  }
-  .page-stats li {
+}
+
+.page-stats li {
     float: left;
     display: block;
     margin-left: 20px;
     padding-left: 20px;
     border-left: 1px solid #d9d9d9;
-  }
-  .page-stats li:first-child {
+}
+
+.page-stats li:first-child {
     border: 0;
-  }
-  .page-stats li .summary {
+}
+
+.page-stats li .summary {
     float: left;
     margin-right: 18px;
-  }
-  .page-stats li .summary span {
+}
+
+.page-stats li .summary span {
     color: #888888;
     font-weight: 600;
     font-size: 11px;
     text-transform: uppercase;
-  }
-  .page-stats li .summary h3 {
+}
+
+.page-stats li .summary h3 {
     color: #555555;
     margin: 0;
     font-size: 20px;
     line-height: 20px;
     font-weight: 600;
-  }
-  .page-stats li .graph {
+}
+
+.page-stats li .graph {
     float: right;
-  }
-  .page-stats li .sparkline {
+}
+
+.page-stats li .sparkline {
     margin-top: 4px;
-  }
+}
+
 
 /* PAD: elimina margen inferior en alerts */
 
@@ -76,6 +94,10 @@
 
 button.close {
     padding-right: 20px;
+}
+
+.compact {
+    line-height: 1.2em;
 }
 
 
@@ -170,9 +192,17 @@ button.close {
 
 /* Posicionar content */
 
+.appWrapper.header-fixed #header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
 .appWrapper.header-fixed.aside-fixed #content {
     position: absolute;
     top: 45px;
+    left: 0;
     right: 0;
     bottom: 0;
     width: auto;
@@ -181,34 +211,32 @@ button.close {
     z-index: 1;
 }
 
+
 /* PAD: wrapper no sidebar */
-.appWrapper.header-fixed.aside-fixed.no-sidebar #sidebar {
-    display: none;
-}
 
 .appWrapper.header-fixed.aside-fixed.no-sidebar #content {
     left: 0px;
 }
 
+.appWrapper.header-fixed.aside-fixed.no-sidebar #sidebar {
+    display: none;
+}
+
+
 /* En pantalla delgada el #content no se mueve si aparece sidebar */
 
 @media only screen and (min-width: 769px) {
     .appWrapper.header-fixed.aside-fixed:not(.no-sidebar) #content {
-        left: 180px;
         /* PAD: Debe coincidir CODA-1 */
-    }
-}
-@media only screen and (max-width: 768px) {
-    .appWrapper.header-fixed.aside-fixed #sidebar {
-        box-shadow: 8px 5px 8px rgba(0, 0, 0, 0.3);
+        left: 180px;
     }
 }
 
-.appWrapper.header-fixed #header {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
+@media only screen and (max-width: 768px) {
+    .appWrapper.header-fixed.aside-fixed #sidebar {
+             /* Si no se mueve #content, entonces mostrar #sidebar con sombra */
+        box-shadow: 8px 5px 8px rgba(0, 0, 0, 0.3);
+    }
 }
 
 #header {
@@ -652,9 +680,6 @@ button.close {
 }
 
 
-
-
-
 /* PAD: 30px --> 15px para acercar un poco al top */
 
 .pageheader {
@@ -699,8 +724,7 @@ button.close {
 
 .pageheader .page-bar {
     /* PAD: Calculado a dedo para que coincida con el breadcrumb */
-    min-height:36px; 
-    /*background-color: white;*/
+    min-height: 36px;
 }
 
 .pageheader .page-bar .page-breadcrumb {
@@ -13534,6 +13558,13 @@ body a {
     color: #3f4e62;
 }
 
+
+/* PAD Agrega */
+
+.text-slategray.dk {
+    color: #3f4e62;
+}
+
 .text-darkgray {
     color: #333;
 }
@@ -13844,6 +13875,25 @@ body a {
     margin-right: 0px !important;
 }
 
+
+/* Aumenta borde si la pantalla es grande */
+
+.p-inner {
+    margin: 0px;
+    padding: 0px;
+}
+
+.p-outer {
+    margin: 0px;
+    padding: 10px;
+}
+
+@media only screen and (min-width: 769px) {
+    .p-outer {
+        padding: 20px;
+    }
+}
+
 .p-30 {
     padding: 30px !important;
 }
@@ -13979,6 +14029,11 @@ body a {
     padding-right: 0px !important;
 }
 
+.b-h {
+    border-top: thin solid rgba(0, 0, 0, 0.2);
+    border-bottom: thin solid rgba(0, 0, 0, 0.2);
+}
+
 .b-0 {
     border: 0 !important;
 }
@@ -13996,7 +14051,7 @@ body a {
 }
 
 .b-r {
-    border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 .b-b {
@@ -14004,11 +14059,11 @@ body a {
 }
 
 .b-l {
-    border-left: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-left: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 .b-t {
-    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 .b-dashed {
@@ -14256,8 +14311,6 @@ hr.line-full {
 .color-schemes a.scheme-light {
     background-color: #fff;
 }
-
-
 
 #header.scheme-light,
 #header.scheme-light .nav-right>li,
