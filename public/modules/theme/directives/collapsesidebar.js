@@ -15,17 +15,16 @@ angular.module('theme')
         // obtener objetos
         var app = angular.element('.appWrapper');
         var $window = angular.element(window);
-        var width = $window.width();   
+        var width = $window.width();
+        var lastWidth = lastWidth||width;
+        var timer;
 
         // agregar clase "sidebar-sm" al app-wrapper al iniciar
         redraw();
 
         $window.resize(function () {
-          if (width !== $window.width()) {
-            var t;
-            clearTimeout(t);
-            t = setTimeout(redraw, 300);
-          }
+            clearTimeout(timer);
+            timer = setTimeout(redraw, 200);
         });
 
         element.on('click', function (e) {
@@ -33,14 +32,17 @@ angular.module('theme')
           e.preventDefault();
         });
 
+
         function redraw() {
           var width = $window.width();
+          //console.log("performing redraw. last:",lastWidth, "current:", width)
           if (width > 768){
             app.removeClass('no-sidebar');
-
           }else{
             app.addClass('no-sidebar');
           }
+          // Actualizar ancho
+          lastWidth= width;
 
         };
 
