@@ -183,6 +183,7 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             //console.log("al controler llegó esta línea", linea, rowIx);
             //onReload();
             clickRow($scope.apiPago, rowIx)($scope.pasoPago);
+            goToPage($scope.apiPago, rowIx)($scope.pasoPago);
 
         }
 
@@ -194,6 +195,11 @@ angular.module('gestion').controller('gestionPagosClientesController', ['$scope'
             // if (!$scope.pasoPago.data[$scope.pasoPago.data.length-1].isSelected){
             //  fn($scope.pasoPago);
             //}
+        }
+        function goToPage(api){
+            return function (res) {
+                 api.goToPage();
+            }
         }
         /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
         function clickRow(api, row) {

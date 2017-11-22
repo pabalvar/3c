@@ -33,12 +33,12 @@
     <!-- separator -->
   </div>
 
+  <!-- #ROW: Separador -->
   <div rnd-row
        class="rnd-gray"></div>
 
   <!-- #ROW: Pagos -->
-  <div rnd-row
-       ng-show="pasoEntidad.length">
+  <div rnd-row>
 
     <div class="col-md-10 col-lg-6 xp-inner">
       <!-- /Pagos -->
@@ -50,6 +50,7 @@
                    dialog="{selectRow:selectRow,onChange:cambiaPago, onAddRow:onAddRowPago}"
                    api="apiPago">
       </rnd-smtable>
+      <br>
       <!-- /Pagos -->
     </div>
     <div class="col-md-10 col-lg-6 xp-inner">
@@ -62,8 +63,13 @@
                    api="apiDeuda">
       </rnd-smtable>
       <!-- /Deuda -->
+      <br>
     </div>
-    <div class="col-sm-6 xp-inner">
+  </div>
+
+  <!-- #ROW: Cruce -->
+  <div rnd-row>
+    <div class="col-md-10 col-lg-6 col-md-offset-1  col-lg-offset-3 xp-inner text-center">
       <!-- Cruce -->
       <rnd-smtable ng-if="pasoCruce.data.length"
                    meta="metaCruce"
@@ -74,7 +80,8 @@
       </rnd-smtable>
       <!--<pre class="mt-10"><p class="text-xs" ng-repeat="item in pasoCruce.data">{{item.NUDP}} | {{item.NUDO}} | {{item.ASIGNADO}}</p></pre>-->
       <!-- /Cruce -->
+      <br>
     </div>
-
   </div>
+
 </section>

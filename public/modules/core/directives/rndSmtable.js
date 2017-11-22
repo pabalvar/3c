@@ -114,22 +114,33 @@ angular.module('core')
             // Anexar instancia
             $scope.api = $scope.api || {};
             $scope.api.clickRow = clickRow;
+            $scope.api.goToPage = goToPage;
             $scope.api.redraw = redraw;
             $scope.api.addRow = addRow;
 
             /* Función que inicializa y crea una nueva línea */
-            function addRow(){
+            function addRow() {
                 var obj = rndORM.createObject($scope.meta, 0, $scope.rtablas);
                 rndDialog.setLineOpen(obj);
                 $scope.source.data.push(obj);
                 // Llamar al controlador si se pasó onAddRow
-                var rowIx = $scope.source.data.length -1;
-                if ($scope.dialog.onAddRow){
-                    $scope.dialog.onAddRow(obj,$scope.source,rowIx);
+                var rowIx = $scope.source.data.length - 1;
+                if ($scope.dialog.onAddRow) {
+                    $scope.dialog.onAddRow(obj, $scope.source, rowIx);
                 }
             }
 
-            
+            function goToPage(page) {
+                // definir el selector como ".id tr:nth-child(rowIx)"
+                var selector = `.${$scope.id} tfoot a.table-last-page`;
+
+                // aplicar trigger (en diferido para asegurar esté renderizado)
+                $timeout(function () {
+                    // Obtener objeto del DOM
+                    var el = angular.element(selector);
+                    el.trigger('click')
+                });
+            }
 
             /** Función que simula un click en una línea */
             function clickRow(rowIx) {
@@ -146,9 +157,9 @@ angular.module('core')
             }
 
             /* Función que fuerza el redibujado de la tabla */
-            function redraw(){
-                $scope.blink=true;
-                $timeout(function(){$scope.blink=false});
+            function redraw() {
+                $scope.blink = true;
+                $timeout(function () { $scope.blink = false });
             }
 
             /* Función utilizada para ocultar líneas por controlador */
