@@ -9,10 +9,12 @@
                     ng-disabled="true">
 </md-progress-linear>
 
-<div class="rnd-b rnd-white">
+<div style="overflow:auto;"
+     class="">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
-           class="st-table table table-striped table-custom headerdark table-bordered inputable {{id}}"
+           class="st-table table-condensed table table-striped table-custom dt-responsive headerdark table-bordered inputable {{id}}"
+
            xxclass="st-table table table-striped table-condensed xtable-bordered hideextra table-custom inputable headerdark dt-responsive dt-right shadow ">
         <thead>
             <tr>
@@ -43,7 +45,24 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot ng-if="!source.$offline">
+
+        <!-- paginación -->
+        <tfoot ng-show="options.pagesize < source.data.length">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div st-pagination=""
+                         st-template="rndSmtable.pagination.html"
+                         st-items-by-page="options.pagesize"
+                         st-displayed-pages="3">
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+        <!-- /paginación -->
+
+
+        <tfoot ng-show="!source.$offline && (options.canCreate || !source.data.length) ">
             <tr>
                 <td colspan="500"
                     class="text-center">
@@ -58,6 +77,8 @@
                 </td>
             </tr>
         </tfoot>
+
+        <!-- offline -->
         <tfoot ng-if="source.$offline">
             <tr>
                 <td colspan="500"
@@ -69,5 +90,54 @@
                 </td>
             </tr>
         </tfoot>
+        <!-- offline -->
+
     </table>
 </div>
+
+<script type="text/ng-template"
+        id="rndSmtable.pagination.html">
+
+    <div class="pagination"
+         ng-if="pages.length >= 2">
+
+        <ul class="pagination">
+
+            <!-- retroceder -->
+            <li>
+                <a ng-disabled="currentPage < 2"
+                   ng-click="selectPage(currentPage - 1)">&lt;</a>
+            </li>
+
+            <!-- mostrar primera -->
+            <li ng-class="{active: currentPage==1}">
+                <a ng-disabled="currentPage == 1"
+                   ng-click="selectPage(1)">1
+                </a>
+            </li>
+
+            <!-- bloque de la actual -->
+            <li ng-if="numPages > 4 && currentPage > 3"><a ng-disabled="true">...</a></li>
+            <li ng-repeat="page in pages"
+                ng-if="page > (currentPage-4) && page < (currentPage+4) && (page > 1) && (page < numPages)"
+                ng-class="{active: page==currentPage}">
+                <a ng-click="selectPage(page)">{{page}}</a>
+            </li>
+            <li ng-if="numPages > 4 && currentPage <  numPages - 2"><a ng-disabled="true">...</a></li>
+
+            <!-- mostrar última página -->
+            <li ng-class="{active: currentPage==numPages}">
+                <a ng-disabled="currentPage == numPages"
+                   ng-click="selectPage(numPages)">{{numPages}}</a>
+            </li>
+
+            <!-- avanzar -->
+            <li>
+                <a ng-disabled="currentPage > (numPages-2)"
+                   ng-click="selectPage(currentPage+1)">&gt;</a>
+            </li>
+
+        </ul>
+    </div>
+
+</script>

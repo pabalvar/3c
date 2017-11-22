@@ -39,7 +39,11 @@ button.redondo{
 .hideextra { white-space: nowrap; overflow: hidden; text-overflow:ellipsis; }
 
 /* Poco borde */
-table.inputable tbody tr td{ padding-top: 0px; padding-bottom: 0px;}
+table.inputable tbody tr td{ 
+  margin:0px;
+  padding:0px;
+
+}
 
 input.rndinputd{
   padding-top: 0px;
@@ -71,8 +75,12 @@ input.rndinputd{
 
 /* PAD: Header gris en datatables */
 table.headerdark thead{
-  background-color: #f5f5f5;
+  background-color: #3f4e62; /* Slategray */
 }
+table.headerdark thead tr{
+ color: rgba(255, 255, 255, 0.7);
+}
+
 
 /* PAD: Parche para que contador de datatable quede más a la derecha */
 .dataTables_length{
