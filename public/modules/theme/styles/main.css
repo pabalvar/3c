@@ -10158,9 +10158,9 @@ only screen and (min-resolution: 144dpi) {
 .table>tbody>tr th,
 .table>tfoot>tr td,
 .table>tfoot>tr th {
-    border-color: #dbe0e2;
+    border-color: rgba(127,127,127,0.5);
 }
-
+/* PAD: Agregaba espacio en primera y ultima columna
 .table>thead>tr td:first-child,
 .table>thead>tr th:first-child,
 .table>tbody>tr td:first-child,
@@ -10177,7 +10177,7 @@ only screen and (min-resolution: 144dpi) {
 .table>tfoot>tr td:last-child,
 .table>tfoot>tr th:last-child {
     padding-right: 15px;
-}
+}*/
 
 .table.table-no-border>thead>tr td,
 .table.table-no-border>thead>tr th,
@@ -10189,7 +10189,7 @@ only screen and (min-resolution: 144dpi) {
 }
 
 .table.table-custom {
-    border-collapse: separate;
+   /* border-collapse: separate; PAD: se ve feo*/
 }
 
 .table.table-custom>thead>tr td,
@@ -10203,8 +10203,8 @@ only screen and (min-resolution: 144dpi) {
 
 .table.table-custom>thead>tr td,
 .table.table-custom>thead>tr th {
-    border-color: #798992;
-    border-width: 1px;
+    /*border-color: #798992;
+    border-width: 1px;*/
     position: relative;
 }
 

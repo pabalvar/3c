@@ -38,8 +38,10 @@ angular.module('theme')
           //console.log("performing redraw. last:",lastWidth, "current:", width)
           if (width > 768){
             app.removeClass('no-sidebar');
+            app.removeClass('mobile')
           }else{
             app.addClass('no-sidebar');
+            app.addClass('mobile');
           }
           // Actualizar ancho
           lastWidth= width;
