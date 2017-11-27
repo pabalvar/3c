@@ -1,13 +1,13 @@
 ﻿'use strict';
 
-exports.initReq = function(req,res,next){
+exports.initReq = function (req, res, next) {
     req.consultas = req.consultas || {};
     next();
 }
 
 /** Middleware que convierte parámetros query de la URL **/
-exports.urlParams = function(req,res,next){
-    if (req.query){
+exports.urlParams = function (req, res, next) {
+    if (req.query) {
         // param: proceso. Si es truty convertirlo a true. Indica usar proceso activo
         if (req.query.proceso) req.query.proceso = true;
         else if (req.query.unassigned) req.query.unassigned = true;
@@ -17,56 +17,56 @@ exports.urlParams = function(req,res,next){
 }
 
 /** Función de salida de objeto **/
-exports.returnStatusCreate = function(req,res){
+exports.returnStatusCreate = function (req, res) {
     var out;
-    if (req.filas){
-        out=req.filas[0];
+    if (req.filas) {
+        out = req.filas[0];
     }
-    out.object='status_create';
+    out.object = 'status_create';
     res.send(out);
 }
 /** Función de salida de objeto **/
-exports.returnStatusDelete = function(req,res){
+exports.returnStatusDelete = function (req, res) {
     var out;
-    if (req.filas){
-        out=req.filas[0];
+    if (req.filas) {
+        out = req.filas[0];
     }
-    out.object='status_delete';
+    out.object = 'status_delete';
     res.send(out);
 }
 /** Función de salida de objeto **/
-exports.returnStatusUpsert = function(req,res){
+exports.returnStatusUpsert = function (req, res) {
     var out;
-    if (req.filas){
-        out=req.filas[0];
+    if (req.filas) {
+        out = req.filas[0];
     }
-    out.object=req.object||'status_upsert';
+    out.object = req.object || 'status_upsert';
     res.send(out);
 }
 /** Función de salida de objeto **/
-exports.returnStatusUpdate = function(req,res){
+exports.returnStatusUpdate = function (req, res) {
     var out;
-    if (req.filas){
-        out=req.filas[0];
+    if (req.filas) {
+        out = req.filas[0];
     }
-    out.object=req.object||'status_update';
+    out.object = req.object || 'status_update';
     res.send(out);
 }
 /** Función de salida de objeto **/
-exports.returnStatus = function(req,res){
+exports.returnStatus = function (req, res) {
     var out;
-    if (req.filas){
-        out=req.filas[0];
+    if (req.filas) {
+        out = req.filas[0];
     }
-    out.object=req.object||'status_insert';
+    out.object = req.object || 'status_insert';
     res.send(out);
 }
 
 /** Función de salida para NO queries, usado para retornar constantes **/
-exports.returnConstante = function(req, res){
+exports.returnConstante = function (req, res) {
     var out = {
-        "values" : req.data,
-        "object" : 'constante'
+        "values": req.data,
+        "object": 'constante'
     };
     //res.send(req.data);   
     res.send(out);
@@ -75,24 +75,24 @@ exports.returnConstante = function(req, res){
 
 // definición objetos salida
 // contrato_dialog {object:'contrato_dialog', data:[], rtablas}
-exports.contrato_dialog = function(req,res){
+exports.contrato_dialog = function (req, res) {
 
     // si no vienen datos retornar 400
-    if (!(req.resultados.contracts||[]).length && req.singleResource) {
-        errorRes(req,res,404,'ERR_SRV_404','No se encuentra el recurso'); 
+    if (!(req.resultados.contracts || []).length && req.singleResource) {
+        errorRes(req, res, 404, 'ERR_SRV_404', 'No se encuentra el recurso');
         return;
     }
     // si viene req.embed.dialog retornar dialog
-    var out = {object:'contrato_dialog'}
+    var out = { object: 'contrato_dialog' }
     var key = 'contracts'
     // agregar rtablas
-    if ((req.embed||{}).dialog) {
-        out.rtablas =req.resultados.parseRtablas;
+    if ((req.embed || {}).dialog) {
+        out.rtablas = req.resultados.parseRtablas;
     }
     // agregar información datatables
-    if(req.query.type== 'datatable'){
+    if (req.query.type == 'datatable') {
         out.recordsTotal = req.resultados.contracts_datatable[0].total;
-        out.recordsFiltered = req.resultados.contracts_datatable[0].total;  
+        out.recordsFiltered = req.resultados.contracts_datatable[0].total;
     }
     out.data = req.resultados.contracts;
     // agregar 
@@ -102,51 +102,59 @@ exports.contrato_dialog = function(req,res){
 
 
 /** Función global de salida a cliente con recurso */
-exports.queryOut = function(req,res){
-    var k,out;
-    if (req.singleResource||req.query.count){
-        for(var key in req.resultados){
-            out=req.resultados[key][0];
+exports.queryOut = function (req, res) {
+    var k, out;
+    if (req.singleResource || req.query.count) {
+        for (var key in req.resultados) {
+            out = req.resultados[key][0];
         }
-    }else{
-        var out = {object:"list"};
+    } else {
+        var out = { object: "list" };
 
         var isObject;
         // probar si respuesta viene en req.resultados
-        for(var key in req.resultados){
+        for (var key in req.resultados) {
             isObject = true;
-            if (k = key.match(/(.*)_datatable$/)){
+
+            if (k = key.match(/(.*)_datatable$/)) {
+                // Agregar datos de datatable
                 out.recordsTotal = req.resultados[key][0].total;
                 out.recordsFiltered = req.resultados[key][0].total;
-            }else{
+
+            } else if (k = key.match(/rtablas$/)) {
+                // Si viene rtablas incorporar
+                out.rtablas = req.resultados[key];
+
+            } else {
+                // Si viene otro campo, agregar como data
                 out.data = req.resultados[key];
             }
         }
-        if (!isObject){
+        if (!isObject) {
             // La respuesta debe venir en req.filas
             out.data = req.filas;
         }
-        
+
     }
-    
+
     // Validación. Si es singleResource y no hay resultados, devolver 404
-    if (req.singleResource){
-        if (typeof(out)=='undefined'){
-            console.log("sacando 404",typeof(out))
-            errorRes(req,res,404,'ERR_SRV_404','No se encuentra el recurso'); 
-            return            
-        }   
+    if (req.singleResource) {
+        if (typeof (out) == 'undefined') {
+            console.log("sacando 404", typeof (out))
+            errorRes(req, res, 404, 'ERR_SRV_404', 'No se encuentra el recurso');
+            return
+        }
     }
-    
+
     res.send(out);
 }
-var errorRes = function(req,res,status,type,message){
-    status = status||400;
-    type = type||'ERR_SRV_400';
-    message = message||'requerimiento malformado';
-   
+var errorRes = function (req, res, status, type, message) {
+    status = status || 400;
+    type = type || 'ERR_SRV_400';
+    message = message || 'requerimiento malformado';
+
     //console.tag("ERR",type).Error(message);
- 
+
     res.status(status).json({
         type: type,
         message: message
@@ -155,33 +163,33 @@ var errorRes = function(req,res,status,type,message){
 }
 exports.errorRes = errorRes;
 
-exports.noContent = function(req,res,msg){
-        msg = msg||'ningún elemento coincide con el criterio de búsqueda';
-        console.log("tarea vacía. HTTP-202");
-        res.status(202).json(
-            {
-                type: 'NO_CONTENT',
-                message: msg
-            });
+exports.noContent = function (req, res, msg) {
+    msg = msg || 'ningún elemento coincide con el criterio de búsqueda';
+    console.log("tarea vacía. HTTP-202");
+    res.status(202).json(
+        {
+            type: 'NO_CONTENT',
+            message: msg
+        });
 }
 
 /** Valida campos antes de insertar */
-exports.validateFields = function(arr,tr){
+exports.validateFields = function (arr, tr) {
 
-    arr.forEach(function(l){
+    arr.forEach(function (l) {
 
         // Reemplazar cada línea por su función tr, si existe
-        for (var key in tr){
-            if (tr[key].required){
-                if (typeof(l[key])=='undefined'){
-                    l[key]=null;
+        for (var key in tr) {
+            if (tr[key].required) {
+                if (typeof (l[key]) == 'undefined') {
+                    l[key] = null;
                 }
             }
         }
-        for (var key in l){
+        for (var key in l) {
             // Aplicar validación tr
-            if (typeof ((tr[key]||{}).transform) != 'undefined'){
-                l[key] = tr[key].transform(l[key],l); 
+            if (typeof ((tr[key] || {}).transform) != 'undefined') {
+                l[key] = tr[key].transform(l[key], l);
             }
         }
     });
@@ -192,18 +200,15 @@ exports.validateFields = function(arr,tr){
 
 
 /**
- * @api {get} /meta/ Meta
+ * @api {get} /meta/:id Metadatos de entidad relacional
  * @apiName meta
  * @apiGroup liberp
- * @apiSampleRequest http://localhost:3000/meta
+ * @apiSampleRequest http://localhost:3000/meta/:id
  *
- * @apiDescription Equivalente a Trae cliente
+ * @apiDescription Trae metadatos de una entity
  *
- * @apiParam {String[]} [koen] Código de la entidad
- * @apiParam {String[]} [tien] Tipo de entidad (C)liente|(P)roveedor|(A)mbos
- * @apiParam {String[]} [tiposuc] Tipo de sucursal (P)???
- * @apiParam {String} [search] <i>search</i>: Condición por defecto, texto contenido en la concatenación de todos los campos <code>"WHERE CONCAT(<i>f</i>) like '%search%'</code>
- *
+ * @apiParam {String} [id] Nombre de la entity
+ * 
  * @apiExample Ejemplo de uso (copy paste en browser):
  * http://localhost:3000/meta/entidades
  *
