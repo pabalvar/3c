@@ -18,7 +18,7 @@ var ApplicationConfiguration = (function() {
 		    //'ui.utils',
             //'ui.grid',
 
-		    'angular-loading-bar',
+		    //'angular-loading-bar',
 		    'angular-momentjs',
             'FBAngular',
 		    //'lazyModel',

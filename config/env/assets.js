@@ -56,7 +56,7 @@ module.exports = {
                 "public/bower_components/angular-fullscreen/src/angular-fullscreen.js",
                 "public/bower_components/angular-simple-logger/dist/angular-simple-logger.js",
                 //"public/bower_components/lodash/lodash.js",
-                "public/bower_components/angular-loading-bar/build/loading-bar.js",
+                //"public/bower_components/angular-loading-bar/build/loading-bar.js",
                 "public/bower_components/eventEmitter/EventEmitter.js",
                 //"public/bower_components/imagesloaded/imagesloaded.js",
                 "public/bower_components/angular-aria/angular-aria.js",
