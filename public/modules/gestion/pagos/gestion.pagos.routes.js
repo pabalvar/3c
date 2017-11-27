@@ -24,7 +24,9 @@ angular.module('gestion').config(['$stateProvider',
                     menuLevel: 1,
                     menuPrio: 20
                 }, resolve: {
-                    // metaEntidad: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'entidades' })], // Así se inyectaría metadatos
+                    metaEntidad: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'entidades' }).$promise],
+                    metaPago: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'pagos' }).$promise],
+                    metaDeuda: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'documentos.deuda' }).$promise],
                     plugins: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
                             'scripts/vendor/datatables/Responsive/dataTables.responsive.css',

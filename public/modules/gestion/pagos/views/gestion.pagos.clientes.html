@@ -1,3 +1,4 @@
+<pre>{{metaPago}}</pre>
 <!-- #ROW: Breadcrumb -->
 <rnd-breadcrumb>
   <!-- search box -->
@@ -10,15 +11,14 @@
   <!-- /search box -->
 </rnd-breadcrumb>
 
-
-<section ng-show="pasoEntidad.length">
+<section xng-if="pasoEntidad.length">
 
   <!-- #ROW: Entidad -->
   <div rnd-row>
     <div class="col-xs-4 p-inner">
       <!-- Entidad -->
       <rnd-profile meta="metaEntidad"
-                   options="{xshowEmpty:'<h2>¡Ingresa clientes!</h2><p>Ingresa algún dato del cliente</p>', xtitle:'Datos entidad'}"
+                   options="{showEmpty:'<h2>¡Nadie aquí!</h2><p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>', title:'Datos entidad'}"
                    source="{data:pasoEntidad}"
                    rtablas="rtablas">
       </rnd-profile>
@@ -40,23 +40,24 @@
   <!-- #ROW: Pagos -->
   <div rnd-row>
 
-    <div class="col-md-10 col-lg-6 xp-inner">
+    <div class="col-md-10 col-lg-8 xp-inner">
+      <!--<button ng-click="apiPago.redraw()">Refresh</button>-->
+
       <!-- /Pagos -->
       <rnd-smtable meta="metaPago"
-                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', canCreate:true, textCreate:'Ingresar un documento de pago', pagesize:3}"
-    
+                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, pageheight:5}"
                    source="pasoPago"
                    rtablas="rtablas"
-                   dialog="{selectRow:selectRow,onChange:cambiaPago, onAddRow:onAddRowPago}"
+                   dialog="{selectRow:selectRow,onChange:cambiaPago, onAddRow:onAddRowPago, canCreate:true }"
                    api="apiPago">
       </rnd-smtable>
       <br>
       <!-- /Pagos -->
     </div>
-    <div class="col-md-10 col-lg-6 xp-inner">
+    <div class="col-md-10 col-lg-8 xp-inner">
       <!-- Deuda -->
       <rnd-smtable meta="metaDeuda"
-                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta'}"
+                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:5, pageheight:5}"
                    source="pasoDeuda"
                    dialog="{selectRow:selectRow}"
                    rtablas="rtablas"
