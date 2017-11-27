@@ -48,7 +48,7 @@ $scope.traePago = function (query) {
 </pre>
 **/
 angular.module('core')
-    .service('ws', function () {
+    .service('ws', ['rndDialog', function (rndDialog) {
         return function (fn, params, store, thenFn, errorFn) {
             store = store || {};
 
@@ -73,6 +73,10 @@ angular.module('core')
                     store.$readylatch = store.$ready;
                     store.$offline = false;
 
+                    // Si viene el campo data, inicializar dialog
+                    if (angular.isArray(store.data)){
+                        rndDialog.initDataset(store);
+                    }
                     // Llamar función calback de usuario
                     if (thenFn) {
                         if (typeof (thenFn) == 'function')
@@ -110,7 +114,7 @@ angular.module('core')
             )
         }
 
-    })
+    }])
     .factory('rndWS', function () {
         return function (resource) {
             var resource = resource;
