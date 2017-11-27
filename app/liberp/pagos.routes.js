@@ -12,4 +12,11 @@ module.exports = function (app) {
         driver.executeListQuery(app),
         globals.queryOut
         )
+
+    app.route('/meta/pagos') // metadatos
+        .get(
+        pagos.getMetaPagos,
+        driver.executeListQuery(app),
+        globals.queryOut
+        )
 }

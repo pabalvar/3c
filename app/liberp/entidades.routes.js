@@ -24,7 +24,7 @@ var globals = require('../lib/globals/controllers/globals.js');
  * @apiSuccess {Array}    data    Array en que cada línea de resultado es un objecto
  */
 module.exports = function (app) {
-    
+
     app.route('/entidades/:id*?') // id=KOEN
         .get(
         entidades.getEntidades,

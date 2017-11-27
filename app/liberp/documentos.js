@@ -4,6 +4,7 @@ var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
 exports.getDocumentos = getDocumentos;
 exports.traeDeuda = traeDeuda;
+exports.getMetaDeuda = getMetaDeuda;
 
 // Detalle de implementación
 function getDocumentos(req, res, next) {
@@ -15,14 +16,14 @@ function getDocumentos(req, res, next) {
 }
 
 function traeDeuda(req, res, next) {
-    req.query.tido = ['BLV','BSV','BLX','FCV','FDB','FDV','FDX','FDZ','FEV','FVL','FVT','FVX','FXV','FYV','FVZ','RIN','ESC','FEE','FDE','NCC','NCB' ];
-    req.query.espgdo = 'P';
-    req.query.nudonodefi = 0;
-    req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
-    next();
+  req.query.tido = ['BLV', 'BSV', 'BLX', 'FCV', 'FDB', 'FDV', 'FDX', 'FDZ', 'FEV', 'FVL', 'FVT', 'FVX', 'FXV', 'FYV', 'FVZ', 'RIN', 'ESC', 'FEE', 'FDE', 'NCC', 'NCB'];
+  req.query.espgdo = 'P';
+  req.query.nudonodefi = 0;
+  req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
+  next();
 }
 
-function getDocumentosQuerySQL(){
+function getDocumentosQuerySQL() {
   return `
   -->> select
  SELECT 
@@ -57,5 +58,36 @@ function getDocumentosQuerySQL(){
  -->> order  
  ORDER BY 
    EDO.TIDO,EDO.NUDO
-  `; 
- }
+  `;
+}
+
+// Entrega metadatos
+function getMetaDeuda(req, res, next) {
+  req.resultados = req.resultados || {};
+  req.resultados.meta = [
+    { field: "IDMAEEDO", name: "IDMAEEDO", visible: false, pk: true },
+    { field: "EMPRESA", name: "Emp.", description: "Empresa", visible: false },
+    { field: "TIDO", name: "DP", description: "Tipo documento", visible: true, length: '3' },
+    { field: "NUDO", name: "Número", visible: true, length: '10' },
+    { field: "SUENDO", name: "Suc.", visible: false },
+    { field: "TIMODO", name: "Timodo", visible: false },
+    { field: "TAMODO", name: "Tamodo", visible: false },
+    { field: "ESPGDO", name: "Estado doc.", visible: false, length: '1', datatype: 'rtabla', tabla: 'EstadoPago', options: { returnSrv: "id", returnClient: "name" } },
+    { field: "FEULVEDO", name: "F. Vencim.", visible: true, length: '8', datatype: 'date' },
+    { field: "MODO", name: "M", description: "Moneda", length: '1', visible: true },
+    { field: "VABRDO", name: "Valor doc.", visible: true, length: '10', datatype: 'number' },
+    { field: "VAABDO", name: "Saldo ant.", visible: true, length: '10', datatype: 'number' },
+    { field: "VAIVARET", name: "Valor IVA ret.", visible: false, datatype: 'number' },
+    { field: "VAIVDO", name: "Valor IVA doc.", visible: false, datatype: 'number' },
+    { field: "VANEDO", name: "Valor neto doc.", visible: false, datatype: 'number' },
+    { field: "BLOQUEAPAG", name: "Bloquea pago", visible: false },
+    { field: "ASIGEDO", name: "Abono", visible: true, length: '10', datatype: 'number' },
+    { field: "SALDOEDO", name: "Saldo", visible: true, length: '10', datatype: 'number' }
+  ];
+  req.resultados.rtablas = { EstadoPago: getEstadoPago() }
+  next();
+}
+
+function getEstadoPago() {
+  return { data: [{ id: "P", name: "Pendiente" }] }
+}
