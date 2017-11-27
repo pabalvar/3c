@@ -1,9 +1,10 @@
 <!-- modo EDIT -->
-<div ng-if="line.$estado.$isOpen && !column.readOnly">
+<div ng-if="line.$estado.$isOpen && !column.readOnly"
+     class="rnd-input-open">
     <!-- debug  <pre>pre: {{line[key]}}</pre>-->
 
     <!-- autocomplete -->
-    <div ng-if="type.datatype=='autocomplete'"
+    <div ng-if="type.datatype=='autocomplete' && false"
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="text"
@@ -30,7 +31,7 @@
     <!-- /autocomplete -->
 
     <!-- rtabla -->
-    <div ng-if="type.datatype=='rtabla'"
+    <div ng-if="type.datatype=='rtabla' "
          class="form-validation"
          uib-dropdown>
         <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
@@ -48,34 +49,24 @@
     <!-- date -->
     <div ng-if="type.datatype=='date'">
         <div class="form-validation">
-            <p class="input-group mb-0">
-
-                <!-- icono -->
-                <span class="input-group-btn pl-10 pr-10 xrnd-b text-center"
-                      style="margin-top: 2px; margin-bottom: 2px;">
-                    <button type="button"
-                            style="float:none; text-align:right;"
-                            class="p-0 b-0 btn"
-                            ng-click="dateCtrl.toggleOpen(); $event.stopPropagation()">
-                        <i class="glyphicon glyphicon-calendar">
-                        </i>
-                    </button>
-                </span>
-                <!-- /icono -->
-
+            <p class="mb-0" style="display:flex;">
                 <!-- fecha indefinida -->
-                <span style="float:right; width:80%"
-                      class="pl-2 pr-2 form-control rndinputd"
-                      ng-if="dateCtrl.isDateInfinite">{{line[key]|monitor:column }}
+                <span 
+                      class="form-control rndinput rnd-input-open-text {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                      ng-if="dateCtrl.isDateInfinite"
+                      ng-click="dateCtrl.setToday()">
+                      {{line[key]|monitor:column }}    
                 </span>
                 <!-- /fecha infinita -->
-
+                <!-- input -->
                 <input ng-model="buffer.tmpInput"
-                       ng-if="!dateCtrl.isDateInfinite"
+                       ng-show="!dateCtrl.isDateInfinite"
                        ng-click="$event.stopPropagation()"
                        type="text"
-                       style="float:left; padding-right:4px; padding-left:4px; text-align:right;"
-                       class="rndinputd form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                       style="display:inline-block;"
+                       ng-mouseenter="dateCtrl.openDeferred();"
+                       ng-mouseleave="dateCtrl.closeDeferred();"
+                       class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                        uib-datepicker-popup="{{dateCtrl.format}}"
                        ng-model-options="{timezone: 'utc'}"
                        is-open="dateCtrl.isOpen"
@@ -85,40 +76,37 @@
                        alt-input-formats="dateCtrl.altInputFormats"
                        datepicker-append-to-body="true"
                        datepicker-popup-template-url="modules/core/directives/rndInput-date.html" />
-
-
-
+                <!-- /input -->
             </p>
         </div>
     </div>
     <!-- /date -->
 
     <!-- numérico -->
-    <div ng-if="type.datatype=='number'||type.datatype=='currency'"
+    <div ng-if="(type.datatype=='number'||type.datatype=='currency')"
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="number"
-               style="width: 95%; padding-right:0px; float:none;"
                uib-tooltip="{{line.$estado[key].$message}}"
                tooltip-class="danger"
                ng-click="$event.stopPropagation()"
-               class="rndinput form-control text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+               class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+    
                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                ng-required="column.required">
     </div>
     <!-- /numérico -->
 
     <!-- texto -->
-    <div ng-if="type.datatype=='string'"
+    <div ng-if="type.datatype=='string' || type.datatype=='uuid'"
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="text"
                ng-click="$event.stopPropagation()"
-               style="width: 95%;"
                uib-tooltip="{{line.$estado[key].$message}}"
                ng-readonly="(column.readOnly && (column.pk && lineMeta.$action!='N' ))  || !line.$estado.$isOpen"
                ng-required="column.required"
-               class="pl-4 pr-4 rndinput form-control rnd-input-cell {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}">
+               class="form-control rndinput rnd-input-open-text {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}">
     </div>
     <!-- /texto -->
 

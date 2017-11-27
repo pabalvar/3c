@@ -3,6 +3,8 @@
     dropdown-nested
     ng-if="isOpen"
     ng-keydown="keydown($event)"
+    ng-mouseenter="datepickerOptions.timer.openDeferred()"
+    ng-mouseleave="datepickerOptions.timer.closeDeferred()"
     ng-click="$event.stopPropagation()">
   <li ng-transclude></li>
   <li ng-if="showButtonBar"

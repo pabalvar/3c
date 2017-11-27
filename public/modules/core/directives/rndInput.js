@@ -47,7 +47,7 @@ angular.module("core")
         line: '=',
         key: '=',
         rtablas: '=',
-        dialog:'=?',
+        dialog: '=?',
         indexBy: '@'
       }, controller: ['$timeout', '$scope', 'getDatatype', '$moment', 'decodeRtabla', 'rndDialog',
         /** Al hacer un cambio se ejecutan las siguientes funciones: 
@@ -55,7 +55,6 @@ angular.module("core")
          * scope.column.onValueChange
           */
         function ($timeout, $scope, getDatatype, $moment, decodeRtabla, rndDialog) {
-
           // Revisar deprecado
           console.log("rndInput: creación objeto");
           if ($scope.columns) console.warn("rndInput: columns va a ser deprecado. Use meta");
@@ -93,11 +92,11 @@ angular.module("core")
           // Crear watcher
           $scope.$watch('buffer.tmpInput', updateBuffer, true);
           // Anexar cellClick si lo tiene el meta
-          if (column.onClick){
-            $scope.cellClick = function(line,column,source){
+          if (column.onClick) {
+            $scope.cellClick = function (line, column, source) {
               console.log("hizo click en la celda", line);
               // llamar a la función de meta
-              column.onClick(line,column,source);/*
+              column.onClick(line, column, source);/*
               console.log("line.key",line[key], key)
               $scope.buffer.tmpInput = line[key];
               init(type);
@@ -154,7 +153,7 @@ angular.module("core")
             // dejar que servicio rndDialog maneje el resto del cambio
             if ($scope.dialog.onChange) {
               //console.log("rndInput: onChange")
-              $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column );
+              $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column);
             }
 
 
@@ -182,10 +181,34 @@ angular.module("core")
             // inicializar controlador del date
             $scope.dateCtrl = {
               isOpen: false,
+              openDeferred: dateOpenDeferred,
+              closeDeferred: dateCloseDeferred,
+              setToday: function(){
+                buffer.tmpInput = new Date();
+                //console.log("cambiando")
+                $scope.dateCtrl.isDateInfinite=false;
+              },
               toggleOpen: function () { $scope.dateCtrl.isOpen = !$scope.dateCtrl.isOpen },
+              setOpen: function (open) {
+                //console.log("estoy open=", open)
+                $scope.dateCtrl.isOpen = open
+              },
               format: (type.variant == 'm') ? 'MMM yyyy' : 'dd-MM-yyyy',
               altInputFormats: ['yyyy-MM-dd', 'dd-MM-yyyy'],
-              isDateInfinite: false
+              isDateInfinite: false,
+              timer:{}
+            }
+
+            function dateCloseDeferred() {
+              $timeout.cancel($scope.dateCtrl.timer);
+              var fn = function(){$scope.dateCtrl.setOpen(false)}
+              $scope.dateCtrl.timer = $timeout(fn,100);
+            }
+            function dateOpenDeferred() {
+              $timeout.cancel($scope.dateCtrl.timer);
+
+              var fn = function(){$scope.dateCtrl.setOpen(true)}
+              $scope.dateCtrl.timer = $timeout(fn,400);
             }
 
             // Opciones para el datepopup
@@ -193,7 +216,8 @@ angular.module("core")
               formatYear: 'yyyy',
               startingDay: 1,
               minMode: type.variant == 'm' ? 'month' : 'day',
-              infiniteDate: DateInfinite
+              infiniteDate: DateInfinite,
+              timer:$scope.dateCtrl
             };
 
             // Anexar hook para formatear date
