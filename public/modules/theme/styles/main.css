@@ -3062,21 +3062,36 @@ uib-accordion .panel .panel-heading {
 }
 
 .pagination {
-    border-radius: 0;
+    /*border-radius: 0;
     margin: 0px 0;
     /* PAD: agrega margen 0 para alinear pagination */
 }
 
 .pagination>li>a,
 .pagination>li>span {
-    border-color: #e4e7e9;
+    /* border-color: #e4e7e9; */
+    float:none;
+    padding: 4px 8px;
+    margin: 1px;
+    background-color: transparent;
+    border:none;
+    color:#616f77;
+}
+
+table > thead.table-head-pagination > tr > td > div > div > ul > li.active > a,
+table > thead.table-head-pagination > tr > td > div > div > ul > li.active > a{
+    background-color: #616f77
+}
+table > thead.table-head-pagination > tr > td{
+    border-bottom-width: 1px;
+    box-shadow: inset 0px -5px 5px -3px rgba(0,0,0,0.2);
 }
 
 .pagination>li>a:hover,
 .pagination>li>a:focus,
 .pagination>li>span:hover,
 .pagination>li>span:focus {
-    background-color: #f2f3f4;
+    background-color: rgb(255, 255, 255);
 }
 
 .pagination>li:first-child>a,
@@ -10160,6 +10175,12 @@ only screen and (min-resolution: 144dpi) {
 .table>tfoot>tr th {
     border-color: rgba(127,127,127,0.5);
 }
+/* PAD: tabla pagination */
+.table>thead.table-head-pagination>tr{
+   /*background-color:#f2f2f2; */
+   background-color:white;
+   color:#616f77;
+}
 /* PAD: Agregaba espacio en primera y ultima columna
 .table>thead>tr td:first-child,
 .table>thead>tr th:first-child,
@@ -10206,6 +10227,11 @@ only screen and (min-resolution: 144dpi) {
     /*border-color: #798992;
     border-width: 1px;*/
     position: relative;
+}
+.table.table-hover>tbody>tr:hover td,
+.table.table-hover>tbody>tr:hover th {
+    /*mix-blend-mode: darken;*/
+    box-shadow: inset 0px 0px 0px 50px rgba(0, 127, 255, 0.1);
 }
 
 .table.table-custom>thead>tr td.sorting:after,
@@ -10287,7 +10313,8 @@ only screen and (min-resolution: 144dpi) {
 
 *[class*='bg-']:not(.bg-default) .table.table-hover>tbody>tr:hover td,
 *[class*='bg-']:not(.bg-default) .table.table-hover>tbody>tr:hover th {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.61);
+
 }
 
 
@@ -10844,9 +10871,8 @@ input[type="text"].ui-grid-filter-input:focus:hover {
 }
 
 .st-table .pagination {
-    margin: 0;
     /* PAD: 10px a 0px porque paginación smart-table está desalineado */
-    margin-top: 0px;
+    margin: 0;
 }
 
 .st-table .pagination a {
@@ -13665,7 +13691,7 @@ body a {
 }
 
 .text-left {
-    text-align: left !important;
+    /* text-align: left !important; */
 }
 
 
