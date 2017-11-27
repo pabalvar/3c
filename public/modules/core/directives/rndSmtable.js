@@ -10,12 +10,19 @@
 * @param {rndRtabla} rtablas Objeto rtabla para enmascarar datos
 * @param {Object} options Objeto de opciones. (recomendado poblar en vista)
 * @param {string} options.title título a mostrar sobre la tabla
-* @param {string} options.showEmpty texto a mostrar si no hay datos  (acepta html)
+* @param {string} options.showEmpty texto a mostrar si no hay datos
+* @param {integer} options.pagesize  número de filas a paginar 
+* @param {integer} options.pageheight  fija el tamaño de la ventana (medido en número de filas) 
 * @param {Object} dialog Objeto con funciones para regular lógica
 * @param {function} dialog.selectRow función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
+* @param {function} dialog.onChange función a llamar cuando se modifica un dato. Se llama con los parámetros  <code>(newVal, oldVal, "objeto linea", source, rowIx, field, meta)</code>
+* @param {function} dialog.onAddRow función a llamar después de crear línea. Se llama con los parámetros  <code>("objeto linea", source, rowIx)</code>
+* @param {boolean} dialog.canCreate si permite crear líneas
 * @param {Object} api Objeto de salida que expone el controlador de la tabla
 * @param {function} api.clickRow función que permite simular un click sobre una línea. Paramétro: <code>rowIx</code>
 * @param {function} api.redraw función recrea los objetos rnd-input de la tabla en estado edición
+* @param {function} api.goToPage función simula botón ir a página. Parámetro: <code>pageIx</code> (parte en 1)
+* @param {function} api.addRow función simula botón add row
 * @element ANY
 * @description
 * Directiva que permite mostrar una tabla. Requiere una promesa o un array, además de un objeto metadatos.<br>
@@ -92,13 +99,13 @@ angular.module('core')
             controller: 'rndSmtable'
         }
     })
-    .controller("rndSmtable", ['$scope', 'rndDialog', 'rndORM', '$timeout',
-        function ($scope, rndDialog, rndORM, $timeout) {
+    .controller("rndSmtable", ['$scope', 'rndDialog', '$timeout',
+        function ($scope, rndDialog, $timeout) {
 
             // Inicialización
 
             /* Asignar un id al DOM en la tabla*/
-            $scope.id = rndORM.newRandomString()();
+            $scope.id = rndDialog.newRandomString()();
 
             /* Opción showEmpty. Si es trueShow empty: si es true se muestra la tabla vacía, false no, texto se agrega */
             if ($scope.options.showEmpty === true) {
@@ -120,7 +127,7 @@ angular.module('core')
 
             /* Función que inicializa y crea una nueva línea */
             function addRow() {
-                var obj = rndORM.createObject($scope.meta, 0, $scope.rtablas);
+                var obj = rndDialog.createObject($scope.meta, 0, $scope.rtablas);
                 rndDialog.setLineOpen(obj);
                 $scope.source.data.push(obj);
                 // Llamar al controlador si se pasó onAddRow
@@ -132,7 +139,7 @@ angular.module('core')
 
             function goToPage(page) {
                 // definir el selector como ".id tr:nth-child(rowIx)"
-                var selector = `.${$scope.id} tfoot a.table-last-page`;
+                var selector = `.${$scope.id} a.table-last-page`;
 
                 // aplicar trigger (en diferido para asegurar esté renderizado)
                 $timeout(function () {
@@ -158,8 +165,11 @@ angular.module('core')
 
             /* Función que fuerza el redibujado de la tabla */
             function redraw() {
+                console.log("redrawing");
                 $scope.blink = true;
-                $timeout(function () { $scope.blink = false });
+                $timeout(function () { 
+                        $scope.blink = false;
+                }, 0);
             }
 
             /* Función utilizada para ocultar líneas por controlador */
@@ -171,10 +181,5 @@ angular.module('core')
                     $scope.dialog.selectRow(linea, $scope.source, $scope.meta, $scope.rtablas);
                 }
             }
-
-
-
-
-
 
         }])

@@ -9,31 +9,69 @@
                     ng-disabled="true">
 </md-progress-linear>
 
-<div style="overflow:auto;"
-     class="">
+<div style="overflow:auto; {{options.pageheight?'height:'+((options.pageheight*21)+40+33+33)+'px;':''}}"
+     class="b-b {{source.busy?'busy':''}}">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
-           class="st-table table-condensed table table-striped table-custom dt-responsive headerdark table-bordered inputable {{id}}"
+           class="st-table table-condensed table table-custom table-hover dt-responsive headerdark table-bordered inputable {{id}}">
 
-           xxclass="st-table table table-striped table-condensed xtable-bordered hideextra table-custom inputable headerdark dt-responsive dt-right shadow ">
-        <thead>
+        <!-- create row -->
+        <tfoot ng-show="!source.$offline && (dialog.canCreate || !source.data.length) ">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div>
+                        <h3 ng-if="!source.data.length"
+                            class="m-10 text-default lter ">{{options.showEmpty}}</h3>
+                        <h4 ng-if="dialog.canCreate"
+                            ng-click="api.addRow()"
+                            class="m-5 text-default lter">
+                            <i class="fa fa-plus-circle"></i> {{options.textCreate}}</h4>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+        <!-- /create row -->
+
+        <!-- column headers -->
+        <thead class="">
             <tr>
                 <th ng-repeat="m in meta | filter: {visible:true}"
                     st-sort="{{m.field}}"
                     style="{{m.length?'':'x-'}}width:{{m.length||1}}%;"
-                    class="text-center">
+                    class="text-center"
+                    ng-click="api.redraw()">
                     {{m.name}}
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <!-- /column headers -->
+
+        <!-- paginación -->
+        <thead ng-if="options.pagesize < source.data.length && options.pagesize"
+               class="table-head-pagination">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div st-pagination=""
+                         st-page-change="api.redraw()"
+                         st-template="rndSmtable.pagination.html"
+                         st-items-by-page="options.pagesize"
+                         st-displayed-pages="3">
+                    </div>
+                </td>
+            </tr>
+        </thead>
+        <!-- /paginación -->
+
+        <tbody class="rnd-gray shadow-b ">
             <tr ng-if="isLineVisible(fila)"
                 st-select-row="dialog.selectRow?fila:''"
                 ng-click="selectRow(fila)"
-                ng-repeat="fila in displayedCollection track by $index ">
+                ng-repeat="fila in displayedCollection track by fila.$estado.$id||$index ">
                 <td ng-repeat="m in meta | filter: {visible:true}"
                     class="text-{{m | alignment}}"
-                    style="vertical-align:middle;">
+                    style="vertical-align:middle; ">
                     <rnd-input ng-if="!blink || m.readOnly"
                                source="source"
                                line="fila"
@@ -45,38 +83,6 @@
                 </td>
             </tr>
         </tbody>
-
-        <!-- paginación -->
-        <tfoot ng-show="options.pagesize < source.data.length">
-            <tr>
-                <td colspan="500"
-                    class="text-center">
-                    <div st-pagination=""
-                         st-template="rndSmtable.pagination.html"
-                         st-items-by-page="options.pagesize"
-                         st-displayed-pages="3">
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
-        <!-- /paginación -->
-
-
-        <tfoot ng-show="!source.$offline && (options.canCreate || !source.data.length) ">
-            <tr>
-                <td colspan="500"
-                    class="text-center">
-                    <div>
-                        <h3 ng-if="!source.data.length"
-                            class="m-10 text-default lter ">{{options.showEmpty}}</h3>
-                        <h4 ng-if="options.canCreate"
-                            ng-click="api.addRow()"
-                            class="m-5 text-default lter">
-                            <i class="fa fa-plus-circle"></i> {{options.textCreate}}</h4>
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
 
         <!-- offline -->
         <tfoot ng-if="source.$offline">
@@ -98,41 +104,41 @@
 <script type="text/ng-template"
         id="rndSmtable.pagination.html">
 
-    <div class="pagination"
+    <div class="text-left"
          ng-if="pages.length >= 2">
-
+        <span class="text-xs mr-10">Página {{currentPage}} de {{numPages}} </span>
         <ul class="pagination">
 
             <!-- retroceder -->
-            <li>
+            <li class="text-xs">
                 <a ng-disabled="currentPage < 2"
                    ng-click="selectPage(currentPage - 1)">&lt;</a>
             </li>
 
             <!-- mostrar primera -->
-            <li ng-class="{active: currentPage==1}">
+            <li class="text-xs" ng-class="{active: currentPage==1}">
                 <a ng-disabled="currentPage == 1"
                    ng-click="selectPage(1)">1
                 </a>
             </li>
 
             <!-- bloque de la actual -->
-            <li ng-if="numPages > 4 && currentPage > 3"><a ng-disabled="true">...</a></li>
-            <li ng-repeat="page in pages"
+            <li class="text-xs" ng-if="numPages > 4 && currentPage > 3"><a ng-disabled="true">...</a></li>
+            <li class="text-xs" ng-repeat="page in pages"
                 ng-if="page > (currentPage-4) && page < (currentPage+4) && (page > 1) && (page < numPages)"
                 ng-class="{active: page==currentPage}">
                 <a ng-click="selectPage(page)">{{page}}</a>
             </li>
-            <li ng-if="numPages > 4 && currentPage <  numPages - 2"><a ng-disabled="true">...</a></li>
+            <li class="text-xs" ng-if="numPages > 4 && currentPage <  numPages - 2"><a ng-disabled="true">...</a></li>
 
             <!-- mostrar última página -->
-            <li ng-class="{active: currentPage==numPages}">
+            <li class="text-xs" ng-class="{active: currentPage==numPages}">
                 <a ng-disabled="currentPage == numPages"
                    ng-click="selectPage(numPages)">{{numPages}}</a>
             </li>
 
             <!-- avanzar -->
-            <li>
+            <li class="text-xs">
                 <a class="table-last-page" ng-disabled="currentPage > (numPages-2)"
                    ng-click="selectPage(currentPage+1)">&gt;</a>
             </li>
