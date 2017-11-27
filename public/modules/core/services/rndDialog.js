@@ -1,8 +1,42 @@
 'use strict';
 angular.module("core")
-    .service("rndDialog", ['rndORM', function (rndORM) {
+
+    .service("rndDialog", [function () {
+
+        /* Inicia dataset */
+        function initDataset(res) {
+            res.data.forEach(function (l) {
+                initLine(l); // Agrega $estado
+            })
+        }
+
+        /** Estructura de dialogo */
+        function initLine(line) {
+            line.$estado = line.$estado || newEstado();
+        }
+
+        /* Agrega columna estado */
+        function initMeta(meta) {
+            var ix;
+            // Buscar campo $estado
+            ix = meta.findIndex(m => m.field == '$estado');
+            // Si no se encontró, crear
+            if (ix < 0) {
+                meta.unshift({ field: '$estado', datatype: '$estado', name: 'estado', visible: true })
+            }
+            return meta;
+        }
 
         var vm = {
+
+            initDataset: initDataset,
+            initLine: initLine,
+            initMeta: initMeta,
+
+            createLine: createLine,
+
+            isLineHidden: isLineHidden,
+            onChange: onChange,
             getLineMatch: getLineMatch,
             getTouched: getTouched,
             getModified: getModified,
@@ -25,15 +59,17 @@ angular.module("core")
             toggleLineOpen: toggleLineOpen,
             toggleLineDelete: toggleLineDelete,
 
-            createLine: createLine,
-            initLine: initLine,
-            initDataset: initDataset,
-            isLineHidden: isLineHidden,
-            onChange: onChange,
-
             validateCell: validateCell,
             validateLine: validateLine,
             validateAll: validateAll,
+
+            /* rndORM */
+            createObject: createObject,
+            newEstado: newEstado,
+            newUuid: newUuid,
+            newString: newString,
+            newRandomString: newRandomString,
+            newDate, newDate
         };
 
         function isLineHidden(linea) {
@@ -41,11 +77,7 @@ angular.module("core")
             return $estado.hidden ? true : false;
         }
 
-        function initDataset(res) {
-            res.data.forEach(function (l) {
-                initLine(l); // Agrega $estado
-            })
-        }
+
 
         function isLineInvalid(line) {
             var ret = false;
@@ -101,7 +133,7 @@ angular.module("core")
 
         /** Función que debería pertenecer al modelo. Crea una nueva instancia del modelo. Input hace merge */
         function createLine(Data, model, input) {
-            var obj = rndORM.createObject(model, input);
+            var obj = createObject(model, input);
 
             Data.data.unshift(obj); //(line, columns, Data, hot, row) 
             validateLine(Data, model, 0);
@@ -203,9 +235,9 @@ angular.module("core")
             }
 
             // Si no pasa las validaciones marcar dato como invalido
-            var isValid = validArr.every(r => r===true);
+            var isValid = validArr.every(r => r === true);
             var msg;
-            if (!isValid) msg = validArr.filter(r => typeof(r)=='string' ).join(' ');
+            if (!isValid) msg = validArr.filter(r => typeof (r) == 'string').join(' ');
             // Marcar estado validación
             setCellValid(Data, i, meta, isValid, msg); // $estado.APPP.$invalid = true/false
 
@@ -246,7 +278,7 @@ angular.module("core")
         function genId() {
             return 'A_' + parseInt(Math.random() * 10000000000);
         }
-        function initLine(line) { line.$estado = line.$estado || { $action: '', $id: genId() }; }
+
 
         function setLinked(set) {
             vm.class = set ? 'linked' : '';
@@ -266,9 +298,9 @@ angular.module("core")
             // Si  es válido borrar mensajes, si no, asignar msg (es Array)
             if (isValid) line.$estado[key].$message = undefined;
             else {
-                if (msg){
+                if (msg) {
                     line.$estado[key].$message = msg;
-                }else{
+                } else {
                     line.$estado[key].$message = undefined;
                 }
             }
@@ -318,6 +350,93 @@ angular.module("core")
             line.$estado = line.$estado || {}; // init
             line.$estado.$action = 'E';
             line.$estado.$message = msg;
+        }
+
+        /* rndORM */
+        function initByType(meta, rtablas) {
+            var ret;
+            switch (meta.datatype) {
+                case 'rtabla':
+                    var tabla = rtablas[meta.tabla].data;
+                    // Inicializar como la primera opción
+                    ret = tabla[0][meta.options.returnSrv];
+                    break;
+                case 'number':
+                    ret = 0;
+                    break;
+                case 'date':
+                    ret = newDate()();
+                    break;
+                case 'uuid':
+                    ret = newUuid();
+                    break;
+                case '$estado':
+                    ret = newEstado();
+                    break;
+                default:
+                    ret = '';
+                    break;
+            }
+            return ret;
+
+        }
+        function createObject(model, input, rtablas) {
+
+            // Crear objeto a partir de rutina de inicialización de metadato
+            var obj = model.reduce(function (t, m) {
+                // si tiene función onInit llamarla
+                if (m.onInit) {
+                    t[m.field] = m.onInit();
+                } else {
+                    // Si no, inicializar el constructor por defecto del tipo
+                    t[m.field] = initByType(m, rtablas);
+                }
+                return t
+            }, {});
+
+            // Agregar datos adicionales si vienen
+            if (input) {
+                angular.extend(obj, input);
+            }
+
+            // Inicializar dialogo
+            //initLine(obj);
+
+            return obj;
+        }
+
+        function newEstado() {
+            return {
+                $action: '', 
+                $id: genId()
+            }
+        }
+
+        function newUuid() {
+            return rndUuid();
+        }
+        function newString(input) {
+            return function () {
+                var ret = '';
+                if (typeof (input) != 'undefined') ret = input;
+                return ret;
+            }
+        }
+        function newRandomString(input) {
+            return function () {
+                var ret = '';
+                var prefix = 'ITEM';
+                if (typeof (input) != 'undefined') prefix = input;
+                ret = prefix + '_' + Math.floor(Math.random() * 1000);
+                return ret;
+            }
+        }
+        function newDate(input) {
+            return function () {
+                var ret = input;
+                if (!input) ret = (new Date()).toISOString().substr(0, 10);
+                return ret;
+            }
         }
 
         return vm
