@@ -8,14 +8,15 @@
             <uib-accordion-heading> Navegación
                 <i class="pull-right fa"
                    ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}">
-              </i>
+                </i>
             </uib-accordion-heading>
             <ul id="navigation"
                 nav-collapse
                 ripple>
                 <li ng-repeat="item in menuItems"
                     ui-sref-active="active">
-                    <a ui-sref={{item.name}}>
+                    <a ui-sref='{{item.name}}'
+                       xxui-sref-opts="{reload: true,inherit: false}">
                         <i ng-class="item.ncyBreadcrumb.icon"></i>
                         <span>{{item.ncyBreadcrumb.label}} </span>
                     </a>
