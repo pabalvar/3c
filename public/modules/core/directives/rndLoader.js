@@ -3,7 +3,7 @@ angular.module("core")
     return {
         restrict: 'A',
         replace: true,
-        template: '<p class="rnd-loader"><i class="fa fa-spinner fa-spin"></i> </p>',
+        template: '<i class="fa fa-circle-o-notch fa-spin"></i>',
         link: function (scope, elem, attrs) {
             var hideLoaderTimeout;
             var minLoaderDisplayTime = attrs.minLoaderDisplay || 300;
