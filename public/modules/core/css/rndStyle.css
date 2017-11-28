@@ -685,11 +685,3 @@ span.input-group-btn button.btn-right {
 .paper-curve-horiz:before {
     top: 0;
 }
-
-/* Spinner */
-.rnd-loader{
-    /* vertical-align: bottom; */
-    color: rgba(255, 255, 255, 0.863);
-    font-size:1em;
-    z-index: 9999;
-}
