@@ -63,6 +63,7 @@ angular.module("core")
           if ($scope.data) console.warn("rndInput: data va a ser deprecado. Use source");
           var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
 
+
           // Scope variables
           $scope.line.$estado = $scope.line.$estado || {}; // init $estado (lineMeta)
           $scope.line.$estado[$scope.key] = $scope.line.$estado[$scope.key] || {}; // init cellMeta
@@ -71,6 +72,10 @@ angular.module("core")
           $scope.column = meta.find(o => o.field == $scope.key);//  modelo de la columna
           $scope.type = getDatatype($scope.column);
           $scope.buffer = {};
+
+
+          // Salir si es $estado
+          if ($scope.key == '$estado') {    return;    }
 
           // variables
           var hooks = []; // Array de funciones a aplicar al haber cambios
@@ -126,7 +131,6 @@ angular.module("core")
 
           /** Función que llama al actualizar valores */
           function updateBuffer(newVal, oldVal) {
-
             // Descartar si no hay cambio (o se está inicializando watcher)
             if ((newVal == oldVal) || typeof (newVal) == 'undefined') return;
 
@@ -183,10 +187,10 @@ angular.module("core")
               isOpen: false,
               openDeferred: dateOpenDeferred,
               closeDeferred: dateCloseDeferred,
-              setToday: function(){
+              setToday: function () {
                 buffer.tmpInput = new Date();
                 //console.log("cambiando")
-                $scope.dateCtrl.isDateInfinite=false;
+                $scope.dateCtrl.isDateInfinite = false;
               },
               toggleOpen: function () { $scope.dateCtrl.isOpen = !$scope.dateCtrl.isOpen },
               setOpen: function (open) {
@@ -196,19 +200,19 @@ angular.module("core")
               format: (type.variant == 'm') ? 'MMM yyyy' : 'dd-MM-yyyy',
               altInputFormats: ['yyyy-MM-dd', 'dd-MM-yyyy'],
               isDateInfinite: false,
-              timer:{}
+              timer: {}
             }
 
             function dateCloseDeferred() {
               $timeout.cancel($scope.dateCtrl.timer);
-              var fn = function(){$scope.dateCtrl.setOpen(false)}
-              $scope.dateCtrl.timer = $timeout(fn,100);
+              var fn = function () { $scope.dateCtrl.setOpen(false) }
+              $scope.dateCtrl.timer = $timeout(fn, 100);
             }
             function dateOpenDeferred() {
               $timeout.cancel($scope.dateCtrl.timer);
 
-              var fn = function(){$scope.dateCtrl.setOpen(true)}
-              $scope.dateCtrl.timer = $timeout(fn,400);
+              var fn = function () { $scope.dateCtrl.setOpen(true) }
+              $scope.dateCtrl.timer = $timeout(fn, 400);
             }
 
             // Opciones para el datepopup
@@ -217,7 +221,7 @@ angular.module("core")
               startingDay: 1,
               minMode: type.variant == 'm' ? 'month' : 'day',
               infiniteDate: DateInfinite,
-              timer:$scope.dateCtrl
+              timer: $scope.dateCtrl
             };
 
             // Anexar hook para formatear date

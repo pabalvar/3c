@@ -98,7 +98,7 @@
     <!-- /numérico -->
 
     <!-- texto -->
-    <div ng-if="type.datatype=='string' || type.datatype=='uuid'"
+    <div ng-if="type.datatype=='string'"
          class="form-validation">
         <input ng-model="buffer.tmpInput"
                type="text"
@@ -114,7 +114,7 @@
 <!-- /modo EDIT -->
 
 <!-- modo READ -->
-<span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='dialog'"
+<span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado'"
       class="m-5"
       ng-class="type.datatype=='number'?'mr-20':''"
       ng-click="cellClick(line,column,source)">
@@ -123,8 +123,8 @@
 <!-- /modo READ -->
 
 <!-- Estado -->
-<div ng-if="type.datatype=='dialog'"
-     class="form-validation">
+<div ng-if="type.datatype=='$estado'"
+     class="form-validation text-center">
     <rnd-estado line="line"></rnd-estado>
 </div>
 <!-- /Estado -->
