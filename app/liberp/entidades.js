@@ -49,7 +49,7 @@ ORDER BY
 function getMetaEntidades(req, res, next) {
   req.resultados = req.resultados || {};
   req.resultados.meta = [
-    { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize' },
+    { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize', nameprop:true },
     { field: "KOEN", name: "Código", visible: true, pk: true },
     { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
     { field: "SUEN", name: "Suc.", visible: true, pk: true }
