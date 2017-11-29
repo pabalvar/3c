@@ -4,7 +4,7 @@
     <input type="text"
            ng-model="selected"
            placeholder="{{options.placeholder}}"
-           uib-typeahead="items as (items[items.$meta[0].field]) for items in sourceP($viewValue)"
+           uib-typeahead="items as (items[items.$meta[namepropIx].field]) for items in sourceP($viewValue)"
            typeahead-loading="loadingLocations"
            typeahead-no-results="noResults"
            typeahead-wait-ms="200"

@@ -10,6 +10,7 @@ angular.module('core')
     * @param {rndRtabla} rtablas Objeto rtabla para enmascarar datos
     * @param {Object} options Objeto de opciones. (recomendado poblar en html)
     * @param {string} options.placeholder Texto a mostrar en el campo de búsqueda
+    * @param {string} options.nameprop Field del metadato a usar en el la lísta de resultados como principal
     * @param {boolean} options.keep Guarda selecciones en dataset (por defecto reemplaza con la última)
     * @element ANY
     * @description
@@ -57,7 +58,7 @@ angular.module('core')
                 scope: {
                     source: '=',
                     options: '=?options',
-                    onSelect: '=?onSelect',
+                    dialog: '=?dialog',
                     dataset: '=?dataset',
                     meta: '=',
                     rtablas: '='
@@ -81,6 +82,17 @@ angular.module('core')
                                 console.log("error", err)
                             })
                     };
+                    // Buscar qué campo mostrar en línea principal
+                    var namePropIx = -1;
+                    if ($scope.options.nameprop) {
+                        namePropIx = $scope.meta.findIndex(f => f.field == '$scope.options.nameprop')
+                        if ($scope.namepropIx < 0) console.warn("rndSearchbox: no hay metadato llamado " + $scope.options.nameprop);
+                    } else {
+                        namePropIx = $scope.meta.findIndex(f => f.nameprop);
+                    }
+                    $scope.namepropIx = (namePropIx < 0) ? 1 : namePropIx; // Si ninguna columna es nameprop, usar columna 1
+
+
 
                     // parámetros por defecto para mostrar en directiva
                     $scope.options = $scope.options || {};
@@ -99,16 +111,16 @@ angular.module('core')
                         $scope.selected = undefined;
 
                         // Si se pasó un arreglo entregar valor
-                        if (angular.isArray($scope.dataset)) {
+                        if (angular.isArray(($scope.dataset || {}).data)) {
                             // Opción keep -> push
-                            if ($scope.options.keep) $scope.dataset.push(ret);
+                            if ($scope.options.keep) $scope.dataset.data.push(ret);
                             // sin opción keep -> reemplaza valor por el actual
-                            else $scope.dataset[0] = ret;
+                            else $scope.dataset.data[0] = ret;
                         }
 
                         // llamar al callback de parent controlador
-                        if (typeof ($scope.onSelect) == "function") {
-                            $scope.onSelect(ret, $model, $label, $event)
+                        if (typeof (($scope.dialog || {}).onChange) == "function") {
+                            $scope.dialog.onChange(ret, $model, $label, $event);
                         }
                         //console.log("retorna: ", ret)
                     }
