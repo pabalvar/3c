@@ -170,7 +170,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 calculaPagos();
                 calculaCruce();
                 // Valida
-                if ($scope.apiDeuda.validate) $scope.apiDeuda.validate();
+                if ($scope.apiPago.validate) $scope.apiPago.validate();
                 if ($scope.apiCruce.validate) $scope.apiCruce.validate();
             }
             // $scope.onChange = calcula;
