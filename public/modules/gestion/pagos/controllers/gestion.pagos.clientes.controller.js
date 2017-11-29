@@ -148,21 +148,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 $scope.pasoCruce.data = cruce
             }
 
-            /** Validaciones */
-
-            // Agregar validaciones a pasoPago (monto > 0)
-            
-            /** Función que se pasa a la directiva que valida datos en pagos */
-            function validaPago(Data, rowIx, meta) {
-                console.log("validaPago")
-                var l = Data.data[rowIx]; // alias para la línea
-                var err = []; // estructura de errores
-
-                // Validaciones
-                if (l.VADP < 0) err.push('El monto del documento debe ser mayor que cero.');
-                var ret = err.length ? err.join(' ') : true;
-                return ret;
-            }
+            /** Validaciones custom */
 
             /** Función que se pasa a la directiva que valida datos en cruce */
             function validaCruce(Data, rowIx, meta) {

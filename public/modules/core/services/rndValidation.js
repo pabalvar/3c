@@ -4,21 +4,21 @@ angular.module("core")
     .service("rndValidation", [function () {
         return compileValidations;
 
-        function compileValidations(meta){
-            var validations = meta.validations||[];
+        function compileValidations(meta) {
+            var validations = meta.validations || [];
             var ret = [];
 
-            validations.forEach(function(v){
-                if (typeof(v)=='function'){
+            validations.forEach(function (v) {
+                if (typeof (v) == 'function') {
                     ret.push(v);
-                }else{
+                } else {
                     // Se asume objeto
-                    for(var key in v){
-                        switch (key){
+                    for (var key in v) {
+                        switch (key) {
                             case 'min':
-                                ret.push(min);
+                                ret.push(min(v[key]));
                         }
-                        console.log("got this:",key);
+                        console.log("got this:", key);
                     }
 
                 }
@@ -26,15 +26,17 @@ angular.module("core")
             return ret;
         }
 
-        function min(Data, rowIx, meta) {
-            console.log("rndValidation#min")
-            var l = Data.data[rowIx]; // alias para la línea
-            var err = []; // estructura de errores
+        function min(param) {
+            return function (Data, rowIx, meta) {
+                console.log("rndValidation#min")
+                var l = Data.data[rowIx]; // alias para la línea
+                var err = []; // estructura de errores
 
-            // Validaciones
-            if (l[meta.field] < 0) err.push(`El valor ${meta.name} debe ser mayor que cero.`);
-            var ret = err.length ? err.join(' ') : true;
-            return ret;
+                // Validaciones
+                if (l[meta.field] < param) err.push(`El valor ${meta.name} no puede ser menor que ${param}.`);
+                var ret = err.length ? err.join(' ') : true;
+                return ret;
+            }
         }
 
 
