@@ -56,7 +56,7 @@ angular.module("core")
           */
         function ($timeout, $scope, getDatatype, $moment, decodeRtabla, rndDialog) {
           // Revisar deprecado
-          console.log("rndInput: creación objeto");
+          //console.log("rndInput: creación objeto");
           if ($scope.columns) console.warn("rndInput: columns va a ser deprecado. Use meta");
           var meta = $scope.columns || $scope.meta; // backwards compatibile columns ahora se llama meta
 
