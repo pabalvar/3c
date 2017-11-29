@@ -1,7 +1,7 @@
 'use strict';
 angular.module("core")
 
-    .service("rndDialog", [function () {
+    .service("rndDialog", ['rndValidation', function (rndValidation) {
 
         /* Inicia dataset */
         function initDataset(res) {
@@ -17,12 +17,19 @@ angular.module("core")
 
         /* Agrega columna estado */
         function initMeta(meta) {
+            // Compilar validaciones Built-in
+            meta.forEach(function(m){
+                m.validations = rndValidation(m)
+            })
+
+
+            // Agregar campo $estado
             var ix;
             // Buscar campo $estado
             ix = meta.findIndex(m => m.field == '$estado');
             // Si no se encontró, crear
             if (ix < 0) {
-                meta.unshift({ field: '$estado', datatype: '$estado', name: 'estado', visible: true })
+                meta.unshift({ field: '$estado', datatype: '$estado', name: 'estado', visible: false, length: '1' })
             }
             return meta;
         }
@@ -54,6 +61,7 @@ angular.module("core")
             setCellDirty: setCellDirty,
             setLineModified: setLineModified,
             setLineOpen: setLineOpen,
+            setLineNew: setLineNew,
             setLineError: setLineError,
 
             toggleLineOpen: toggleLineOpen,
@@ -61,7 +69,7 @@ angular.module("core")
 
             validateCell: validateCell,
             validateLine: validateLine,
-            validateAll: validateAll,
+            validate: validate,
 
             /* rndORM */
             createObject: createObject,
@@ -226,7 +234,7 @@ angular.module("core")
             if (meta.field[0] == '$') return true;
 
             // ejecutar todas las validaciones definidas en el modelo.validations=[fn,fn...]
-            var validArr = (meta.validations || []).map(fn => fn(Data, i, meta)) || [];
+            var validArr = (meta.validations || []).map(fn=>fn(Data,i,meta));
 
             // En el caso de hotTable ejecutar la validación interna de la directiva modelo.validator
             if (meta.hotValidator) {
@@ -250,7 +258,7 @@ angular.module("core")
             return isValid;
         }
 
-        function validateAll(Data, Columns, hot) {
+        function validate(Data, Columns, hot) {
             Data.data.forEach(function (d, i) {
                 if (!((d.$estado) || {}).$action) return;
                 else if (d.$estado.$action == 'N' || d.$estado.$action == 'M') { // Economy: validar sólo líneas modificadas
@@ -344,7 +352,10 @@ angular.module("core")
             line.$estado = line.$estado || {}; // init
             line.$estado.$isOpen = true;
         }
-
+        function setLineNew(line) {
+            line.$estado = line.$estado || {}; // init
+            line.$estado.$action = 'N';
+        }
         function setLineError(line, msg) {
             console.log("setLineError")
             line.$estado = line.$estado || {}; // init
@@ -407,7 +418,7 @@ angular.module("core")
 
         function newEstado() {
             return {
-                $action: '', 
+                $action: '',
                 $id: genId()
             }
         }

@@ -132,14 +132,14 @@
             <li class="text-xs" ng-if="numPages > 4 && currentPage <  numPages - 2"><a ng-disabled="true">...</a></li>
 
             <!-- mostrar última página -->
-            <li class="text-xs" ng-class="{active: currentPage==numPages}">
+            <li class="text-xs table-last-page" ng-class="{active: currentPage==numPages}">
                 <a ng-disabled="currentPage == numPages"
                    ng-click="selectPage(numPages)">{{numPages}}</a>
             </li>
 
             <!-- avanzar -->
             <li class="text-xs">
-                <a class="table-last-page" ng-disabled="currentPage > (numPages-2)"
+                <a class="" ng-disabled="currentPage > (numPages-2)"
                    ng-click="selectPage(currentPage+1)">&gt;</a>
             </li>
 

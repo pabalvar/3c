@@ -122,24 +122,42 @@ angular.module('core')
             $scope.api = $scope.api || {};
             $scope.api.clickRow = clickRow;
             $scope.api.goToPage = goToPage;
+            $scope.api.goToRow = goToRow;
             $scope.api.redraw = redraw;
             $scope.api.addRow = addRow;
+            $scope.api.validate = validate; // mostrar validate de rndDialog
+
+            function validate(){
+                rndDialog.validate($scope.source, $scope.meta);
+            }
 
             /* Función que inicializa y crea una nueva línea */
             function addRow() {
                 var obj = rndDialog.createObject($scope.meta, 0, $scope.rtablas);
                 rndDialog.setLineOpen(obj);
-                $scope.source.data.push(obj);
+                rndDialog.setLineNew(obj);
+                $scope.source.data.unshift(obj);
                 // Llamar al controlador si se pasó onAddRow
-                var rowIx = $scope.source.data.length - 1;
+                var rowIx = 0//$scope.source.data.length - 1;
                 if ($scope.dialog.onAddRow) {
                     $scope.dialog.onAddRow(obj, $scope.source, rowIx);
                 }
             }
 
+            function goToRow(rowIx) {
+                // Calcular la página que contiene a rowIx
+                var page = Math.floor(rowIx / ($scope.options.pagesize || 9999999)) + 1;
+                goToPage(page);
+            }
+
             function goToPage(page) {
+                var selector;
                 // definir el selector como ".id tr:nth-child(rowIx)"
-                var selector = `.${$scope.id} a.table-last-page`;
+                if (page == -1)
+                    selector = `.${$scope.id} a.table-last-page`;
+                else if (page == 1)
+                selector = `.${$scope.id} a.table-last-page`;
+                // XX ToDo: ir a una página distinta a la primera y última
 
                 // aplicar trigger (en diferido para asegurar esté renderizado)
                 $timeout(function () {
@@ -167,8 +185,8 @@ angular.module('core')
             function redraw() {
                 console.log("redrawing");
                 $scope.blink = true;
-                $timeout(function () { 
-                        $scope.blink = false;
+                $timeout(function () {
+                    $scope.blink = false;
                 }, 0);
             }
 

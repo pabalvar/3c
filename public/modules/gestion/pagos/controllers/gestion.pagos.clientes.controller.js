@@ -10,18 +10,12 @@ angular.module('gestion').controller('gestionPagosClientesController',
     ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda',
         function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda) {
 
-            /* Rtablas */
-            $scope.rtablas = angular.extend({},
-                metaPago.rtablas,
-                metaDeuda.rtablas,
-                metaEntidad.rtablas);
-
             /** Trae ENTIDAD **/
-            $scope.metaEntidad = metaEntidad.data;
-            $scope.pasoEntidad = [];
+            $scope.metaEntidad = metaEntidad;
+            $scope.pasoEntidad = { data: [] };
             $scope.traeEntidad = function (query) {
                 return ws(entidades.get, {
-                    fields: $scope.metaEntidad.map(m => m.field),
+                    fields: $scope.metaEntidad.data.map(m => m.field),
                     search: query.search,
                     size: 10,
                     order: 'NOKOEN'
@@ -29,123 +23,98 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             /** Trae PAGO */
-            $scope.metaPago = rndDialog.initMeta(metaPago.data);
+            $scope.metaPago = metaPago;
             $scope.apiPago = {}
             $scope.pasoPago = { data: [] };
-            $scope.traePago = function (query) {
+            function traePago() {
                 return ws(pagos.get, {
-                    fields: $scope.metaPago.map(m => m.field),
-                    koen: $scope.pasoEntidad.map(e => e.KOEN),
+                    fields: $scope.metaPago.data.map(m => m.field),
+                    koen: $scope.pasoEntidad.data.map(e => e.KOEN),
                     empresa: rndEmpresa.get(),
                     variante: 'simple',
                     size: 10,
                     order: 'FEEMDP'
-                }, $scope.pasoPago, [onReload, clickRow($scope.apiPago, 0)]);
+                }, $scope.pasoPago, [clickRow($scope.apiPago, 0)]);
             };
+          
 
             /** Trae DEUDA */
-            $scope.metaDeuda = rndDialog.initMeta(metaDeuda.data)
+            $scope.metaDeuda = metaDeuda;
             $scope.apiDeuda = {}
             $scope.pasoDeuda = { data: [] };
-            $scope.traeDeuda = function (query) {
+            function traeDeuda() {
                 return ws(documentos.traeDeuda.get, {
-                    fields: $scope.metaDeuda.map(m => m.field),
-                    koen: $scope.pasoEntidad.map(e => e.KOEN),
+                    fields: $scope.metaDeuda.data.map(m => m.field),
+                    koen: $scope.pasoEntidad.data.map(e => e.KOEN),
                     empresa: rndEmpresa.get(),
                     size: 10,
                     order: 'FEULVEDO'
-                }, $scope.pasoDeuda, [onReload, clickRow($scope.apiDeuda, 0)]);
+                }, $scope.pasoDeuda, [clickRow($scope.apiDeuda, 0)]);
             }
 
             /* Cruce Pagos-Deuda */
-            $scope.metaCruce = rndDialog.initMeta([
-                { field: "SALDODP", name: "Saldo pago.", datatype: 'number', length: '10', readOnly: true, visible: true },
-                { field: "SALDOEDO", name: "Saldo doc.", datatype: 'number', readOnly: true, visible: true, length: '10' },
-                { field: "MAXASIG", name: "Máximo asignable", datatype: 'currency', readOnly: true, visible: true, length: '10', onClick: asignaMaximo },
-                { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '10', validations: [valida] },
-            ])
             $scope.apiCruce = {}
             $scope.pasoCruce = { data: [] }
-
-
+            $scope.metaCruce = {
+                data: rndDialog.initMeta([
+                    { field: "SALDODP", name: "Saldo pago.", datatype: 'number', length: '10', readOnly: true, visible: true },
+                    { field: "SALDOEDO", name: "Saldo doc.", datatype: 'number', readOnly: true, visible: true, length: '10' },
+                    { field: "MAXASIG", name: "Máximo asignable", datatype: 'currency', readOnly: true, visible: true, length: '10', onClick: asignaMaximo },
+                    { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '10', validations: [validaCruce] },
+                ])
+            }
 
 
             /** Lógica **/
-            
-            /* 1. Si cambia entidad traer pagos y deuda */
-            $scope.$watch('pasoEntidad', onCambioDeEntidad, true);
-            /* 2. Si se agregan o borran pagos recrear cruce */
+
+            // Si se agregan o borran pagos recrear cruce 
+            $scope.$watchCollection('pasoPago.data', onCambioLineas);
+            $scope.$watchCollection('pasoDeuda.data', onCambioLineas);
+
+            // Si cambia un valor volver a calcular y validar
+            $scope.onChangeValue = calcula;
+
+            // Función llamada por directiva cuando cambia entidad (causa recarga de pago y deuda)
+            $scope.onChangeEntidad = onChangeEntidad;
+
+            // Si se crea una línea de pago hacer foco en ella (toDo: esto debería ser parte de la directiva)
+            $scope.onAddRowPago = onAddRowPago;
 
 
-            /* 3. Si cambian valores de cruce, recalcular */
-
-            // Si cambia entidad volver a cargar deuda y pagos
-            
-
-            function onCambioDeEntidad(n, o) {
-                if (!n.length) return;
-                $scope.traePago();
-                $scope.traeDeuda();
+            /** Funciones auxiliares */
+            function onCambioLineas() {
+                creaPasoCruce();
+                calcula();
             }
 
-            // Si cambian pagos o deuda recalcular todo:
-            $scope.$watch('pasoPago.data', function (n, o) {
-                if (!n.length) return;
-                console.log("detecta cambio pago")
-                creaPasoCruce();
-                calcula();
-            }, true);
-            $scope.$watch('pasoDeuda.data', function (n, o) {
-                if (!n.length) return;
-                console.log("detecta cambio deuda")
-                creaPasoCruce();
-                calcula();
-            }, true);
-            $scope.$watch('pasoCruce.data', function (n, o) {
-                if (!n.length) return;
-                console.log("detecta cambio cruce")
-                creaPasoCruce();
-                calcula();
-            }, true);
-
-            function onReload() {
-                //creaPasoCruce();
-                //calcula();
+            function onChangeEntidad(n, o) {
+                cleanData();
+                traePago();
+                traeDeuda();
             }
 
-            $scope.onAddRowPago = function (linea, source, rowIx) {
+            function cleanData() {
+                console.log("Clean Data")
+                $scope.pasoPago.data.length = 0;
+                $scope.pasoDeuda.data.length = 0;
+                $scope.pasoCruce.data.length = 0;
+            }
+
+            // Función llamada desde la directiva al crear nuevo pago
+            function onAddRowPago(linea, source, rowIx) {
                 //console.log("al controler llegó esta línea", linea, rowIx);
-                //onReload();
                 clickRow($scope.apiPago, rowIx)($scope.pasoPago);
-                goToPage($scope.apiPago, rowIx)($scope.pasoPago);
-
+                goToRow($scope.apiPago, rowIx)($scope.pasoPago);
             }
 
-            $scope.cambiaPago = function (x) {
-                //console.log("cambio pago en controller", arguments);
-                //calcula();
-                //onReload();
-                //var fn=clickRow($scope.apiPago, 0);//($scope.pasoPago);
-                // if (!$scope.pasoPago.data[$scope.pasoPago.data.length-1].isSelected){
-                //  fn($scope.pasoPago);
-                //}
-            }
-            function goToPage(api) {
-                return function (res) {
-                    api.goToPage();
-                }
-            }
             /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
-            function clickRow(api, row) {
-                return function (res) {
-                    if (res.data[row]) api.clickRow(row);
-                }
-            }
+            function clickRow(api, row) { return (res) => { if (res.data[row]) api.clickRow(row); } }
+            function goToRow(api) { return (res) => { api.goToRow(); } }
 
             /** Esta función guarda en pasoCruce una matriz que es el cruce de 
              * pasoPagos y pasoDeuda y guarda el dato de abono */
             function creaPasoCruce(res) {
-
+                console.log("creaPasoCruce. Costo: ",($scope.pasoPago.data.length * $scope.pasoDeuda.data.length));
                 // Inicializar variables
                 var cruce = [];
                 var pasoCruce = $scope.pasoCruce.data || [];
@@ -155,22 +124,21 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     $scope.pasoDeuda.data.forEach(function (d) {
                         var obj = {};
 
-                        // buscar entre los existentes
+                        // buscar si existe en pasoCruce un objeto que referencie al pago y deuda iterando
                         var ix = pasoCruce.findIndex(o => (o.$pago === p && o.$deuda === d));
                         if (ix >= 0) {
                             // Si el cruce existe insertar al array
                             obj = pasoCruce[ix];
                         } else {
                             // Si el cruce no existe, crear uno nuevo
-                            obj = rndDialog.createObject($scope.metaCruce);
+                            obj = rndDialog.createObject($scope.metaCruce.data);
 
                             // agregar referencias a objetos pago y deuda originales
                             obj.$pago = p;
                             obj.$deuda = d;
 
-                            // agregar propiedades de diálogo, 
+                            // marcar línea como editable
                             rndDialog.setLineOpen(obj);
-
                         }
                         // Si existe el cruce insertar el anterior, si no, el nuevo
                         cruce.push(obj);
@@ -180,9 +148,25 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 $scope.pasoCruce.data = cruce
             }
 
-            /** Función que retorna errores */
-            function valida(Data, rowIx, meta) {
-                console.log("valida")
+            /** Validaciones */
+
+            // Agregar validaciones a pasoPago (monto > 0)
+            
+            /** Función que se pasa a la directiva que valida datos en pagos */
+            function validaPago(Data, rowIx, meta) {
+                console.log("validaPago")
+                var l = Data.data[rowIx]; // alias para la línea
+                var err = []; // estructura de errores
+
+                // Validaciones
+                if (l.VADP < 0) err.push('El monto del documento debe ser mayor que cero.');
+                var ret = err.length ? err.join(' ') : true;
+                return ret;
+            }
+
+            /** Función que se pasa a la directiva que valida datos en cruce */
+            function validaCruce(Data, rowIx, meta) {
+                console.log("validaCruce")
                 var l = Data.data[rowIx]; // alias para la línea
                 var err = []; // estructura de errores
 
@@ -194,15 +178,20 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             /** Función que actualiza los saldos en pasoDeuda, pasoPago y pasoCruce */
-            function calcula(newVal, oldVal, linea, Data, rowIx, key, column) {
+            function calcula() {
+                // Calcula
                 calculaDeuda();
                 calculaPagos();
                 calculaCruce();
+                // Valida
+                if ($scope.apiDeuda.validate) $scope.apiDeuda.validate();
+                if ($scope.apiCruce.validate) $scope.apiCruce.validate();
             }
             // $scope.onChange = calcula;
 
             /** Calcular la suma de asignaciones para cada pago */
             function calculaPagos() {
+                console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
                 $scope.pasoPago.data.forEach(function (p) {
                     p.ASIGDP = $scope.pasoCruce.data
                         .filter(c => c.$pago === p)
@@ -219,6 +208,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Calcular la suma de asignaciones para cada documento */
             function calculaDeuda() {
+                console.log("calculaDeuda. Costo:", $scope.pasoDeuda.data.length);
                 $scope.pasoDeuda.data.forEach(function (d) {
                     d.ASIGEDO = $scope.pasoCruce.data
                         .filter(c => c.$deuda === d)
@@ -233,6 +223,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             /* Calcular máximo asignable en cada cruce como el mínimo entre 
              * el disponible del pago ($pago.SALDODP) y el saldo de la deuda ($deuda.SALDOEDO) */
             function calculaCruce() {
+                console.log("calculaCruce. Costo:", $scope.pasoCruce.data.length);
                 $scope.pasoCruce.data.forEach(function (o) {
                     o.SALDODP = o.$pago.SALDODP;
                     o.SALDOEDO = o.$deuda.SALDOEDO; //+o.$pago.ASIGNADO
@@ -243,7 +234,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
             function asignaMaximo(line) {
                 line.ASIGNADO = line.MAXASIG;
                 calcula();
-                valida({ data: [line] }, 0);
                 $scope.apiCruce.redraw();// XXX Truco para que redibuje la tabla (falla rnd-input)
             }
 
@@ -251,6 +241,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             /** Función que oculta las líneas en pasoCruce que no están seleccionadas en 
              * la grilla de Pago y Documento
              */
+            $scope.selectRow = filtraLineas;
             function filtraLineas() {
 
                 // Obtener el seleccionado de pago
@@ -266,9 +257,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 });
 
             }
-
-            // Conectar a la vista
-            $scope.selectRow = filtraLineas;
 
         }
     ])
