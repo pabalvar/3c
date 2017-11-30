@@ -7,8 +7,8 @@
  * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
  */
 angular.module('gestion').controller('gestionPagosClientesController',
-    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda',
-        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda) {
+    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda','$timeout',
+        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda,$timeout) {
 
             /** Trae ENTIDAD **/
             $scope.metaEntidad = metaEntidad;
@@ -34,9 +34,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     variante: 'simple',
                     size: 10,
                     order: 'FEEMDP'
-                }, $scope.pasoPago, [clickRow($scope.apiPago, 0)]);
+                }, $scope.pasoPago, clickRow($scope.apiPago, 0));
             };
-          
+
 
             /** Trae DEUDA */
             $scope.metaDeuda = metaDeuda;
@@ -49,7 +49,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     empresa: rndEmpresa.get(),
                     size: 10,
                     order: 'FEULVEDO'
-                }, $scope.pasoDeuda, [clickRow($scope.apiDeuda, 0)]);
+                }, $scope.pasoDeuda, clickRow($scope.apiDeuda, 0));
             }
 
             /* Cruce Pagos-Deuda */
@@ -80,6 +80,15 @@ angular.module('gestion').controller('gestionPagosClientesController',
             // Si se crea una línea de pago hacer foco en ella (toDo: esto debería ser parte de la directiva)
             $scope.onAddRowPago = onAddRowPago;
 
+            // Variables de resumen
+            $scope.resumen = {
+                saldoDeuda: 0,
+                asignadoCruce: 0
+            }
+
+            // Si se crea un nuevo pago, proponer el total por pagar
+            $scope.metaPago.data.VADP.onInit=()=>$scope.resumen.saldoDeuda;
+
 
             /** Funciones auxiliares */
             function onCambioLineas() {
@@ -102,19 +111,19 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             // Función llamada desde la directiva al crear nuevo pago
             function onAddRowPago(linea, source, rowIx) {
-                //console.log("al controler llegó esta línea", linea, rowIx);
-                clickRow($scope.apiPago, rowIx)($scope.pasoPago);
-                goToRow($scope.apiPago, rowIx)($scope.pasoPago);
+                $scope.apiPago.goToRow(rowIx);
             }
 
             /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
-            function clickRow(api, row) { return (res) => { if (res.data[row]) api.clickRow(row); } }
+            function clickRow(api, row) {
+                return (res) => { $timeout(()=>{ if (res.data[row]) api.clickRow(row); })}
+            }
+
             function goToRow(api) { return (res) => { api.goToRow(); } }
 
             /** Esta función guarda en pasoCruce una matriz que es el cruce de 
              * pasoPagos y pasoDeuda y guarda el dato de abono */
             function creaPasoCruce(res) {
-                console.log("creaPasoCruce. Costo: ",($scope.pasoPago.data.length * $scope.pasoDeuda.data.length));
                 // Inicializar variables
                 var cruce = [];
                 var pasoCruce = $scope.pasoCruce.data || [];
@@ -169,15 +178,15 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 calculaDeuda();
                 calculaPagos();
                 calculaCruce();
+                calculaTotales();
                 // Valida
                 if ($scope.apiPago.validate) $scope.apiPago.validate();
                 if ($scope.apiCruce.validate) $scope.apiCruce.validate();
             }
-            // $scope.onChange = calcula;
 
             /** Calcular la suma de asignaciones para cada pago */
             function calculaPagos() {
-                console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
+                //console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
                 $scope.pasoPago.data.forEach(function (p) {
                     p.ASIGDP = $scope.pasoCruce.data
                         .filter(c => c.$pago === p)
@@ -194,7 +203,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Calcular la suma de asignaciones para cada documento */
             function calculaDeuda() {
-                console.log("calculaDeuda. Costo:", $scope.pasoDeuda.data.length);
+                //console.log("calculaDeuda. Costo:", $scope.pasoDeuda.data.length);
                 $scope.pasoDeuda.data.forEach(function (d) {
                     d.ASIGEDO = $scope.pasoCruce.data
                         .filter(c => c.$deuda === d)
@@ -206,10 +215,19 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 })
             }
 
+            function calculaTotales() {
+                var saldoDeuda = 0;
+                $scope.pasoDeuda.data.forEach(f => { saldoDeuda += f.SALDOEDO })
+                $scope.resumen.saldoDeuda = saldoDeuda;
+                var asignadoCruce = 0;
+                $scope.pasoCruce.data.forEach(f => { asignadoCruce += f.ASIGNADO })
+                $scope.resumen.asignadoCruce = asignadoCruce;
+            }
+
             /* Calcular máximo asignable en cada cruce como el mínimo entre 
              * el disponible del pago ($pago.SALDODP) y el saldo de la deuda ($deuda.SALDOEDO) */
             function calculaCruce() {
-                console.log("calculaCruce. Costo:", $scope.pasoCruce.data.length);
+                //console.log("calculaCruce. Costo:", $scope.pasoCruce.data.length);
                 $scope.pasoCruce.data.forEach(function (o) {
                     o.SALDODP = o.$pago.SALDODP;
                     o.SALDOEDO = o.$deuda.SALDOEDO; //+o.$pago.ASIGNADO

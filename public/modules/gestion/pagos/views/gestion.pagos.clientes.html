@@ -26,8 +26,8 @@
     </div>
     <div class="col-xs-8 p-inner">
       <!-- totales -->
-      <rnd-tile-simple source="{value:2,name:'total selección'}"></rnd-tile-simple>
-      <rnd-tile-simple source="{value:1,name:'total pagos'}"></rnd-tile-simple>
+      <rnd-tile-simple options="{title:'por pagar'}">{{resumen.saldoDeuda|monitor:'currency'}}</rnd-tile-simple>
+      <rnd-tile-simple options="{title:'total asignado'}">{{resumen.asignadoCruce|monitor:'currency'}}</rnd-tile-simple>
       <!-- /totales -->
     </div>
     <!-- separator -->
