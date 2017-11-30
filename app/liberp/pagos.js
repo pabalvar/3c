@@ -90,7 +90,7 @@ function getMetaPagos(req, res, next) {
         { field: "MODP", name: "M", description: "Moneda", visible: true, length: "1", onInit: () => '$' },
         { field: "TIMODP", name: "Tipo moneda", description: "Nacional (N) o extranjera (E)", visible: false },
         { field: "TAMODP", name: "Tasa de cambio", visible: false },
-        { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations:[{min:0}] },
+        { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations:[{min:1}] },
         //{ field: "VAABDP", name: "Abono", description: "Abono anterior asignado", visible: false, datatype: 'number' },
         { field: "VAASDP", name: "Asignado (anterior)", description: "Asignado (anterior)", visible: false, datatype: 'number' },
         { field: "VAASDPN", name: "Asignado", description: "Asignado (nuevo)", visible: false, datatype: 'number' },
