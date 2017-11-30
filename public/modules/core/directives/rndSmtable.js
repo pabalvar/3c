@@ -103,15 +103,12 @@ angular.module('core')
         function ($scope, rndDialog, $timeout) {
 
             // Inicialización
-            $scope.pressed = function ($event, b, c) {
-                if ($event.keyCode == 38)
-                    console.log("up arrow");
-                else if ($event.keyCode == 39)
-                    console.log("right arrow");
-                else if ($event.keyCode == 40)
-                    console.log("down arrow");
-                else if ($event.keyCode == 37)
-                    console.log("left arrow");
+            $scope.pressed = function ($event) {
+                // Add Row con Enter
+                if ($event.keyCode==13){
+                    addRow();
+                }
+               
             }
 
             /* Asignar un id al DOM en la tabla*/
@@ -181,7 +178,7 @@ angular.module('core')
 
             /** Función que simula un click en una línea */
             function clickInput(rowIx) {
-                var selector = `table.${$scope.id} tbody tr:last-child > td input:first`;
+                var selector = `table.${$scope.id} tbody tr:last-child > td :input:first`;
 
                 // aplicar trigger (en diferido para asegurar esté renderizado)
                 $timeout(function () {

@@ -59,6 +59,13 @@ table.inputable tbody tr td {
     padding: 0px;
 }
 
+/* Fondo azul en input de tabla con foco */
+table > tbody > tr.ng-scope.ng-isolate-scope > td > rnd-input > div > div > div > p > input:focus,
+table > tbody > tr.ng-scope.ng-isolate-scope > td > rnd-input > div > div > input:focus,
+table > tbody > tr.ng-scope.ng-isolate-scope> td > rnd-input > div > div > select:focus{
+    box-shadow: inset 0px 0px 20px 0px #2390b060
+}
+
 input.rndinputd {
     padding-top: 0px;
     padding-bottom: 0px;

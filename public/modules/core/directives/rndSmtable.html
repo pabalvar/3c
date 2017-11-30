@@ -10,7 +10,7 @@
 </md-progress-linear>
 
 <div style="overflow:auto; {{options.pageheight?'height:'+((options.pageheight*21)+40+33+33)+'px;':''}}"
-     class="b-b {{source.busy?'busy':''}}">
+     class="{{source.busy?'busy':''}}">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
            ng-keydown="pressed($event)"
