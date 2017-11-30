@@ -41,11 +41,9 @@
   <div rnd-row>
 
     <div class="col-md-10 col-lg-8 xp-inner">
-      <!--<button ng-click="apiPago.redraw()">Refresh</button>-->
-
       <!-- /Pagos -->
       <rnd-smtable meta="metaPago.data"
-                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, pageheight:5}"
+                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:4, pageheight:4}"
                    source="pasoPago"
                    rtablas="metaPago.rtablas"
                    dialog="{selectRow:selectRow,onChange:onChangeValue, onAddRow:onAddRowPago, canCreate:true }"
@@ -57,7 +55,7 @@
     <div class="col-md-10 col-lg-8 xp-inner">
       <!-- Deuda -->
       <rnd-smtable meta="metaDeuda.data"
-                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:5, pageheight:5}"
+                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:3, pageheight:3}"
                    source="pasoDeuda"
                    dialog="{selectRow:selectRow}"
                    rtablas="metaDeuda.rtablas"

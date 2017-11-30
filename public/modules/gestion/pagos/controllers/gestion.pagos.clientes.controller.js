@@ -88,6 +88,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             // Si se crea un nuevo pago, proponer el total por pagar
             $scope.metaPago.data.VADP.onInit=()=>$scope.resumen.saldoDeuda;
+            $scope.metaPago.data.$estado.visible=true;//onInit=()=>$scope.resumen.saldoDeuda;
 
 
             /** Funciones auxiliares */
