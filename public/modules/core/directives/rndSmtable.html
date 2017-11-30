@@ -13,6 +13,7 @@
      class="b-b {{source.busy?'busy':''}}">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
+           ng-keydown="pressed($event)"
            class="st-table table-condensed table table-custom table-hover dt-responsive headerdark table-bordered inputable {{id}}">
 
         <!-- create row -->
@@ -110,13 +111,13 @@
         <ul class="pagination">
 
             <!-- retroceder -->
-            <li class="text-xs">
+            <li class="text-xs table-previous-page">
                 <a ng-disabled="currentPage < 2"
                    ng-click="selectPage(currentPage - 1)">&lt;</a>
             </li>
 
             <!-- mostrar primera -->
-            <li class="text-xs" ng-class="{active: currentPage==1}">
+            <li class="text-xs table-first-page" ng-class="{active: currentPage==1}">
                 <a ng-disabled="currentPage == 1"
                    ng-click="selectPage(1)">1
                 </a>
@@ -134,11 +135,12 @@
             <!-- mostrar última página -->
             <li class="text-xs table-last-page" ng-class="{active: currentPage==numPages}">
                 <a ng-disabled="currentPage == numPages"
-                   ng-click="selectPage(numPages)">{{numPages}}</a>
+                   ng-click="selectPage(numPages)">{{numPages}}
+                </a>
             </li>
 
             <!-- avanzar -->
-            <li class="text-xs">
+            <li class="text-xs  table-next-page">
                 <a class="" ng-disabled="currentPage > (numPages-2)"
                    ng-click="selectPage(currentPage+1)">&gt;</a>
             </li>

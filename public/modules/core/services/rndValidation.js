@@ -18,7 +18,7 @@ angular.module("core")
                             case 'min':
                                 ret.push(min(v[key]));
                         }
-                        console.log("got this:", key);
+                        //console.log("got this:", key);
                     }
 
                 }

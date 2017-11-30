@@ -143,8 +143,8 @@ angular.module("core")
         function createLine(Data, model, input) {
             var obj = createObject(model, input);
 
-            Data.data.unshift(obj); //(line, columns, Data, hot, row) 
-            validateLine(Data, model, 0);
+            Data.data.push(obj); //(line, columns, Data, hot, row) 
+            validateLine(Data, model, Data.data.length - 1);
             setLineOpen(obj); // Abrir editor de la línea
         }
 

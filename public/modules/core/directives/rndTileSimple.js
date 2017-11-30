@@ -1,17 +1,19 @@
 angular.module('core')
-.component('rndTileSimple', {
-    bindings:{
-        source:'='
+  .component('rndTileSimple', {
+    bindings: {
+      source: '=',
+      options: '='
     },
-    template:`
-<div ng-show="$ctrl.source" class="col-xs-6 b-l p-0">
+    transclude: true,
+    template: `
+<div class="col-xs-6 b-l p-0">
   <section class="tile tile-simple">
     <div class="tile-body text-center p-0">
-      <h1 class="m-0">{{$ctrl.source.value}}</h1>
-      <span class="text-muted">{{$ctrl.source.name}}</span>
+      <h1 class="m-0"><ng-transclude></ng-transclude></h1>
+      <span class="text-muted">{{$ctrl.options.title}}</span>
     </div>
   </section>
 </div>
 `
-})
+  })
 

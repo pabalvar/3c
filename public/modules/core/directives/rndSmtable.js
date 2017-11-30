@@ -103,6 +103,16 @@ angular.module('core')
         function ($scope, rndDialog, $timeout) {
 
             // Inicialización
+            $scope.pressed = function ($event, b, c) {
+                if ($event.keyCode == 38)
+                    console.log("up arrow");
+                else if ($event.keyCode == 39)
+                    console.log("right arrow");
+                else if ($event.keyCode == 40)
+                    console.log("down arrow");
+                else if ($event.keyCode == 37)
+                    console.log("left arrow");
+            }
 
             /* Asignar un id al DOM en la tabla*/
             $scope.id = rndDialog.newRandomString()();
@@ -127,7 +137,7 @@ angular.module('core')
             $scope.api.addRow = addRow;
             $scope.api.validate = validate; // mostrar validate de rndDialog
 
-            function validate(){
+            function validate() {
                 rndDialog.validate($scope.source, $scope.meta);
             }
 
@@ -136,9 +146,9 @@ angular.module('core')
                 var obj = rndDialog.createObject($scope.meta, 0, $scope.rtablas);
                 rndDialog.setLineOpen(obj);
                 rndDialog.setLineNew(obj);
-                $scope.source.data.unshift(obj);
+                $scope.source.data.push(obj);
                 // Llamar al controlador si se pasó onAddRow
-                var rowIx = 0//$scope.source.data.length - 1;
+                var rowIx = $scope.source.data.length - 1;
                 if ($scope.dialog.onAddRow) {
                     $scope.dialog.onAddRow(obj, $scope.source, rowIx);
                 }
@@ -153,10 +163,11 @@ angular.module('core')
             function goToPage(page) {
                 var selector;
                 // definir el selector como ".id tr:nth-child(rowIx)"
-                if (page == -1)
-                    selector = `.${$scope.id} a.table-last-page`;
-                else if (page == 1)
-                selector = `.${$scope.id} a.table-last-page`;
+                if (page == 1) {
+                    selector = `table.${$scope.id} thead.table-head-pagination  li.table-first-page a`;
+                } else {
+                    selector = `table.${$scope.id} thead.table-head-pagination  li.table-last-page a`;
+                }
                 // XX ToDo: ir a una página distinta a la primera y última
 
                 // aplicar trigger (en diferido para asegurar esté renderizado)
@@ -164,6 +175,21 @@ angular.module('core')
                     // Obtener objeto del DOM
                     var el = angular.element(selector);
                     el.trigger('click')
+                    clickInput();
+                });
+            }
+
+            /** Función que simula un click en una línea */
+            function clickInput(rowIx) {
+                var selector = `table.${$scope.id} tbody tr:last-child > td input:first`;
+
+                // aplicar trigger (en diferido para asegurar esté renderizado)
+                $timeout(function () {
+                    // Obtener objeto del DOM
+                    var el = angular.element(selector);
+                    //console.log("clicke", el);
+                    el.trigger('focus')
+                    clickRow()
                 });
             }
 
@@ -171,7 +197,7 @@ angular.module('core')
             function clickRow(rowIx) {
 
                 // definir el selector como ".id tr:nth-child(rowIx)"
-                var selector = `.${$scope.id} tbody tr:nth-child(${rowIx + 1})`;
+                var selector = `table.${$scope.id} tbody tr:last-child`;
 
                 // aplicar trigger (en diferido para asegurar esté renderizado)
                 $timeout(function () {
