@@ -73,7 +73,7 @@
                 <td ng-repeat="m in meta | filter: {visible:true}"
                     class="text-{{m | alignment}}"
                     style="vertical-align:middle; ">
-                    <rnd-input ng-if="!blink || m.readOnly"
+                    <rnd-input ng-if="!blink && m.datatype!='rnd-profile' &&  m.datatype!='rnd-smtable' "
                                source="source"
                                line="fila"
                                key="m.field"
@@ -81,23 +81,37 @@
                                rtablas="rtablas"
                                dialog="dialog">
                     </rnd-input>
+                    <rnd-profile ng-if="!blink && m.datatype=='rnd-profile'"
+                                 meta="m.options.meta.data"
+                                 options="{}"
+                                 source="{data:[fila[m.field]]}"
+                                 rtablas="m.options.rtablas">
+                    </rnd-profile>
+                    <rnd-smtable ng-if="!blink && m.datatype=='rnd-smtable'"
+                                 meta="m.options.meta.data"
+                                 options="{}"
+                                 source="{data:[fila[m.field]]}"
+                                 rtablas="m.options.rtablas">
+                    </rnd-smtable>
+                    <!--<pre ng-if="!blink && m.datatype=='table'">{{fila[m.field]}}</pre>
+                    <pre ng-if="!blink && m.datatype=='table'">{{m.options.meta.data}}</pre>->
                 </td>
             </tr>
         </tbody>
 
         <!-- offline -->
-        <tfoot ng-if="source.$offline">
-            <tr>
-                <td colspan="500"
-                    class="text-center">
-                    <div>
-                        <h3 class="m-10 text-danger busy">
-                            <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
-        <!-- offline -->
+                    <tfoot ng-if="source.$offline">
+                        <tr>
+                            <td colspan="500"
+                                class="text-center">
+                                <div>
+                                    <h3 class="m-10 text-danger busy">
+                                        <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    <!-- offline -->
 
     </table>
 </div>

@@ -106,7 +106,7 @@ angular.module('core')
             $scope.pressed = function ($event) {
                 // Add Row con Enter
                 if ($event.keyCode==13){
-                    addRow();
+                    if ($scope.dialog.canCreate) addRow();
                 }
                
             }

@@ -1,6 +1,6 @@
 const _SEPARATOR_ = '➙'; // ojo, se usa en rndInput.html tb. 
 function isTypeNumeric(input) {
-	return ((input||'').match(/currency|date|number/)) ? true : false;
+	return ((input || '').match(/currency|date|number/)) ? true : false;
 }
 
 
@@ -246,12 +246,16 @@ angular.module('core')
 					else if (input.match(/f/i)) ret = 'Femenino'
 					else ret = input; // error
 				}
+			} else if (type.datatype == '$estado') {
+				//console.log("es estado", ret)
+				ret = ''
 			}
 			// string
 			else if (type.datatype == 'string') {
 				//si viene variante usar directamente
 				if (type.variant == 'capitalize') ret = $filter('capitalize')(input);
 			}
+
 
 			return ret;
 		}

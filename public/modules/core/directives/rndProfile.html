@@ -5,7 +5,7 @@
     </div>
 
     <div ng-repeat="linea in source.data">
-        <h3 class="mt-0 mb-10 text-slategray dk">{{linea[meta[namepropIx].field] | monitor:meta[0]:rtablas}}</h3>
+        <h3 class="mt-0 mb-10 text-slategray dk">{{linea[meta[namepropIx].field] | monitor:meta[namepropIx]:rtablas}}</h3>
         <ul class="list-unstyled text-default lt compact text-small">
             <span ng-repeat="m in meta">
                 <div ng-if="m.visible && $index !=namepropIx">

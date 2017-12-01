@@ -29,7 +29,7 @@ angular.module("core")
             ix = meta.findIndex(m => m.field == '$estado');
             // Si no se encontró, crear
             if (ix < 0) {
-                meta.unshift({ field: '$estado', datatype: '$estado', name: ' * ', visible: false, length: '1' })
+                meta.unshift({ field: '$estado', datatype: '$estado', name: ' ☰ ', visible: false, length: '1' })
             }
             return meta;
         }
