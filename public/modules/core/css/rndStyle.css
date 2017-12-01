@@ -1,3 +1,15 @@
+/* Fijar máximo ancho de ventana */
+#content {
+    margin-right: auto;
+    margin-left: 0;
+    max-width: 1200px; /* or 950px */
+    border-right: 1px solid rgba(127,127,127,0.5);
+  }
+#appheader{
+	max-width:1380px;
+}
+
+
 .rnd-gray {
     background-color: rgb(241, 241, 241);
 }
