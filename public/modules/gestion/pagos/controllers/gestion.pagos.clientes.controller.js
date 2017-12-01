@@ -7,8 +7,8 @@
  * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
  */
 angular.module('gestion').controller('gestionPagosClientesController',
-    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda','$timeout',
-        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda,$timeout) {
+    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda', '$timeout',
+        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda, $timeout) {
 
             /** Trae ENTIDAD **/
             $scope.metaEntidad = metaEntidad;
@@ -49,7 +49,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     empresa: rndEmpresa.get(),
                     size: 10,
                     order: 'FEULVEDO'
-                }, $scope.pasoDeuda, clickRow($scope.apiDeuda, 0));
+                }, $scope.pasoDeuda);
             }
 
             /* Cruce Pagos-Deuda */
@@ -57,12 +57,16 @@ angular.module('gestion').controller('gestionPagosClientesController',
             $scope.pasoCruce = { data: [] }
             $scope.metaCruce = {
                 data: rndDialog.initMeta([
-                    { field: "SALDODP", name: "Saldo pago.", datatype: 'number', length: '10', readOnly: true, visible: true },
-                    { field: "SALDOEDO", name: "Saldo doc.", datatype: 'number', readOnly: true, visible: true, length: '10' },
-                    { field: "MAXASIG", name: "Máximo asignable", datatype: 'currency', readOnly: true, visible: true, length: '10', onClick: asignaMaximo },
-                    { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '10', validations: [validaCruce] },
+                    { field: "TIDO", name: "DP", visible: true, length: '3', readOnly:true },
+                    { field: "NUDO", name: "Número", visible: true, length: '10', readOnly:true },
+                   // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
+                    { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '8', onClick: asignaMaximo },
+                    { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
+                   // { field: "$pago", name: 'Pago', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaPago, rtablas: $scope.metaPago.rtablas } },
+
                 ])
             }
+
 
 
             /** Lógica **/
@@ -87,8 +91,8 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             // Si se crea un nuevo pago, proponer el total por pagar
-            $scope.metaPago.data.VADP.onInit=()=>$scope.resumen.saldoDeuda;
-            $scope.metaPago.data.$estado.visible=true;//onInit=()=>$scope.resumen.saldoDeuda;
+            $scope.metaPago.data.VADP.onInit = () => $scope.resumen.saldoDeuda;
+            $scope.metaPago.data.$estado.visible = true;//onInit=()=>$scope.resumen.saldoDeuda;
 
 
             /** Funciones auxiliares */
@@ -117,10 +121,8 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
             function clickRow(api, row) {
-                return (res) => { $timeout(()=>{ if (res.data[row]) api.clickRow(row); })}
+                return (res) => { $timeout(() => { if (res.data[row]) api.clickRow(row); }) }
             }
-
-            function goToRow(api) { return (res) => { api.goToRow(); } }
 
             /** Esta función guarda en pasoCruce una matriz que es el cruce de 
              * pasoPagos y pasoDeuda y guarda el dato de abono */
@@ -217,6 +219,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             function calculaTotales() {
+
                 var saldoDeuda = 0;
                 $scope.pasoDeuda.data.forEach(f => { saldoDeuda += f.SALDOEDO })
                 $scope.resumen.saldoDeuda = saldoDeuda;
@@ -230,9 +233,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
             function calculaCruce() {
                 //console.log("calculaCruce. Costo:", $scope.pasoCruce.data.length);
                 $scope.pasoCruce.data.forEach(function (o) {
-                    o.SALDODP = o.$pago.SALDODP;
-                    o.SALDOEDO = o.$deuda.SALDOEDO; //+o.$pago.ASIGNADO
-                    o.MAXASIG = Math.min(o.SALDODP + o.ASIGNADO, o.SALDOEDO + o.ASIGNADO);
+                    o.MAXASIG = Math.min(o.$pago.SALDODP + o.ASIGNADO, o.$deuda.SALDOEDO + o.ASIGNADO);
+                    o.TIDO = o.$deuda.TIDO;
+                    o.NUDO = o.$deuda.NUDO;
                 })
             }
 
@@ -260,6 +263,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     var muestraLinea = (l.$pago.isSelected || showAllPago) && (l.$deuda.isSelected || showAllDeuda);
                     l.$estado.hidden = !muestraLinea;
                 });
+
+                // Actualizar título
+                $scope.tituloCruce = pagoSeleccionados[0]?pagoSeleccionados[0].TIDP+' : '+pagoSeleccionados[0].NUCUDP : 'No hay pagos seleccionados'
 
             }
 
