@@ -36,7 +36,7 @@ angular.module('theme')
         function redraw() {
           var width = $window.width();
           //console.log("performing redraw. last:",lastWidth, "current:", width)
-          if (width > 768){
+          if (width > 991){
             app.removeClass('no-sidebar');
             app.removeClass('mobile')
           }else{

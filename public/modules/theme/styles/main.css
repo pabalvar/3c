@@ -224,8 +224,8 @@ button.close {
 
 
 /* En pantalla delgada el #content no se mueve si aparece sidebar */
-
-@media only screen and (min-width: 769px) {
+/* Debe coincidir con collapsesidebar.js */
+@media only screen and (min-width: 992px) {
     .appWrapper.header-fixed.aside-fixed:not(.no-sidebar) #content {
         /* PAD: Debe coincidir CODA-1 */
         left: 180px;
@@ -10231,7 +10231,7 @@ only screen and (min-resolution: 144dpi) {
 .table.table-hover>tbody>tr:hover td,
 .table.table-hover>tbody>tr:hover th {
     /*mix-blend-mode: darken;*/
-    box-shadow: inset 0px 0px 0px 50px rgba(0, 127, 255, 0.1);
+    box-shadow: inset 0px 0px 50px 50px rgba(0, 127, 255, 0.1);
 }
 
 .table.table-custom>thead>tr td.sorting:after,
