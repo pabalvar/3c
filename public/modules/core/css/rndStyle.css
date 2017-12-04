@@ -68,7 +68,7 @@ button.redondo {
 
 table.inputable tbody tr td {
     margin: 0px;
-    padding: 0px;
+    padding: 2px;
 }
 
 /* Fondo azul en input de tabla con foco */
@@ -104,21 +104,11 @@ input.rndinputd {
     font-family: "Lato", "Arial", sans-serif;
     height: 18px;
     width: 100%;
-    /* padding-top: 0px;
-  padding-bottom: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-left : 0px;
-  padding-right: 0px;
-  /*margin-top: 2px;
-  margin-bottom: 2px;
-  height: 1.3em;
-  width: 95%;*/
 }
 div.rnd-input-open input.rnd-input-open-numeric,
-div.rnd-input-open input.rnd-input-open-text {      
+div.rnd-input-open input.rnd-input-open-text {
     padding-left:4px;
-    padding-right:4px;
+    padding-right: 4px;
 }
 
 
@@ -127,6 +117,13 @@ div.rnd-input-open input.rnd-input-open-text {
 table.headerdark thead {
     background-color: #3f4e62;
     /* Slategray */
+}
+div.rnd-gray table.headerdark > thead {
+    background-color: #3f4e623A;
+}
+div.rnd-gray table.headerdark > thead tr th {
+    color: #000000A0;
+    /* Slategray más gris */
 }
 
 table.headerdark thead tr {

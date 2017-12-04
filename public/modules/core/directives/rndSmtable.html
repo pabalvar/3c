@@ -1,6 +1,7 @@
+
 <div ng-if="options.title">
     <p class="text-uppercase text-strong mb-0 custom-font">
-        <span>{{options.title}} </span>
+        <span ng-bind-html="options.title | trust"></span>
     </p>
 </div>
 
@@ -90,28 +91,31 @@
                     <rnd-smtable ng-if="!blink && m.datatype=='rnd-smtable'"
                                  meta="m.options.meta.data"
                                  options="{}"
-                                 source="{data:[fila[m.field]]}"
+                                 dialog="m.options.dialog"
+                                 source="{data:fila[m.field]}"
                                  rtablas="m.options.rtablas">
                     </rnd-smtable>
-                    <!--<pre ng-if="!blink && m.datatype=='table'">{{fila[m.field]}}</pre>
-                    <pre ng-if="!blink && m.datatype=='table'">{{m.options.meta.data}}</pre>->
                 </td>
+
+                <!--<pre ng-if="!blink && m.datatype=='table'">{{fila[m.field]}}</pre>
+                    <pre ng-if="!blink && m.datatype=='table'">{{m.options.meta.data}}</pre>->
+                
             </tr>
         </tbody>
 
         <!-- offline -->
-                    <tfoot ng-if="source.$offline">
-                        <tr>
-                            <td colspan="500"
-                                class="text-center">
-                                <div>
-                                    <h3 class="m-10 text-danger busy">
-                                        <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                    <!-- offline -->
+                <tfoot ng-if="source.$offline">
+                    <tr>
+                        <td colspan="500"
+                            class="text-center">
+                            <div>
+                                <h3 class="m-10 text-danger busy">
+                                    <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+                <!-- offline -->
 
     </table>
 </div>

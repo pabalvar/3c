@@ -57,8 +57,10 @@ angular.module('gestion').controller('gestionPagosClientesController',
             $scope.pasoCruce = { data: [] }
             $scope.metaCruce = {
                 data: rndDialog.initMeta([
-                    { field: "TIDO", name: "DP", visible: true, length: '3', readOnly:true },
+                    { field: "TIDO", name: "TP", visible: true, length: '3', readOnly:true },
                     { field: "NUDO", name: "Número", visible: true, length: '10', readOnly:true },
+                   // { field: "TIDP", name: "DP", visible: true, length: '3', readOnly:true },
+                  //  { field: "NUDP", name: "Número", visible: true, length: '10', readOnly:true },
                    // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
                     { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '8', onClick: asignaMaximo },
                     { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
@@ -67,7 +69,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 ])
             }
 
-
+            //var metaCruceCol = { field: "$cruce", name: 'Cruce', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaCruce, rtablas: $scope.metaCruce.rtablas, dialog:{onChange:calcula} } };
+           // $scope.metaPago.data.push(metaCruceCol); 
+            
 
             /** Lógica **/
 
@@ -98,7 +102,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
             /** Funciones auxiliares */
             function onCambioLineas() {
                 creaPasoCruce();
+    
                 calcula();
+                pivotTable();
             }
 
             function onChangeEntidad(n, o) {
@@ -122,6 +128,17 @@ angular.module('gestion').controller('gestionPagosClientesController',
             /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
             function clickRow(api, row) {
                 return (res) => { $timeout(() => { if (res.data[row]) api.clickRow(row); }) }
+            }
+
+            /* Asigna el campo $cruce un array con cruces */
+            function pivotTable(){
+                $scope.pasoPago.data.forEach(function (p) {
+                    // Borrar
+                    p.$cruce = [];
+                    $scope.pasoCruce.data.forEach(function(c){
+                        if (c.$pago === p) p.$cruce.push(c);
+                    })
+                })
             }
 
             /** Esta función guarda en pasoCruce una matriz que es el cruce de 
@@ -189,6 +206,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Calcular la suma de asignaciones para cada pago */
             function calculaPagos() {
+                console.log($scope.pasoPago.data)
                 //console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
                 $scope.pasoPago.data.forEach(function (p) {
                     p.ASIGDP = $scope.pasoCruce.data
@@ -236,6 +254,8 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     o.MAXASIG = Math.min(o.$pago.SALDODP + o.ASIGNADO, o.$deuda.SALDOEDO + o.ASIGNADO);
                     o.TIDO = o.$deuda.TIDO;
                     o.NUDO = o.$deuda.NUDO;
+                    o.TIDP = o.$pago.TIDP;
+                    o.NUDP = o.$deuda.NUDP;
                 })
             }
 
@@ -265,7 +285,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 });
 
                 // Actualizar título
-                $scope.tituloCruce = pagoSeleccionados[0]?pagoSeleccionados[0].TIDP+' : '+pagoSeleccionados[0].NUCUDP : 'No hay pagos seleccionados'
+                //$scope.tituloCruce = pagoSeleccionados[0]?pagoSeleccionados[0].TIDP+' : '+pagoSeleccionados[0].NUCUDP : 'No hay pagos seleccionados'
 
             }
 
