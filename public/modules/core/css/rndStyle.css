@@ -10,6 +10,28 @@
 }
 
 
+.rnd-btn:hover{
+    color:white;
+}
+
+.add:after    { content: "\271A"; }
+.edit:after   { content: "\270E"; }
+.delete:after { content: "\2718";}
+.save:after   { content: "\2714";}
+.email:after  { content: "\2709";}
+.cross:after  { content: "\2716"; }
+.right:after  { content: "\25B8"; }
+.left:after  { content: "\25C0"; }
+
+.rnd-btn {
+    background-color: #616f7720;
+    /* padding-left: 5px; */
+    padding-right: 5px;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+}
+
 .rnd-gray {
     background-color: rgb(241, 241, 241);
 }
@@ -386,7 +408,7 @@ div.dead {
 }
 
 .shadow-b {
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.15);
 }
 .shadow-t {
     box-shadow: 0px -3px 3px rgba(0, 0, 0, 0.2);

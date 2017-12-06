@@ -101,15 +101,7 @@ angular.module("core")
             $scope.cellClick = function (line, column, source) {
               console.log("hizo click en la celda", line);
               // llamar a la función de meta
-              column.onClick(line, column, source);/*
-              console.log("line.key",line[key], key)
-              $scope.buffer.tmpInput = line[key];
-              init(type);
-              line.$estado.$isOpen = false;
-              updateBuffer(line[column.field]);
-              $timeout(function(){line.$estado.$isOpen=true;},3000);*/
-              //buffer.tmpInput = line[key];
-              //updateBuffer(line[column.field]);
+              column.onClick(line, column, source);
             }
           }
 

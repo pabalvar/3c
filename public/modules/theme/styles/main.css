@@ -5,7 +5,7 @@
 
 .page {
     padding: 10px;
-    background-color: #f2f2f2;
+    /*background-color: #f2f2f2;*/
 }
 
 
@@ -1184,7 +1184,7 @@ button.close {
     position: relative;
     margin-bottom: 20px;
     color: #616f77;
-    background-color: white;
+    /*background-color: white;*/
     filter: alpha(opacity=100);
     opacity: 1;
     -webkit-transition: opacity 0.25s ease-out;
@@ -13006,7 +13006,7 @@ body {
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
     -ms-overflow-style: scrollbar;
-    background-color: white;
+    background-color: #ECECEC;
     color: #616f77;
 }
 
@@ -13803,7 +13803,7 @@ body a {
 }
 
 .m-5 {
-    margin: 5px !important;
+     margin: 5px !important;
 }
 
 .m-0 {
@@ -13904,24 +13904,6 @@ body a {
     margin-right: 0px !important;
 }
 
-
-/* Aumenta borde si la pantalla es grande */
-
-.p-inner {
-    margin: 0px;
-    padding: 0px;
-}
-
-.p-outer {
-    margin: 0px;
-    padding: 10px;
-}
-
-@media only screen and (min-width: 769px) {
-    .p-outer {
-        padding: 20px;
-    }
-}
 
 .p-30 {
     padding: 30px !important;

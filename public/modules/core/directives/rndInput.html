@@ -49,13 +49,14 @@
     <!-- date -->
     <div ng-if="type.datatype=='date'">
         <div class="form-validation">
-            <p class="mb-0" style="display:flex;">
+            <p class="mb-0"
+               style="display:flex;">
                 <!-- fecha indefinida -->
-                <span 
-                      class="form-control rndinput rnd-input-open-text {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                <span class="form-control rndinput rnd-input-open-text {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+            
                       ng-if="dateCtrl.isDateInfinite"
                       ng-click="dateCtrl.setToday()">
-                      {{line[key]|monitor:column }}    
+                    {{line[key]|monitor:column }}
                 </span>
                 <!-- /fecha infinita -->
                 <!-- input -->
@@ -67,6 +68,7 @@
                        ng-mouseenter="dateCtrl.openDeferred();"
                        ng-mouseleave="dateCtrl.closeDeferred();"
                        class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+            
                        uib-datepicker-popup="{{dateCtrl.format}}"
                        ng-model-options="{timezone: 'utc'}"
                        is-open="dateCtrl.isOpen"
@@ -115,7 +117,7 @@
 
 <!-- modo READ -->
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado'"
-      class="m-5"
+      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
       ng-class="type.datatype=='number'?'mr-20':''"
       ng-click="cellClick(line,column,source)">
     {{line[key]| monitor:column:rtablas}}

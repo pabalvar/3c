@@ -62,16 +62,12 @@ angular.module('gestion').controller('gestionPagosClientesController',
                    // { field: "TIDP", name: "DP", visible: true, length: '3', readOnly:true },
                   //  { field: "NUDP", name: "Número", visible: true, length: '10', readOnly:true },
                    // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
-                    { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '8', onClick: asignaMaximo },
+                    { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '8', onClick: asignaMaximo, icon:'right' },
                     { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
                    // { field: "$pago", name: 'Pago', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaPago, rtablas: $scope.metaPago.rtablas } },
 
                 ])
-            }
-
-            //var metaCruceCol = { field: "$cruce", name: 'Cruce', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaCruce, rtablas: $scope.metaCruce.rtablas, dialog:{onChange:calcula} } };
-           // $scope.metaPago.data.push(metaCruceCol); 
-            
+            }         
 
             /** Lógica **/
 
