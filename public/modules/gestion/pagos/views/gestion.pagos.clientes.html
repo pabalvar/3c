@@ -10,16 +10,16 @@
   <!-- /search box -->
 </rnd-breadcrumb>
 
-
 <section ng-if="pasoEntidad.data.length">
 
-  <div rnd-row class="rnd-gray">
+  <!-- #ROW: Entidad, Deuda -->
+  <div rnd-row
+       class="rnd-gray">
 
     <div class="col-xs-4">
       <!-- Entidad -->
       <rnd-profile meta="metaEntidad.data"
                    options="{showEmpty:'<h2>¡Nadie aquí!</h2><p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>', title:'Datos entidad'}"
-  
                    source="pasoEntidad"
                    rtablas="metaEntidad.rtablas">
       </rnd-profile>
@@ -32,39 +32,37 @@
       <rnd-tile-simple options="{title:'total asignado'}">{{resumen.asignadoCruce|monitor:'currency'}}</rnd-tile-simple>
       <!-- /totales -->
     </div>
+
     <div class="col-xs-12">
-      <br>
-        <!-- Deuda -->
-        <rnd-smtable meta="metaDeuda.data"
-                     options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:5, xpageheight:3}"
-                     source="pasoDeuda"
-                     dialog="{selectRow:selectRow}"
-                     rtablas="metaDeuda.rtablas"
-                     api="apiDeuda">
-        </rnd-smtable>
-        <!-- /Deuda -->
-        <br>
-      </div>
+      <!-- Deuda -->
+      <rnd-smtable meta="metaDeuda.data"
+                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:3, pageheight:3}"
+                   source="pasoDeuda"
+                   dialog="{selectRow:selectRow}"
+                   rtablas="metaDeuda.rtablas"
+                   api="apiDeuda">
+      </rnd-smtable>
+      <!-- /Deuda -->
+    </div>
   </div>
 
-  <!-- #ROW: Pagos --> 
-  <div rnd-row class="rnd-white shadow-b pt-20">
+  <!-- #ROW: Pagos, Asignación, acciones -->
+  <div rnd-row
+       class="rnd-white shadow-b pt-20">
 
     <div class="col-md-8 col-lg-7">
-
       <!-- /Pagos -->
       <rnd-smtable meta="metaPago.data"
-                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:55, pageheight:4}"
-    
+                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, xpageheight:5}"
                    source="pasoPago"
                    rtablas="metaPago.rtablas"
                    dialog="{selectRow:selectRow,onChange:onChangeValue, onAddRow:onAddRowPago, canCreate:true }"
                    api="apiPago">
       </rnd-smtable>
       <!-- /Pagos -->
-
     </div>
-    <div class="col-sm-6 col-md-4">
+
+    <div class="col-sm-8 col-md-4 col-lg-5">
 
       <div ng-repeat="pago in pasoPago.data"
            ng-if="pago.isSelected">
@@ -83,16 +81,21 @@
 
         <!-- Cruce -->
         <rnd-smtable meta="metaCruce.data"
-                     options="{showEmpty:'Vacío', xtitle:'<strong>'+pago.TIDP+'</strong>'}"
+                     options="{showEmpty:'No hay asignaciones'}"
                      source="{data:pago.$cruce}"
                      dialog="{onChange:onChangeValue}"
                      api="apiCruce">
         </rnd-smtable>
         <!-- /Cruce -->
-        <br>
+
       </div>
     </div>
-  </div>
 
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center p-20">
+      <button type="button"
+              class="btn btn-greensea btn-border btn-rounded-20">Guardar cambios</button>
+    </div>
+
+  </div>
 
 </section>

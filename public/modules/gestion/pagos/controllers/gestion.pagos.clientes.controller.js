@@ -24,6 +24,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Trae PAGO */
             $scope.metaPago = metaPago;
+            $scope.metaPago.data.$estado.visible = true;
             $scope.apiPago = {}
             $scope.pasoPago = { data: [] };
             function traePago() {
@@ -52,22 +53,29 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 }, $scope.pasoDeuda);
             }
 
-            /* Cruce Pagos-Deuda */
+            /* CRUCE Pagos-Deuda */
             $scope.apiCruce = {}
             $scope.pasoCruce = { data: [] }
             $scope.metaCruce = {
                 data: rndDialog.initMeta([
-                    { field: "TIDO", name: "TP", visible: true, length: '3', readOnly:true },
-                    { field: "NUDO", name: "Número", visible: true, length: '10', readOnly:true },
-                   // { field: "TIDP", name: "DP", visible: true, length: '3', readOnly:true },
-                  //  { field: "NUDP", name: "Número", visible: true, length: '10', readOnly:true },
-                   // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
-                    { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '8', onClick: asignaMaximo, icon:'right' },
+                    { field: "TIDO", name: "TP", visible: true, length: '3', readOnly: true },
+                    { field: "NUDO", name: "Número", visible: true, length: '10', readOnly: true },
+                    // { field: "TIDP", name: "DP", visible: true, length: '3', readOnly:true },
+                    //  { field: "NUDP", name: "Número", visible: true, length: '10', readOnly:true },
+                    // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
+                    { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '10', onClick: asignaMaximo, icon: 'right' },
                     { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
-                   // { field: "$pago", name: 'Pago', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaPago, rtablas: $scope.metaPago.rtablas } },
+                    // { field: "$pago", name: 'Pago', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaPago, rtablas: $scope.metaPago.rtablas } },
 
                 ])
-            }         
+            }
+
+            // Variables de RESUMEN
+            $scope.resumen = {
+                saldoDeuda: 0,
+                asignadoCruce: 0
+            }
+
 
             /** Lógica **/
 
@@ -75,30 +83,21 @@ angular.module('gestion').controller('gestionPagosClientesController',
             $scope.$watchCollection('pasoPago.data', onCambioLineas);
             $scope.$watchCollection('pasoDeuda.data', onCambioLineas);
 
-            // Si cambia un valor volver a calcular y validar
-            $scope.onChangeValue = calcula;
-
             // Función llamada por directiva cuando cambia entidad (causa recarga de pago y deuda)
             $scope.onChangeEntidad = onChangeEntidad;
-
+            // Si cambia un valor volver a calcular y validar
+            $scope.onChangeValue = calcula;
             // Si se crea una línea de pago hacer foco en ella (toDo: esto debería ser parte de la directiva)
             $scope.onAddRowPago = onAddRowPago;
-
-            // Variables de resumen
-            $scope.resumen = {
-                saldoDeuda: 0,
-                asignadoCruce: 0
-            }
-
             // Si se crea un nuevo pago, proponer el total por pagar
             $scope.metaPago.data.VADP.onInit = () => $scope.resumen.saldoDeuda;
-            $scope.metaPago.data.$estado.visible = true;//onInit=()=>$scope.resumen.saldoDeuda;
+            // Al hacer click en líneas, mostrar cruce que tienen que ver
+            $scope.selectRow = filtraLineas;
 
 
             /** Funciones auxiliares */
             function onCambioLineas() {
                 creaPasoCruce();
-    
                 calcula();
                 pivotTable();
             }
@@ -123,15 +122,20 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Función que dada una api (de rndSmtable) y un número de línea, ejecuta un click usando la api*/
             function clickRow(api, row) {
-                return (res) => { $timeout(() => { if (res.data[row]) api.clickRow(row); }) }
+                return (res) => {
+                    $timeout(() => {
+                        if (res.data[row] && api.clickRow) api.clickRow(row);
+
+                    })
+                }
             }
 
             /* Asigna el campo $cruce un array con cruces */
-            function pivotTable(){
+            function pivotTable() {
                 $scope.pasoPago.data.forEach(function (p) {
                     // Borrar
                     p.$cruce = [];
-                    $scope.pasoCruce.data.forEach(function(c){
+                    $scope.pasoCruce.data.forEach(function (c) {
                         if (c.$pago === p) p.$cruce.push(c);
                     })
                 })
@@ -198,11 +202,19 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 // Valida
                 if ($scope.apiPago.validate) $scope.apiPago.validate();
                 if ($scope.apiCruce.validate) $scope.apiCruce.validate();
+                validaGrabacion();
+            }
+
+            /* Calcula si es posible grabar en base a que hayan cambios y todas las validaciones estén superadas */
+            function validaGrabacion() {
+                // Validar pagos;
+                $scope.pasoPago.data.forEach(function (l) {
+                    //console.log("estado:", l.$estado)
+                })
             }
 
             /** Calcular la suma de asignaciones para cada pago */
             function calculaPagos() {
-                console.log($scope.pasoPago.data)
                 //console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
                 $scope.pasoPago.data.forEach(function (p) {
                     p.ASIGDP = $scope.pasoCruce.data
@@ -233,7 +245,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             function calculaTotales() {
-
                 var saldoDeuda = 0;
                 $scope.pasoDeuda.data.forEach(f => { saldoDeuda += f.SALDOEDO })
                 $scope.resumen.saldoDeuda = saldoDeuda;
@@ -265,7 +276,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
             /** Función que oculta las líneas en pasoCruce que no están seleccionadas en 
              * la grilla de Pago y Documento
              */
-            $scope.selectRow = filtraLineas;
             function filtraLineas() {
 
                 // Obtener el seleccionado de pago
@@ -279,9 +289,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     var muestraLinea = (l.$pago.isSelected || showAllPago) && (l.$deuda.isSelected || showAllDeuda);
                     l.$estado.hidden = !muestraLinea;
                 });
-
-                // Actualizar título
-                //$scope.tituloCruce = pagoSeleccionados[0]?pagoSeleccionados[0].TIDP+' : '+pagoSeleccionados[0].NUCUDP : 'No hay pagos seleccionados'
 
             }
 
