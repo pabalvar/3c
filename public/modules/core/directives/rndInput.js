@@ -64,18 +64,23 @@ angular.module("core")
           var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
 
 
-          // Scope variables
+          // Init
           $scope.line.$estado = $scope.line.$estado || {}; // init $estado (lineMeta)
-          $scope.line.$estado[$scope.key] = $scope.line.$estado[$scope.key] || {}; // init cellMeta
-          $scope.lineMeta = $scope.line.$estado; // alias line meta
-          $scope.cellMeta = $scope.line.$estado[$scope.key]; // alias cellMeta
+
+          // Referenciar meta
           $scope.column = meta.find(o => o.field == $scope.key);//  modelo de la columna
           $scope.type = getDatatype($scope.column);
           $scope.buffer = {};
 
-
           // Salir si es $estado
-          if ($scope.key == '$estado') {    return;    }
+          if ($scope.key == '$estado') return;
+
+          // Alias
+          $scope.line.$estado[$scope.key] = $scope.line.$estado[$scope.key] || {}; // init cellMeta
+          $scope.lineMeta = $scope.line.$estado; // alias line meta
+          $scope.cellMeta = $scope.line.$estado[$scope.key]; // alias cellMeta
+
+
 
           // variables
           var hooks = []; // Array de funciones a aplicar al haber cambios
