@@ -10,7 +10,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
     ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaDeuda', '$timeout',
         function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaDeuda, $timeout) {
 
-            /** Trae ENTIDAD **/
+            /** Modelo de datos */
+
+            // Trae ENTIDAD 
             $scope.metaEntidad = metaEntidad;
             $scope.pasoEntidad = { data: [] };
             $scope.traeEntidad = function (query) {
@@ -22,7 +24,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 });
             }
 
-            /** Trae PAGO */
+            // Trae PAGO
             $scope.metaPago = metaPago;
             $scope.metaPago.data.$estado.visible = true;
             $scope.apiPago = {}
@@ -39,7 +41,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             };
 
 
-            /** Trae DEUDA */
+            // Trae DEUDA
             $scope.metaDeuda = metaDeuda;
             $scope.apiDeuda = {}
             $scope.pasoDeuda = { data: [] };
@@ -53,20 +55,16 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 }, $scope.pasoDeuda);
             }
 
-            /* CRUCE Pagos-Deuda */
+            // CRUCE Pagos-Deuda
             $scope.apiCruce = {}
             $scope.pasoCruce = { data: [] }
             $scope.metaCruce = {
                 data: rndDialog.initMeta([
+                    //{ field: "$deuda", name: "TP", visible: true, length: '30', readOnly: true, datatype:'rnd-profile', options: {meta:$scope.metaDeuda, rtablas:$scope.metaDeuda.rtablas} },
                     { field: "TIDO", name: "TP", visible: true, length: '3', readOnly: true },
                     { field: "NUDO", name: "Número", visible: true, length: '10', readOnly: true },
-                    // { field: "TIDP", name: "DP", visible: true, length: '3', readOnly:true },
-                    //  { field: "NUDP", name: "Número", visible: true, length: '10', readOnly:true },
-                    // { field: "$deuda", name: 'Deuda', visible: true, datatype: 'rnd-profile', options: { meta: $scope.metaDeuda, rtablas: $scope.metaDeuda.rtablas } },
                     { field: "MAXASIG", name: "Máximo", datatype: 'currency', readOnly: true, visible: true, length: '10', onClick: asignaMaximo, icon: 'right' },
                     { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
-                    // { field: "$pago", name: 'Pago', visible: true, datatype: 'rnd-smtable', options: { meta: $scope.metaPago, rtablas: $scope.metaPago.rtablas } },
-
                 ])
             }
 
@@ -109,7 +107,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             function cleanData() {
-                console.log("Clean Data")
                 $scope.pasoPago.data.length = 0;
                 $scope.pasoDeuda.data.length = 0;
                 $scope.pasoCruce.data.length = 0;
@@ -125,7 +122,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 return (res) => {
                     $timeout(() => {
                         if (res.data[row] && api.clickRow) api.clickRow(row);
-
                     })
                 }
             }
@@ -179,7 +175,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             /** Validaciones custom */
 
-            /** Función que se pasa a la directiva que valida datos en cruce */
+            // Función que se pasa a la directiva que valida datos en cruce
             function validaCruce(Data, rowIx, meta) {
                 console.log("validaCruce")
                 var l = Data.data[rowIx]; // alias para la línea
@@ -192,7 +188,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 return ret;
             }
 
-            /** Función que actualiza los saldos en pasoDeuda, pasoPago y pasoCruce */
+            // Función que actualiza los saldos en pasoDeuda, pasoPago y pasoCruce
             function calcula() {
                 // Calcula
                 calculaDeuda();
@@ -205,7 +201,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 validaGrabacion();
             }
 
-            /* Calcula si es posible grabar en base a que hayan cambios y todas las validaciones estén superadas */
+            // Calcula si es posible grabar en base a que hayan cambios y todas las validaciones estén superadas
             function validaGrabacion() {
                 // Validar pagos;
                 $scope.pasoPago.data.forEach(function (l) {
@@ -213,7 +209,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 })
             }
 
-            /** Calcular la suma de asignaciones para cada pago */
+            // Calcular la suma de asignaciones para cada pago
             function calculaPagos() {
                 //console.log("calculaPagos. Costo:", $scope.pasoPago.data.length);
                 $scope.pasoPago.data.forEach(function (p) {
