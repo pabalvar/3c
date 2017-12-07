@@ -259,6 +259,7 @@ angular.module("core")
         }
 
         function validate(Data, Columns, hot) {
+           
             Data.data.forEach(function (d, i) {
                 if (!((d.$estado) || {}).$action) return;
                 else if (d.$estado.$action == 'N' || d.$estado.$action == 'M') { // Economy: validar sólo líneas modificadas
@@ -298,11 +299,13 @@ angular.module("core")
         }
 
         function setCellValid(Data, i, meta, isValid, msg) {
+            //console.log("setCellValid:", meta.field);
             var line = Data.data[i];
             var key = meta.field;
             line.$estado = line.$estado || {};
             line.$estado[key] = line.$estado[key] || {};
             line.$estado[key].$invalid = !isValid;
+            //if (meta.field=='$estado') console.warn("validando $estado", JSON.stringify(line.$estado))
             // Si  es válido borrar mensajes, si no, asignar msg (es Array)
             if (isValid) line.$estado[key].$message = undefined;
             else {

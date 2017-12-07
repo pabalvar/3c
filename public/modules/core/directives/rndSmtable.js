@@ -125,6 +125,12 @@ angular.module('core')
                 }
             }
 
+            // Al seleccionar la línea
+            $scope.selectRow = selectRow;
+
+            // Funcíón auxiliar que entrega valor de !data.$estado.hidden 
+            $scope.isLineVisible = isLineVisible;
+
             // Anexar instancia
             $scope.api = $scope.api || {};
             $scope.api.clickRow = clickRow;
@@ -214,10 +220,10 @@ angular.module('core')
             }
 
             /* Función utilizada para ocultar líneas por controlador */
-            $scope.isLineVisible = function (line) { return !rndDialog.isLineHidden(line) };
+            function isLineVisible(line) { return !rndDialog.isLineHidden(line) };
 
             /** Función llamada al hacer click en línea. Llama a su vez a selectRow del controlador (si existe) */
-            $scope.selectRow = function (linea) {
+            function selectRow(linea) {
                 if (($scope.dialog || {}).selectRow) {
                     $scope.dialog.selectRow(linea, $scope.source, $scope.meta, $scope.rtablas);
                 }
