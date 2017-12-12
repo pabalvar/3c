@@ -53,7 +53,6 @@
                style="display:flex;">
                 <!-- fecha indefinida -->
                 <span class="form-control rndinput rnd-input-open-text {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-            
                       ng-if="dateCtrl.isDateInfinite"
                       ng-click="dateCtrl.setToday()">
                     {{line[key]|monitor:column }}
@@ -68,7 +67,6 @@
                        ng-mouseenter="dateCtrl.openDeferred();"
                        ng-mouseleave="dateCtrl.closeDeferred();"
                        class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-            
                        uib-datepicker-popup="{{dateCtrl.format}}"
                        ng-model-options="{timezone: 'utc'}"
                        is-open="dateCtrl.isOpen"
@@ -93,7 +91,6 @@
                tooltip-class="danger"
                ng-click="$event.stopPropagation()"
                class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
-    
                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
                ng-required="column.required">
     </div>
@@ -117,11 +114,8 @@
 
 <!-- modo READ -->
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado'"
-      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
-      ng-class="type.datatype=='number'?'mr-20':''"
-      ng-click="cellClick(line,column,source)">
-    {{line[key]| monitor:column:rtablas}}
-</span>
+      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}} mr-20"
+      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:rtablas}}</span>
 <!-- /modo READ -->
 
 <!-- Estado -->

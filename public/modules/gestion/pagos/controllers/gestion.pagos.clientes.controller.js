@@ -71,7 +71,8 @@ angular.module('gestion').controller('gestionPagosClientesController',
             // Variables de RESUMEN
             $scope.resumen = {
                 saldoDeuda: 0,
-                asignadoCruce: 0
+                asignadoCruce: 0,
+                canSave: false
             }
 
 
@@ -94,6 +95,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
 
             /** Funciones auxiliares */
+
             function onCambioLineas() {
                 creaPasoCruce();
                 calcula();
@@ -177,7 +179,6 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             // Función que se pasa a la directiva que valida datos en cruce
             function validaCruce(Data, rowIx, meta) {
-                console.log("validaCruce")
                 var l = Data.data[rowIx]; // alias para la línea
                 var err = []; // estructura de errores
 
@@ -195,18 +196,19 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 calculaPagos();
                 calculaCruce();
                 calculaTotales();
-                // Valida
+                // Forzar validación de todo el dataset
                 if ($scope.apiPago.validate) $scope.apiPago.validate();
                 if ($scope.apiCruce.validate) $scope.apiCruce.validate();
-                validaGrabacion();
+                // Ejecutar validación en diferido (después que se calcule validación del rndInput)
+                $timeout(()=>{validaGrabacion()});
             }
 
             // Calcula si es posible grabar en base a que hayan cambios y todas las validaciones estén superadas
             function validaGrabacion() {
-                // Validar pagos;
-                $scope.pasoPago.data.forEach(function (l) {
-                    //console.log("estado:", l.$estado)
-                })
+                $scope.resumen.canSave =
+                    rndDialog.getSumState($scope.pasoPago, $scope.metaPago).canSave ||
+                    rndDialog.getSumState($scope.pasoCruce, $scope.metaCruce).canSave;
+                console.log("get sumState cruce ", rndDialog.getSumState($scope.pasoCruce, $scope.metaCruce).canSave)
             }
 
             // Calcular la suma de asignaciones para cada pago

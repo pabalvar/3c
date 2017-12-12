@@ -273,7 +273,7 @@ angular.module("core")
          hotValidation/rndValidation -> meta.validations -> cell.validations */
         function onChange(Data, i, meta, oldval, hot) { //(Data, i, meta, hot)
             //console.log("rndDialog: onChange");
-
+            
             // Hacer el cambio dado por la directiva
             if (hot) {
                 if (meta.hotChange) meta.hotChange(Data, i, meta, oldval, hot);

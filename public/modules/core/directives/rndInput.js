@@ -151,17 +151,15 @@ angular.module("core")
               rowIx = Data.data.findIndex(l => l === $scope.line);
             }
 
-            // dejar que servicio rndDialog maneje el resto del cambio
-            if ($scope.dialog.onChange) {
-              //console.log("rndInput: onChange")
-              $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column);
-            }
+            // Ejecutar hooks requeridos por el controlador (mediante dialog.onChange)
+            if ($scope.dialog.onChange) $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column);
 
-
-            // Ejecutar cambios incluidos en metadata.onValueChange
+            // Ejecutar hooks incluidos en metadata.onValueChange
             rndDialog.onChange(Data, rowIx, column, oldVal);
+            // Marcar como modificada 
             rndDialog.setCellDirty(Data, rowIx, column);
             rndDialog.setLineModified(Data.data[rowIx]);
+            // Ejecutar validación en la celda
             rndDialog.validateCell(Data, rowIx, column);
           }
 

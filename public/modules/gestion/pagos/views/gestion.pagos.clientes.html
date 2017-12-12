@@ -48,9 +48,9 @@
 
   <!-- #ROW: Pagos, Asignación, acciones -->
   <div rnd-row
-       class="rnd-white shadow-b pt-20">
+       class="rnd-white shadow-b">
 
-    <div class="col-md-8 col-lg-7">
+    <div class="col-md-8 col-lg-7 pt-20">
       <!-- /Pagos -->
       <rnd-smtable meta="metaPago.data"
                    options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, xpageheight:5}"
@@ -62,7 +62,7 @@
       <!-- /Pagos -->
     </div>
 
-    <div class="col-sm-8 col-md-4 col-lg-5">
+    <div class="col-sm-8 col-md-4 col-lg-5 pt-20">
 
       <div ng-repeat="pago in pasoPago.data"
            ng-if="pago.isSelected">
@@ -92,7 +92,7 @@
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center p-20">
-      <button type="button"
+      <button ng-disabled="!resumen.canSave" type="button"
               class="btn btn-greensea btn-border btn-rounded-20">Guardar cambios</button>
     </div>
 
