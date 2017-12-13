@@ -28,7 +28,7 @@ angular.module("core")
 
         function min(param) {
             return function (Data, rowIx, meta) {
-                console.log("rndValidation#min")
+                //console.log("rndValidation#min")
                 var l = Data.data[rowIx]; // alias para la línea
                 var err = []; // estructura de errores
 

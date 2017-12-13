@@ -31,6 +31,9 @@ angular.module("core")
             if (ix < 0) {
                 meta.unshift({ field: '$estado', datatype: '$estado', name: ' ☰ ', visible: false, length: '1' })
             }
+
+            // Agregar referencia a campos en array para poder acceder por propiedad
+			meta.forEach(f => { meta[f.field] = f });
             return meta;
         }
 

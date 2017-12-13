@@ -113,8 +113,14 @@
 <!-- /modo EDIT -->
 
 <!-- modo READ -->
-<span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado'"
+<span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype!='number'"
+      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
+      uib-tooltip="{{column.datatype}}"
+      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:rtablas}}</span>
+<!-- modo READ -->
+<span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype=='number'"
       class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}} mr-20"
+      uib-tooltip="{{column.datatype}}"
       ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:rtablas}}</span>
 <!-- /modo READ -->
 

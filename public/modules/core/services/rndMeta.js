@@ -17,7 +17,7 @@ angular.module('core')
 						// Agregar campo $estado
 						res.data = rndDialog.initMeta(res.data);
 						// Agregar referencia a campos en array para poder acceder por propiedad
-						res.data.forEach(f => { res.data[f.field] = f });
+						//res.data.forEach(f => { res.data[f.field] = f });
 						return res;
 					}
 				}

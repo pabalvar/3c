@@ -67,6 +67,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     { field: "ASIGNADO", name: "Asignado", visible: true, datatype: 'number', length: '8', validations: [validaCruce] },
                 ])
             }
+            $scope.metaCruce.data.$estado.visible = true;
 
             // Variables de RESUMEN
             $scope.resumen = {
@@ -92,10 +93,18 @@ angular.module('gestion').controller('gestionPagosClientesController',
             $scope.metaPago.data.VADP.onInit = () => $scope.resumen.saldoDeuda;
             // Al hacer click en líneas, mostrar cruce que tienen que ver
             $scope.selectRow = filtraLineas;
+            // Botón grabar
+            $scope.save = save;
+
+
 
 
             /** Funciones auxiliares */
-
+            function save(){
+                // Obtener pagos
+                console.log("pagos", rndDialog.getCreated($scope.pasoPago.data, $scope.metaPago.data));
+                console.log("cruce", rndDialog.getModified($scope.pasoCruce.data, $scope.metaCruce.data));
+            }
             function onCambioLineas() {
                 creaPasoCruce();
                 calcula();
@@ -208,7 +217,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 $scope.resumen.canSave =
                     rndDialog.getSumState($scope.pasoPago, $scope.metaPago).canSave ||
                     rndDialog.getSumState($scope.pasoCruce, $scope.metaCruce).canSave;
-                console.log("get sumState cruce ", rndDialog.getSumState($scope.pasoCruce, $scope.metaCruce).canSave)
+                //console.log("get sumState cruce ", rndDialog.getSumState($scope.pasoCruce, $scope.metaCruce).canSave)
             }
 
             // Calcular la suma de asignaciones para cada pago
