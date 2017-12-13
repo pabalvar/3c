@@ -72,17 +72,17 @@ ORDER BY
 DPCE.FEEMDP
 `}
 
-// Entrega metadatos
+// Entrega metadatos MAEPCDE
 function getMetaPagos(req, res, next) {
     req.resultados = req.resultados || {};
     req.resultados.meta = [
         { field: "IDMAEDPCE", name: "IDMAEDPCE", visible: false, pk: true },
-        { field: "EMPRESA", readOnly: true, name: "Empresa", visible: false },
-        { field: "TIDP", name: "TD", description: "Tipo documento", visible: true, length: "5", datatype: 'rtabla', tabla: 'FormasDePago', options: { returnSrv: "codigo", returnClient: "codigo" } },
+        { field: "EMPRESA", readOnly: true, name: "Empresa", fk: 'TABENDP.EMPRESA', visible: false },
+        { field: "TIDP", name: "TD", description: "Tipo documento", fk: 'TABENDP.TIDPEN+"P"', visible: true, length: "5", datatype: 'rtabla', tabla: 'FormasDePago', options: { returnSrv: "codigo", returnClient: "codigo" } },
         { field: "NUDP", name: "Número", description: "Número documento de pago", visible: false },
-        { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", visible: false },
-        { field: "EMDP", name: "Emisor", description: "Emisor documento de pago (banco)", visible: false },
-        { field: "SUEMDP", name: "Sucursal", description: "Plaza", visible: false },
+        { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", fk:'MAEEN.KOEN', visible: false },
+        { field: "EMDP", name: "Emisor", description: "Emisor documento de pago (banco)", fk:'TABENDP.EMDP', visible: false },
+        { field: "SUEMDP", name: "Sucursal", description: "Plaza", fk:'TABENDP.SUEMDP', visible: false },
         { field: "CUDP", name: "Cuenta", description: "Cuenta de banco", visible: false },
         { field: "NUCUDP", name: "Número", description: "Número de cheque o transferencia", visible: true, length: "10" },
         { field: "FEEMDP", name: "F. Emisión", visible: true, datatype: 'date', length: "8" },
@@ -90,7 +90,7 @@ function getMetaPagos(req, res, next) {
         { field: "MODP", name: "M", description: "Moneda", visible: true, length: "1", onInit: () => '$' },
         { field: "TIMODP", name: "Tipo moneda", description: "Nacional (N) o extranjera (E)", visible: false },
         { field: "TAMODP", name: "Tasa de cambio", visible: false },
-        { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations:[{min:1}] },
+        { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations: [{ min: 1 }] },
         //{ field: "VAABDP", name: "Abono", description: "Abono anterior asignado", visible: false, datatype: 'number' },
         { field: "VAASDP", name: "Asignado (anterior)", description: "Asignado (anterior)", visible: false, datatype: 'number' },
         { field: "VAASDPN", name: "Asignado", description: "Asignado (nuevo)", visible: false, datatype: 'number' },
