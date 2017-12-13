@@ -1,8 +1,7 @@
-call config.bat
+:: requisitos: nodejs lts, git instaladados con instalador
 
-:: Descargar componentes
-echo --- Descargando componentes servidor
-call npm install
-
-echo --- Descargando componentes cliente
-call bower install
+npm install
+npm install -g bower
+npm install -g grunt
+npm install -g git
+bower install
