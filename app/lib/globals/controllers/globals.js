@@ -1,7 +1,11 @@
 ﻿'use strict';
+var _ = require('lodash');
+
 
 exports.initReq = function (req, res, next) {
     req.consultas = req.consultas || {};
+    req.resultados = req.resultados || {};
+    req.add = (data,store)=>{req.resultados[store]=data}
     next();
 }
 
@@ -100,6 +104,10 @@ exports.contrato_dialog = function (req, res) {
     return
 }
 
+exports.out = function(req,res){
+    // Revisar si quedaron consultas sin ejecutar?
+    res.send(req.resultados)
+}
 
 /** Función global de salida a cliente con recurso */
 exports.queryOut = function (req, res) {
@@ -116,16 +124,25 @@ exports.queryOut = function (req, res) {
         for (var key in req.resultados) {
             isObject = true;
 
+            // llamar los callback
+            if ( (req.callme||{})[key] ){
+
+                req.callme[key](req,res,req.resultados[key])
+                console.log("algo hay", req.callme[key]);
+            }
+
             if (k = key.match(/(.*)_datatable$/)) {
                 // Agregar datos de datatable
                 out.recordsTotal = req.resultados[key][0].total;
                 out.recordsFiltered = req.resultados[key][0].total;
-
             } else if (k = key.match(/rtablas$/)) {
                 // Si viene rtablas incorporar
-                out.rtablas = req.resultados[key];
-
-            } else {
+                out.rtablas = out.rtablas||{};
+                _.extend(out.rtablas,req.resultados[key]);
+            } else if (k = key.match(/(.*)_rtabla$/)) {
+                out.rtablas = out.rtablas||{};
+                out.rtablas[k] = req.resultados[key];
+            }else {
                 // Si viene otro campo, agregar como data
                 out.data = req.resultados[key];
             }
