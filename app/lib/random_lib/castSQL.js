@@ -357,7 +357,7 @@ var source =
 
 function SQLcast(s, p, opt) {
     // @xxx     DATE()     HASHBYTES()     COALESCE()               SELECT..FROM..   DROP TABLE        ( .... )
-    var sqlexpr = /^(?:@\w+)|DATE\(.*\)|HASHBYTES\(.*\)|NEWID\(.*\)|COALESCE\(.*\)|SUM\(.*\)|SELECT.*FROM.*|DROP.*TABLE.*|^\s*\(.*\)\s*$|^\s*\[.*\]\s*$/i;
+    var sqlexpr = /^(?:@\w+)|DATE\(.*\)|DATEPART\(.*\)|HASHBYTES\(.*\)|NEWID\(.*\)|COALESCE\(.*\)|SUM\(.*\)|SELECT.*FROM.*|DROP.*TABLE.*|^\s*\(.*\)\s*$|^\s*\[.*\]\s*$/i;
     var noquote = '/noquote';
     var quote = '/quote';
     var newLine = /\n/;
@@ -468,7 +468,7 @@ function SQLcast(s, p, opt) {
                     }
 
                     // Reemplazar match.key con eval(match.variable) (i.e. resValue)
-                    e = e.replace(match.key, match.value);
+                    e = e.replace(match.key, typeof(match.value)=='string'?match.value.replace(/\$/g,'$$$$'):match.value); // Duplicar $ si vienen debido a función replace lo interpreta mal
 
                     // Remove comments
                     e = e.replace(match.comment, '')
