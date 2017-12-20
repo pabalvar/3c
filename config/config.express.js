@@ -1,7 +1,6 @@
 'use strict';
 
 var fs = require('fs', 'dont-enclose'),
-    http = require('http', 'dont-enclose'),
     https = require('https', 'dont-enclose'),
     express = require('express'),
     favicon = require('serve-favicon'),
@@ -15,6 +14,7 @@ var fs = require('fs', 'dont-enclose'),
     path = require('path', 'dont-enclose'),
     logger = require('./logger.js'),
     globals = require('../app/lib/globals/controllers/globals.js'),
+    mssql = require('../app/lib/Server/drivers/mssql.server.driver'),
     db = require('../app/lib/Server/controllers/config.server.controller.js');
 
 
@@ -48,6 +48,7 @@ module.exports = function (config) {
 
     /* Inicializar campos consulta SQL*/
     app.use(globals.initReq);
+    app.use(mssql.initSQL);
     app.use(methodOverride());
     app.use(cookieSession({ secret: 'RANDOM_SECRET', resave: false, saveUninitialized: false }));
 
@@ -66,6 +67,7 @@ module.exports = function (config) {
     // abrir archivo conexión 
     db.read(config);
     db.reset(app)();
+
 
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
@@ -113,19 +115,19 @@ module.exports = function (config) {
     config.getGlobbedFiles('./app/liberp/*routes.js').forEach(requirePath);
     config.getGlobbedFiles('./app/!(lib|rrhh)/*.routes.js').forEach(requirePath);
 
-    // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
+    // Responder 500 si viene con error
     app.use(function (err, req, res, next) {
         if (!err) return next(); // If the error object doesn't exists
-        process.console.Error(err.stack);        // Log it
-        // Error page
-        res.status(500).json({ type: "ERR_SRV_UNKNOWN", message: "Error de servidor", error: err.stack });
+        process.console.Error(err.stack);
+        res.status(500).json({ type: err.type||"ERR_SRV_UNKNOWN", message: err.text||"Error de servidor", shortid:err.shortid||'' });
     });
 
-    // Assume 404 since no middleware responded
+    // Responder 404 si nadie ha respondido hasta ahora
     app.use(function (req, res) {
         res.status(404).json({ type: "ERR_404", message: "Ruta no existe: " + req.originalUrl });
     });
 
+    // Si configuración es https
     if (process.env.NODE_ENV === 'secure') {
         // Log SSL usage
         console.log('Securely using https protocol');
