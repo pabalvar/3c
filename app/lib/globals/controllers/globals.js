@@ -124,12 +124,6 @@ exports.queryOut = function (req, res) {
         for (var key in req.resultados) {
             isObject = true;
 
-            // llamar los callback
-            if ( (req.callme||{})[key] ){
-
-                req.callme[key](req,res,req.resultados[key])
-                console.log("algo hay", req.callme[key]);
-            }
 
             if (k = key.match(/(.*)_datatable$/)) {
                 // Agregar datos de datatable
