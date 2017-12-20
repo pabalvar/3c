@@ -4,9 +4,85 @@ var sql = require('mssql'),
     console = process.console,
     async = require('async'),
     _ = require('lodash'),
-    uidGen = require('node-uuid');
+    uidGen = require('node-uuid'),
+    shortid = require('shortid');
 
-exports.namedQuery = function (req, res, queryObj, store, callback) {
+exports.runsql = runsql;
+exports.runsqlp = runsqlp;
+
+exports.namedQuery = namedQuery;
+exports.executeQuery = executeQuery;
+exports.transaction = transaction;
+exports.executeListQuery = executeListQuery;
+
+exports.initSQL = function (req, res, next) {
+    req.addsql = function (query, store, thenfn, errfn) {
+        // anotar en req.qSql
+        req.qSQL = req.qSQL || [];
+        req.qSQL.push({ query: query, resolved: false, store: store, thenfn: thenfn, errfn: errfn });
+    }
+    next();
+}
+
+// Función que es capaz de resolver SQL en una estructura anidada
+
+
+function runsqlp(req, query, store, thenfn, errfn) {
+    // Obtener handler a SQL
+    var request = new sql.Request(req.app.locals.connectionPool);
+    return function () {
+        return request.batch(query)
+            .then(runsqlThen(req, query, store, thenfn, errfn))
+            .catch(errorCatch('runsqlp', query));
+    }
+}
+
+function runsql(req, res, next) {
+    // Handler a SqlServer
+    var transaction = new sql.Transaction(req.app.locals.connectionPool);
+
+    // Anidar transacciones
+    transaction.begin(function (err) {
+
+        // Salir con error si no resulta iniciar la transacción
+        if (err) errorCatch('runsqlp', query)(err);
+
+        // instanciar objeto request
+        var request = new sql.Request(transaction);
+
+        var pending = req.qSQL.filter(f => !f.resolved)
+        var list = pending.map(
+            function (o) {
+                return function (callback) {
+                    request.batch(o.query, callback)
+                }
+            });
+
+        async.series(list,
+
+            function (err, results) {
+                if (err) {
+                    transaction.rollback();
+                    errorCatch('runsql_async', pending.map(f => f.query))(err)
+                }
+                transaction.commit(function (err) {
+                    if (err) {
+                        errorCatch('runsql_commit', pending.map(f => f.query))(err)
+                    }
+
+                    results.forEach((f, i) => {
+                        pending[i].resolved = true;
+                        // copiar a store
+                        if (pending[i].store) req.resultados[pending[i].store] = f
+                    })
+                    next();
+                });
+            }
+        );
+    });
+}
+
+function namedQuery(req, res, queryObj, store, callback) {
     var err;
     var verbose = (req.app.locals.config.debugLevel > 2)
     // Generar ID de transacción
@@ -95,8 +171,7 @@ exports.namedQuery = function (req, res, queryObj, store, callback) {
 
 };
 
-exports.executeQuery = function (app) {
-
+function executeQuery(app) {
     return function (req, res, next) {
         var debug = (app.locals.config.debugLevel > 2);
 
@@ -105,11 +180,11 @@ exports.executeQuery = function (app) {
         var queryName = req.consultaBDN || 'consultaBD';
 
         // Si no se encuentra nada, revisar en req.consultas
-        if (!query){
-            for (var key in req.consultas){
+        if (!query) {
+            for (var key in req.consultas) {
                 if (query) console.tag("SQL", "executeQuery").Error("Viene más de una consulta en executeQuery. Usa executeListQuery ");
-              query = req.consultas[key];
-              queryName = key
+                query = req.consultas[key];
+                queryName = key
             }
         }
 
@@ -160,7 +235,7 @@ exports.executeQuery = function (app) {
     }
 };
 
-exports.transaction = function (app) {
+function transaction(app) {
     var debug = (app.locals.config.debugLevel > 2);
 
     return function (req, res, queries, store, callback) {
@@ -285,7 +360,7 @@ function setUpTransaction(queries, request) {
     return requestObject;
 };
 
-exports.executeListQuery = function (app) {
+function executeListQuery(app) {
 
     return function (req, res, next) {
 
@@ -348,7 +423,7 @@ exports.executeListQuery = function (app) {
                             return 0
                         }
                         //console.log("Transaction commited.");
-                        //console.log(results);
+                        console.log(results);
                         for (var key in results) {
                             req.resultados[key] = results[key];
                         }
@@ -356,10 +431,11 @@ exports.executeListQuery = function (app) {
                     });
                 }
             );
-        }); //transaction.begin(function(err) {
+        });
 
     }
 };
+
 
 function setUpMultipleQueries(req, request) {
     var consultas = req.consultas;
@@ -391,3 +467,41 @@ function setUpMultipleQueries(req, request) {
 
     return requestObject;
 };
+
+function decodeErrorSQL(err, query, verbose) {
+    var type, message;
+    var str = err.message || '';
+
+    // si el error parte con "@" es un error controlado. Se muestra al usuario
+    if (str[0] == '@') {
+        type = str.substr(1, str.indexOf(':') - 1);
+        message = str.substr(str.indexOf(':') + 1);
+    }
+
+    var ret = {
+        type: type || 'ERR_SQL_SPO', // error no controlado
+        message: message || 'Error en transacción: ',
+        error: verbose ? err : undefined,
+        query: verbose ? query : undefined
+    }
+
+    return ret;
+}
+
+function runsqlThen(req, query, store, thenfn, errfn) {
+    return function (recordset) {
+        if (thenfn) recordset = thenfn(recordset);
+        if (store) req.resultados[store] = recordset;
+        return recordset;
+    }
+}
+
+function errorCatch(msg, query) {
+    return function (err) {
+        err.shortid = shortid.generate();
+        err.query = query;
+        err.text = 'Error ' + msg + ": #" + err.shortid;
+        console.tag("SQL").Error(err.text, err);
+        throw err;
+    }
+}
