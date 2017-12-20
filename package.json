@@ -32,6 +32,7 @@
     "grunt": "~0.4.5",
     "handlebars": "~4.0.5",
     "handlebars-intl": "~1.1.2",
+    "html-pdf": "latest",
     "json-stringify-safe": "~5.0.1",
     "jsonwebtoken": "~5.5.4",
     "lodash": "~4.4.0",
@@ -45,6 +46,7 @@
     "q": "~1.4.1",
     "scribe-js": "~2.0.4",
     "serve-favicon": "~2.3.0",
+    "shortid": "latest",
     "swig": "~1.4.1"
   },
   "devDependencies": {
