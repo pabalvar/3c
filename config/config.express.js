@@ -14,7 +14,6 @@ var fs = require('fs', 'dont-enclose'),
     path = require('path', 'dont-enclose'),
     logger = require('./logger.js'),
     globals = require('../app/lib/globals/controllers/globals.js'),
-    mssql = require('../app/lib/Server/drivers/mssql.server.driver'),
     db = require('../app/lib/Server/controllers/config.server.controller.js');
 
 
@@ -48,7 +47,6 @@ module.exports = function (config) {
 
     /* Inicializar campos consulta SQL*/
     app.use(globals.initReq);
-    app.use(mssql.initSQL);
     app.use(methodOverride());
     app.use(cookieSession({ secret: 'RANDOM_SECRET', resave: false, saveUninitialized: false }));
 
