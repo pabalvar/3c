@@ -14,7 +14,6 @@ exports.namedQuery = namedQuery;
 exports.executeQuery = executeQuery;
 exports.transaction = transaction;
 exports.executeListQuery = executeListQuery;
-
 exports.initSQL = function (req, res, next) {
     req.addsql = function (query, store, thenfn, errfn) {
         // anotar en req.qSql
