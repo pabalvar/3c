@@ -11,7 +11,9 @@ angular.module('liberp')
 		return $resource('/entidades/:id', { id: '@id' }, {
 			get: {
 				method: 'GET',
-				headers: { Authorization: 'Bearer ' + auth_service.getToken() }
+				headers: { Authorization: 'Bearer ' + auth_service.getToken() },
+				responseType: 'json',
+				transformResponse: (r) => { r.data = r.entidades; return r }
 			}
 		});
 	}])

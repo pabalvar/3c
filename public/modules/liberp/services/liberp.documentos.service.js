@@ -18,7 +18,9 @@ angular.module('liberp')
 			traeDeuda: $resource('/documentos/traeDeuda/:id', { id: '@id' }, {
 				get: {
 					method: 'GET',
-					headers: { Authorization: 'Bearer ' + auth_service.getToken() }
+					headers: { Authorization: 'Bearer ' + auth_service.getToken() },
+					responseType: 'json',
+					transformResponse: (r) => { r.data = r.deuda; return r }
 				}
 			})
 		}

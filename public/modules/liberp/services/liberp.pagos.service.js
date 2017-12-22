@@ -11,7 +11,13 @@ angular.module('liberp')
 		return $resource('/pagos/:id', { id: '@id' }, {
 			get: {
 				method: 'GET',
+				headers: { Authorization: 'Bearer ' + auth_service.getToken() },
+				responseType: 'json',
+				transformResponse: (r) => { r.data = r.pagos; return r }
+			},
+			post: {
+				method: 'POST',
 				headers: { Authorization: 'Bearer ' + auth_service.getToken() }
-			}
+			},
 		});
 	}])
