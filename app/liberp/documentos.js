@@ -3,27 +3,26 @@
 var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
 
 exports.getDocumentos = getDocumentos;
-exports.traeDeuda = traeDeuda;
+exports.getDeuda = getDeuda;
 exports.getMetaDeuda = getMetaDeuda;
 
 // Detalle de implementación
 function getDocumentos(req, res, next) {
   // en este contecto req.params.id es idmaeedo
   if (req.params.id) req.query.idmaeedo = req.params.id;
-
-  req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
-  next();
+  req.addquery(SQLcast(getDocumentosSQL(), req.query, req.pagination),'documentos');
+  if (next) next();
 }
 
-function traeDeuda(req, res, next) {
+function getDeuda(req, res, next) {
   req.query.tido = ['BLV', 'BSV', 'BLX', 'FCV', 'FDB', 'FDV', 'FDX', 'FDZ', 'FEV', 'FVL', 'FVT', 'FVX', 'FXV', 'FYV', 'FVZ', 'RIN', 'ESC', 'FEE', 'FDE', 'NCC', 'NCB'];
   req.query.espgdo = 'P';
   req.query.nudonodefi = 0;
-  req.consultas.documentos = SQLcast(getDocumentosQuerySQL(), req.query, req.pagination);
-  next();
+  req.addquery(SQLcast(getDocumentosSQL(), req.query, req.pagination),'deuda');
+  if (next) next();
 }
 
-function getDocumentosQuerySQL() {
+function getDocumentosSQL() {
   return `
   -->> select
  SELECT 
@@ -63,8 +62,13 @@ function getDocumentosQuerySQL() {
 
 // Entrega metadatos
 function getMetaDeuda(req, res, next) {
-  req.resultados = req.resultados || {};
-  req.resultados.meta = [
+  req.add(getDeudaMeta(), 'data');
+  req.add(getEstadosPago(), 'estadosPago');
+  if (next) next();
+}
+
+function getDeudaMeta() {
+  return [
     { field: "IDMAEEDO", name: "IDMAEEDO", visible: false, pk: true },
     { field: "EMPRESA", name: "Emp.", description: "Empresa", visible: false },
     { field: "TIDO", name: "DP", description: "Tipo documento", visible: true, length: '3' },
@@ -72,7 +76,7 @@ function getMetaDeuda(req, res, next) {
     { field: "SUENDO", name: "Suc.", visible: false },
     { field: "TIMODO", name: "Timodo", visible: false },
     { field: "TAMODO", name: "Tamodo", visible: false },
-    { field: "ESPGDO", name: "Estado doc.", visible: false, length: '1', datatype: 'rtabla', tabla: 'EstadoPago', options: { returnSrv: "id", returnClient: "name" } },
+    { field: "ESPGDO", name: "Estado doc.", visible: false, length: '1', datatype: 'lookup', tabla: 'estadosPago', options: { returnSrv: "id", returnClient: "name" } },
     { field: "FEULVEDO", name: "F. Vencim.", visible: true, length: '8', datatype: 'date' },
     { field: "MODO", name: "M", description: "Moneda", length: '1', visible: true },
     { field: "VABRDO", name: "Valor doc.", visible: true, length: '10', datatype: 'number' },
@@ -83,11 +87,9 @@ function getMetaDeuda(req, res, next) {
     { field: "BLOQUEAPAG", name: "Bloquea pago", visible: false },
     { field: "ASIGEDO", name: "Abono", visible: true, length: '10', datatype: 'number' },
     { field: "SALDOEDO", name: "Saldo", visible: true, length: '10', datatype: 'number' }
-  ];
-  req.resultados.rtablas = { EstadoPago: getEstadoPago() }
-  next();
+  ]
 }
 
-function getEstadoPago() {
-  return { data: [{ id: "P", name: "Pendiente" }] }
+function getEstadosPago() {
+  return [{ id: "P", name: "Pendiente" }]
 }

@@ -12,8 +12,8 @@ function getEntidades(req, res, next) {
   if (req.params.id) req.query.koen = req.params.id;
 
   req.query.tiposuc = req.query.tiposuc || true; // por defecto P
-  req.consultas.entidades = SQLcast(getEntidadesQuerySQL(), req.query, req.pagination);
-  next();
+  req.addquery(SQLcast(getEntidadesQuerySQL(), req.query, req.pagination), 'entidades');
+  if (next) next();
 }
 
 function getEntidadesQuerySQL() {
@@ -47,23 +47,22 @@ ORDER BY
 
 // Entrega metadatos
 function getMetaEntidades(req, res, next) {
-  req.resultados = req.resultados || {};
-  req.resultados.meta = [
-    { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize', nameprop:true },
-    { field: "KOEN", name: "Código", visible: true, pk: true },
-    { field: "TIEN", name: "Tipo", visible: true, datatype: 'rtabla', tabla: 'TipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
-    { field: "SUEN", name: "Suc.", visible: true, pk: true }
-  ];
-  req.resultados.rtablas = { TipoEntidad: getTipoEntidad() }
+  req.add(getEntidadesMeta(), 'data')
+  req.add(getTipoEntidad(), 'tipoEntidad')
   next();
 }
-
+function getEntidadesMeta() {
+  return [
+    { field: "NOKOEN", name: "Nombre", visible: true, datatype: 'string:capitalize', nameprop: true },
+    { field: "KOEN", name: "Código", visible: true, pk: true },
+    { field: "TIEN", name: "Tipo", visible: true, datatype: 'lookup', tabla: 'tipoEntidad', options: { returnSrv: "id", returnClient: "name" } },
+    { field: "SUEN", name: "Suc.", visible: true, pk: true }
+  ]
+};
 function getTipoEntidad() {
-  return {
-    data: [
-      { id: "A", name: "Ambos" },
-      { id: "P", name: "Proveedor" },
-      { id: "C", name: "Cliente" }
-    ]
-  }
+  return [
+    { id: "A", name: "Ambos" },
+    { id: "P", name: "Proveedor" },
+    { id: "C", name: "Cliente" }
+  ]
 }

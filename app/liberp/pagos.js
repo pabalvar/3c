@@ -1,12 +1,14 @@
 'use strict';
 
-var SQLcast = require('../lib/random_lib/castSQL').SQLcast;
+var sql = require('../lib/random_lib/castSQL'),
+    monedas = require('./monedas.js');
 
 exports.getPagos = getPagos;
 exports.getMetaPagos = getMetaPagos;
 
 // Detalle de implementación
 function getPagos(req, res, next) {
+
     // en este contecto req.params.id es idmaedpce
     if (req.params.id) req.query.idmaedpce = req.params.id;
 
@@ -25,11 +27,10 @@ function getPagos(req, res, next) {
             req.query.variante = ''; // Necesario para que no inyecten SQL
     }
 
-    req.consultas.pagos = SQLcast(getPagosQuerySQL(), req.query, req.pagination);
-    next();
+    req.addquery(sql.SQLcast(getPagosSQL(), req.query, req.pagination), 'pagos');
+    if (next) next();
 }
-
-function getPagosQuerySQL() {
+function getPagosSQL() {
     return `
 -->> select
 SELECT 
@@ -74,20 +75,25 @@ DPCE.FEEMDP
 
 // Entrega metadatos MAEPCDE
 function getMetaPagos(req, res, next) {
-    req.resultados = req.resultados || {};
-    req.resultados.meta = [
+    req.add(getPagosMeta(), 'data');
+    req.add(getFormasDePago('ventas'), 'formasPago');
+    monedas.getMonedas(req, req); // agrega res.monedas
+    if (next) next();
+}
+function getPagosMeta() {
+    return [
         { field: "IDMAEDPCE", name: "IDMAEDPCE", visible: false, pk: true },
         { field: "EMPRESA", readOnly: true, name: "Empresa", fk: 'TABENDP.EMPRESA', visible: false },
-        { field: "TIDP", name: "TD", description: "Tipo documento", fk: 'TABENDP.TIDPEN+"P"', visible: true, length: "5", datatype: 'rtabla', tabla: 'FormasDePago', options: { returnSrv: "codigo", returnClient: "codigo" } },
+        { field: "TIDP", name: "TD", description: "Tipo documento", fk: 'TABENDP.TIDPEN+"P"', visible: true, length: "5", datatype: 'lookup', tabla: 'formasPago', options: { returnSrv: "codigo", returnClient: "codigo" } },
         { field: "NUDP", name: "Número", description: "Número documento de pago", visible: false },
-        { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", fk:'MAEEN.KOEN', visible: false },
-        { field: "EMDP", name: "Emisor", description: "Emisor documento de pago (banco)", fk:'TABENDP.EMDP', visible: false },
-        { field: "SUEMDP", name: "Sucursal", description: "Plaza", fk:'TABENDP.SUEMDP', visible: false },
+        { field: "ENDP", name: "Entidad", description: "Entidad documento de pago", fk: 'MAEEN.KOEN', visible: false },
+        { field: "EMDP", name: "Emisor", description: "Emisor documento de pago (banco)", fk: 'TABENDP.EMDP', visible: false },
+        { field: "SUEMDP", name: "Sucursal", description: "Plaza", fk: 'TABENDP.SUEMDP', visible: false },
         { field: "CUDP", name: "Cuenta", description: "Cuenta de banco", visible: false },
         { field: "NUCUDP", name: "Número", description: "Número de cheque o transferencia", visible: true, length: "10" },
-        { field: "FEEMDP", name: "F. Emisión", visible: true, datatype: 'date', length: "8" },
-        { field: "FEVEDP", name: "F. Vencim.", visible: true, datatype: 'date', length: "8" },
-        { field: "MODP", name: "M", description: "Moneda", visible: true, length: "1", onInit: () => '$' },
+        { field: "FEEMDP", name: "F. Emisión", visible: true, datatype: 'date', length: "10" },
+        { field: "FEVEDP", name: "F. Vencim.", visible: true, datatype: 'date', length: "10" },
+        { field: "MODP", name: "M", description: "Moneda", visible: true, length: "3", onInit: () => '$', datatype: 'lookup', tabla: 'monedas', options: { returnSrv: "KOMO", returnClient: "KOMO" }},
         { field: "TIMODP", name: "Tipo moneda", description: "Nacional (N) o extranjera (E)", visible: false },
         { field: "TAMODP", name: "Tasa de cambio", visible: false },
         { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations: [{ min: 1 }] },
@@ -101,10 +107,7 @@ function getMetaPagos(req, res, next) {
         { field: "ARCHIRSD", name: "ARCHIRSD", visible: false },
         { field: "IDRSD", name: "IDRSD", visible: false }
     ];
-    req.resultados.rtablas = { FormasDePago: getFormasDePago('ventas') }
-    next();
 }
-
 function getFormasDePago(tipo) {
     var ret;
     if (tipo == "ventas") {
@@ -128,5 +131,5 @@ function getFormasDePago(tipo) {
             { 'TIDPEN': 'PT', 'codigo': 'PTB', 'nombre': 'TRANSFERENCIA BANCARIA' }
         ];
     }
-    return { data: ret };
+    return ret //{ data: ret };
 }

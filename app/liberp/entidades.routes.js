@@ -28,15 +28,15 @@ module.exports = function (app) {
     app.route('/entidades/:id*?') // id=KOEN
         .get(
         entidades.getEntidades,
-        driver.executeListQuery(app),
-        globals.queryOut
+        driver.runsql,
+        globals.out
         )
 
     app.route('/meta/entidades') // metadatos
         .get(
         entidades.getMetaEntidades,
-        driver.executeListQuery(app),
-        globals.queryOut
+        driver.runsql,
+        globals.out
         )
 }
 

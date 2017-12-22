@@ -8,23 +8,22 @@ module.exports = function (app) {
 
     app.route('/documentos/traeDeuda')
         .get(
-        documentos.traeDeuda,
-        driver.executeListQuery(app),
-        globals.queryOut
+        documentos.getDeuda,
+        driver.runsql,
+        globals.out
         );
 
     app.route('/documentos/:id*?') // id=IDMAEEDO
         .get(
         documentos.getDocumentos,
-        driver.executeListQuery(app),
-        globals.queryOut
+        driver.runsql,
+        globals.out
         );
 
     app.route('/meta/documentos.deuda')
         .get(
         documentos.getMetaDeuda,
-        driver.executeListQuery(app),
-        globals.queryOut
+        globals.out
         );
 
 }

@@ -9,14 +9,14 @@ module.exports = function (app) {
     app.route('/pagos/:id*?')
         .get(
         pagos.getPagos,
-        driver.executeListQuery(app),
-        globals.queryOut
+        driver.runsql,
+        globals.out
         )
 
     app.route('/meta/pagos') // metadatos
         .get(
         pagos.getMetaPagos,
-        driver.executeListQuery(app),
-        globals.queryOut
+        driver.runsql,
+        globals.out
         )
 }
