@@ -1,11 +1,10 @@
 <rnd-breadcrumb>
   <!-- search box -->
   <rnd-searchbox options="{placeholder:'buscar entidad', nameprop:'NOKOEN'}"
-                 meta="metaEntidad.data"
+                 meta="metaEntidad"
                  dataset="pasoEntidad"
                  source="traeEntidad"
-                 dialog="{onChange:onChangeEntidad}"
-                 rtablas="metaEntidad.rtablas">
+                 dialog="{onChange:onChangeEntidad}">
   </rnd-searchbox>
   <!-- /search box -->
 </rnd-breadcrumb>
@@ -18,10 +17,10 @@
 
     <div class="col-xs-4">
       <!-- Entidad -->
-      <rnd-profile meta="metaEntidad.data"
+      <rnd-profile meta="metaEntidad"
                    options="{showEmpty:'<h2>¡Nadie aquí!</h2><p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>', title:'Datos entidad'}"
-                   source="pasoEntidad"
-                   rtablas="metaEntidad.rtablas">
+    
+                   source="pasoEntidad">
       </rnd-profile>
       <!-- /Entidad -->
     </div>
@@ -35,11 +34,10 @@
 
     <div class="col-xs-12">
       <!-- Deuda -->
-      <rnd-smtable meta="metaDeuda.data"
+      <rnd-smtable meta="metaDeuda"
                    options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:3, pageheight:3}"
                    source="pasoDeuda"
                    dialog="{selectRow:selectRow}"
-                   rtablas="metaDeuda.rtablas"
                    api="apiDeuda">
       </rnd-smtable>
       <!-- /Deuda -->
@@ -50,19 +48,19 @@
   <div rnd-row
        class="rnd-white shadow-b">
 
-    <div class="col-md-8 col-lg-7 pt-20">
+    <div class="col-md-9 col-lg-8 pt-20">
       <!-- /Pagos -->
-      <rnd-smtable meta="metaPago.data"
+      <rnd-smtable meta="metaPago"
                    options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, xpageheight:5}"
+    
                    source="pasoPago"
-                   rtablas="metaPago.rtablas"
                    dialog="{selectRow:selectRow,onChange:onChangeValue, onAddRow:onAddRowPago, canCreate:true }"
                    api="apiPago">
       </rnd-smtable>
       <!-- /Pagos -->
     </div>
 
-    <div class="col-sm-8 col-md-4 col-lg-5 pt-20">
+    <div class="col-sm-8 col-md-3 col-lg-4 pt-20">
 
       <div ng-repeat="pago in pasoPago.data"
            ng-if="pago.isSelected">
@@ -80,7 +78,7 @@
         <!-- /título del pago -->
 
         <!-- Cruce -->
-        <rnd-smtable meta="metaCruce.data"
+        <rnd-smtable meta="metaCruce"
                      options="{showEmpty:'No hay asignaciones'}"
                      source="{data:pago.$cruce}"
                      dialog="{onChange:onChangeValue}"
@@ -92,8 +90,14 @@
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center p-20">
-      <button ng-disabled="!resumen.canSave" type="button" ng-click="save()"
+      <button ng-disabled="!resumen.canSave"
+              type="button"
+              ng-click="save()"
               class="btn btn-greensea btn-border btn-rounded-20">Guardar cambios</button>
+      <button
+              type="button"
+              ng-click="dump()"
+              class="btn btn-default btn-border btn-rounded-20">debug</button>
     </div>
 
   </div>

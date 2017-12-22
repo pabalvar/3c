@@ -26,6 +26,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             // Trae PAGO
             $scope.metaPago = metaPago;
+            $scope.metaPago.data.push({ field: "SALDODP", name: "Saldo", visible: true, length: '10', readOnly: true, datatype:"currency" })
             $scope.metaPago.data.$estado.visible = true;
             $scope.apiPago = {}
             $scope.pasoPago = { data: [] };
@@ -96,14 +97,18 @@ angular.module('gestion').controller('gestionPagosClientesController',
             // Botón grabar
             $scope.save = save;
 
-
-
+            function guardaPago() {
+                return ws(pagos.post, {
+                    pagos: rndDialog.getCreated($scope.pasoPago.data, $scope.metaPago.data)
+                });
+            }  
 
             /** Funciones auxiliares */
             function save(){
                 // Obtener pagos
                 console.log("pagos", rndDialog.getCreated($scope.pasoPago.data, $scope.metaPago.data));
-                console.log("cruce", rndDialog.getModified($scope.pasoCruce.data, $scope.metaCruce.data));
+                //console.log("cruce", rndDialog.getModified($scope.pasoCruce.data, $scope.metaCruce.data));
+                guardaPago();
             }
             function onCambioLineas() {
                 creaPasoCruce();
@@ -167,7 +172,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
                             obj = pasoCruce[ix];
                         } else {
                             // Si el cruce no existe, crear uno nuevo
-                            obj = rndDialog.createObject($scope.metaCruce.data);
+                            obj = rndDialog.createObject($scope.metaCruce);
 
                             // agregar referencias a objetos pago y deuda originales
                             obj.$pago = p;
@@ -297,6 +302,11 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     l.$estado.hidden = !muestraLinea;
                 });
 
+            }
+            $scope.dump = dump;
+            function dump(){
+                var dm = ['pasoPago','pasoDeuda','pasoCruce'];
+                dm.forEach(a=>{console.log(a, $scope[a])})
             }
 
         }
