@@ -9,23 +9,12 @@ var sql = require('mssql'),
 
 exports.runsql = runsql;
 exports.runsqlp = runsqlp;
-
 exports.namedQuery = namedQuery;
 exports.executeQuery = executeQuery;
 exports.transaction = transaction;
 exports.executeListQuery = executeListQuery;
-exports.initSQL = function (req, res, next) {
-    req.addsql = function (query, store, thenfn, errfn) {
-        // anotar en req.qSql
-        req.qSQL = req.qSQL || [];
-        req.qSQL.push({ query: query, resolved: false, store: store, thenfn: thenfn, errfn: errfn });
-    }
-    next();
-}
 
 // Función que es capaz de resolver SQL en una estructura anidada
-
-
 function runsqlp(req, query, store, thenfn, errfn) {
     // Obtener handler a SQL
     var request = new sql.Request(req.app.locals.connectionPool);
@@ -37,6 +26,16 @@ function runsqlp(req, query, store, thenfn, errfn) {
 }
 
 function runsql(req, res, next) {
+    // Obtener lista de tareas
+    req.qSQL = req.qSQL||[];
+    var pending = req.qSQL.filter(f => !f.resolved);
+    // Salir si no hay nada que hacer
+    if (!pending.length){
+        next();
+        console.log("runsql: nada que hacer")
+        return;
+    } 
+
     // Handler a SqlServer
     var transaction = new sql.Transaction(req.app.locals.connectionPool);
 
@@ -49,7 +48,7 @@ function runsql(req, res, next) {
         // instanciar objeto request
         var request = new sql.Request(transaction);
 
-        var pending = req.qSQL.filter(f => !f.resolved)
+
         var list = pending.map(
             function (o) {
                 return function (callback) {
