@@ -1,11 +1,20 @@
 ﻿'use strict';
-var _ = require('lodash');
+var _ = require('lodash'),
+uidGen = require('node-uuid');
+
 
 
 exports.initReq = function (req, res, next) {
     req.consultas = req.consultas || {};
     req.resultados = req.resultados || {};
     req.add = (data,store)=>{req.resultados[store]=data}
+    req.addquery = function (query, store, thenfn, errfn) {
+        // anotar en req.qSql
+        var uuid = uidGen.v4();
+        req.qSQL = req.qSQL || [];
+        req.qSQL.push({ query: query, resolved: false, store: store, thenfn: thenfn, errfn: errfn, uuid:uuid });
+        return uuid 
+    }
     next();
 }
 
