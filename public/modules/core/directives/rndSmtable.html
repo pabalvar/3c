@@ -38,7 +38,7 @@
         <!-- column headers -->
         <thead class="">
             <tr>
-                <th ng-repeat="m in meta | filter: {visible:true}"
+                <th ng-repeat="m in meta.data | filter: {visible:true}"
                     st-sort="{{m.field}}"
                     style="{{m.length?'':'x-'}}width:{{m.length||1}}%;"
                     class="text-center"
@@ -71,7 +71,7 @@
                 st-select-row="dialog.selectRow?fila:''"
                 ng-click="selectRow(fila)"
                 ng-repeat="fila in displayedCollection track by fila.$estado.$id||$index ">
-                <td ng-repeat="m in meta | filter: {visible:true}"
+                <td ng-repeat="m in meta.data | filter: {visible:true}"
                     class="text-{{m | alignment}}"
                     style="vertical-align:middle; ">
                     <rnd-input ng-if="!blink && m.datatype!='rnd-profile' &&  m.datatype!='rnd-smtable' "
@@ -83,17 +83,15 @@
                                dialog="dialog">
                     </rnd-input>
                     <rnd-profile ng-if="!blink && m.datatype=='rnd-profile'"
-                                 meta="m.options.meta.data"
+                                 meta="m.options.meta"
                                  options="{}"
-                                 source="{data:[fila[m.field]]}"
-                                 rtablas="m.options.rtablas">
+                                 source="{data:[fila[m.field]]}">
                     </rnd-profile>
                     <rnd-smtable ng-if="!blink && m.datatype=='rnd-smtable'"
                                  meta="m.options.meta.data"
                                  options="{}"
                                  dialog="m.options.dialog"
-                                 source="{data:fila[m.field]}"
-                                 rtablas="m.options.rtablas">
+                                 source="{data:fila[m.field]}">
                     </rnd-smtable>
                 </td>
 

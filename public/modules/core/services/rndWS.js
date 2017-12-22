@@ -77,7 +77,7 @@ angular.module('core')
                     if (angular.isArray(store.data)){
                         rndDialog.initDataset(store);
                     }
-                    // Llamar función calback de usuario
+                    // Llamar función callback de usuario
                     if (thenFn) {
                         if (typeof (thenFn) == 'function')
                             thenFn(res);

@@ -44,7 +44,6 @@ angular.module('core')
 			}
 			return ret;
 		}
-
 	})
 	/** retorna un string como número. ToDo: I18N!, está fijo en español */
 	.service('parseNumber', function () {
@@ -69,7 +68,9 @@ angular.module('core')
 				sub = param.split(':')[2];
 			} else if (typeof (param) == 'object') {
 				// revisar si es rtabla
-				if (param.tabla) {
+				if (param.datatype=='lookup'){
+					datatype='lookup'
+				}else if (param.tabla) {
 					datatype = 'rtabla';
 				} else {
 					if (param.datatype) {
@@ -124,10 +125,10 @@ angular.module('core')
 			var valid = false; // 
 			var data;
 			// Ahora recorrer la tabla, hasta encontrar el valor
-			for (var i = 0; i < rtabla.data.length; i++) {
-				if (rtabla.data[i][opts.returnSrv] == input) {
-					value = rtabla.data[i][opts.returnClient];
-					data = rtabla.data[i];
+			for (var i = 0; i < rtabla.length; i++) {
+				if (rtabla[i][opts.returnSrv] == input) {
+					value = rtabla[i][opts.returnClient];
+					data = rtabla[i];
 					valid = true;
 					break;
 				}
@@ -231,7 +232,14 @@ angular.module('core')
 				} else {
 					console.log("Warning, datatype date desconocido: ", type.variant);
 				}
+				// lookup
+			} else if (type.datatype == 'lookup') {
+				// las tablas de apoyo están en el segundo parámetro
+				// Si rtabla es una función, instanciar ahora
+				var meta = (typeof (_rtablas) == 'function') ? _rtablas() : _rtablas;
 
+				// el valor se encuentra en rtabla[param.tabla]
+				ret = decodeRtabla(input, meta[param.tabla], param.options).value;
 				// rtabla
 			} else if (type.datatype == 'rtabla') {
 				// Si rtabla es una función, instanciar ahora

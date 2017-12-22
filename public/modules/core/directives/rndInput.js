@@ -58,7 +58,7 @@ angular.module("core")
           // Revisar deprecado
           //console.log("rndInput: creación objeto");
           if ($scope.columns) console.warn("rndInput: columns va a ser deprecado. Use meta");
-          var meta = $scope.columns || $scope.meta; // backwards compatibile columns ahora se llama meta
+          var meta = $scope.columns || $scope.meta.data; // backwards compatibile columns ahora se llama meta
 
           if ($scope.data) console.warn("rndInput: data va a ser deprecado. Use source");
           var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
@@ -122,6 +122,7 @@ angular.module("core")
             switch ((type || {}).datatype) {
               case 'rtabla': initRtabla(); break;
               case 'date': initDate(type); break;
+              case 'lookup': initLookup(); break;
             }
 
           }
@@ -171,6 +172,13 @@ angular.module("core")
             hooks.push(updateInputRtabla);
           }
 
+          /** Función que hace cargo de cuando el input es de tipo rtabla. */
+          function initLookup() {
+           // $scope._rtablas = (typeof (rtablas) == 'function') ? rtablas() : rtablas; // instanciar si es función
+            buffer.tmpInput = decodeRtabla(line[key], $scope.meta[column.tabla], column.options).data
+            // Anexar hook para cambiar la tabla
+            hooks.push(updateInputRtabla);
+          }
 
           /** Función que hace cargo de cuando el input es de tipo date. Controla el datepopup */
           function initDate(type) {

@@ -68,10 +68,10 @@ angular.module('core')
                     // Buscar qué campo mostrar en línea principal
                     var namePropIx = -1;
                     if ($scope.options.nameprop) {
-                        namePropIx = $scope.meta.findIndex(f => f.field == '$scope.options.nameprop')
-                        if ($scope.namepropIx < 0) console.warn("rndProfile: no hay metadato llamado " + $scope.options.nameprop);
+                        namePropIx = $scope.meta.data.findIndex(f => f.field == $scope.options.nameprop)
+                        if (namePropIx < 0) console.warn("rndProfile: no hay metadato llamado " + $scope.options.nameprop);
                     } else {
-                        namePropIx = $scope.meta.findIndex(f => f.nameprop);
+                        namePropIx = $scope.meta.data.findIndex(f => f.nameprop);
                     }
                     $scope.namepropIx = (namePropIx < 0) ? 1 : namePropIx; // Si ninguna columna es nameprop, usar columna 1
                 }]

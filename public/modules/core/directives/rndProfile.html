@@ -3,15 +3,14 @@
     <div ng-if="options.title">
         <p class="text-uppercase text-strong mb-0 custom-font">{{options.title}}</p>
     </div>
-
     <div ng-repeat="linea in source.data">
-        <h3 class="mt-0 mb-10 text-slategray dk">{{linea[meta[namepropIx].field] | monitor:meta[namepropIx]:rtablas}}</h3>
+        <h3 class="mt-0 mb-10 text-slategray dk">{{linea[meta.data[namepropIx].field] | monitor:meta.data[namepropIx]:meta}}</h3>
         <ul class="list-unstyled text-default lt compact text-small">
-            <span ng-repeat="m in meta">
+            <span ng-repeat="m in meta.data">
                 <div ng-if="m.visible && $index !=namepropIx">
                     <li>
                         <span class="inline-block w-xs">{{m.name}}:</span>
-                        <span class="text-default dk">{{linea[m.field] | monitor:m:rtablas}}</span>
+                        <span class="text-default dk">{{linea[m.field] | monitor:m:meta}}</span>
                     </li>
                 </div>
             </span>

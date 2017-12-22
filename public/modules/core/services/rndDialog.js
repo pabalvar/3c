@@ -1,7 +1,7 @@
 'use strict';
 angular.module("core")
 
-    .service("rndDialog", ['rndValidation', function (rndValidation) {
+    .service("rndDialog", ['rndValidation', 'rndUuid', function (rndValidation, rndUuid) {
 
         /* Inicia dataset */
         function initDataset(res) {
@@ -143,11 +143,11 @@ angular.module("core")
 
 
         /** Función que debería pertenecer al modelo. Crea una nueva instancia del modelo. Input hace merge */
-        function createLine(Data, model, input) {
-            var obj = createObject(model, input);
+        function createLine(Data, meta, addobj) {
+            var obj = createObject(meta, addobj);
 
             Data.data.push(obj); //(line, columns, Data, hot, row) 
-            validateLine(Data, model, Data.data.length - 1);
+            validateLine(Data, meta, Data.data.length - 1);
             setLineOpen(obj); // Abrir editor de la línea
         }
 
@@ -256,7 +256,7 @@ angular.module("core")
         }
 
         function validateLine(Data, Columns, i) {
-            var validArr = Columns.map(m => validateCell(Data, i, m))
+            var validArr = Columns.data.map(m => validateCell(Data, i, m))
             var isValid = validArr.every(r => r);
             return isValid;
         }
@@ -397,16 +397,16 @@ angular.module("core")
             return ret;
 
         }
-        function createObject(model, input, rtablas) {
+        function createObject(meta, input, rtablas) {
 
             // Crear objeto a partir de rutina de inicialización de metadato
-            var obj = model.reduce(function (t, m) {
+            var obj = meta.data.reduce(function (t, m) {
                 // si tiene función onInit llamarla
                 if (m.onInit) {
                     t[m.field] = m.onInit();
                 } else {
                     // Si no, inicializar el constructor por defecto del tipo
-                    t[m.field] = initByType(m, rtablas);
+                    t[m.field] = initByType(m, meta);
                 }
                 return t
             }, {});

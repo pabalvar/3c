@@ -15,7 +15,10 @@ angular.module('core')
 					transformResponse: function (_res) {
 						var res = angular.fromJson(_res);
 						// Agregar campo $estado
+						if (res.data)
 						res.data = rndDialog.initMeta(res.data);
+						//else
+						//res.data = rndDialog.initMeta(res.meta);
 						// Agregar referencia a campos en array para poder acceder por propiedad
 						//res.data.forEach(f => { res.data[f.field] = f });
 						return res;

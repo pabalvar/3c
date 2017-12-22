@@ -4,7 +4,7 @@
     <input type="text"
            ng-model="selected"
            placeholder="{{options.placeholder}}"
-           uib-typeahead="items as (items[items.$meta[namepropIx].field]) for items in sourceP($viewValue)"
+           uib-typeahead="items as (items[items.$meta.data[namepropIx].field]) for items in sourceP($viewValue)"
            typeahead-loading="loadingLocations"
            typeahead-no-results="noResults"
            typeahead-wait-ms="200"
@@ -54,9 +54,9 @@
         <p class="mb-0"
            ng-bind-html="match.label | uibTypeaheadHighlight:query"></p>
         <span class="text-sm text-muted pl-4"
-              ng-repeat="m in match.model.$meta">
+              ng-repeat="m in match.model.$meta.data">
             <span ng-if="!$first">
-                <strong>{{m.name}}</strong>: {{match.model[m.field]| monitor:m:match.model.$rtablas}}
+                <strong>{{m.name}}</strong>: {{match.model[m.field]  | monitor:m:match.model.$meta}}
             </span>
         </span>
     </a>

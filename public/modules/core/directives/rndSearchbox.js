@@ -85,8 +85,8 @@ angular.module('core')
                     // Buscar qué campo mostrar en línea principal
                     var namePropIx = -1;
                     if ($scope.options.nameprop) {
-                        namePropIx = $scope.meta.findIndex(f => f.field == '$scope.options.nameprop')
-                        if ($scope.namepropIx < 0) console.warn("rndSearchbox: no hay metadato llamado " + $scope.options.nameprop);
+                        namePropIx = $scope.meta.data.findIndex(f => f.field == $scope.options.nameprop)
+                        if (namePropIx < 0) console.warn("rndSearchbox: no hay metadato llamado " + $scope.options.nameprop);
                     } else {
                         namePropIx = $scope.meta.findIndex(f => f.nameprop);
                     }

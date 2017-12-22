@@ -30,6 +30,23 @@
     </div>
     <!-- /autocomplete -->
 
+    <!-- lookup -->
+    <div ng-if="type.datatype=='lookup' "
+         class="form-validation"
+         uib-dropdown>
+        <!-- ojo, la flecha debe coincidir con _SEPARATOR_ de filters.js -->
+        <select ng-model="buffer.tmpInput"
+                style="width: 100%;"
+                ng-click="$event.stopPropagation()"
+                class="pl-0 pr-0 rndinput form-control {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                ng-disabled="line.$estado.$action!='N' &&  column.readOnly"
+                ng-required="column.required"
+                ng-options="item[column.options.returnClient]+( column.options.addClient?('➙'+item[column.options.addClient[0]]):''   ) for item in meta[column.tabla] track by item[column.options.returnClient]">
+        </select>
+    </div>
+    <!-- /lookup -->
+
+
     <!-- rtabla -->
     <div ng-if="type.datatype=='rtabla' "
          class="form-validation"
@@ -114,14 +131,14 @@
 
 <!-- modo READ -->
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype!='number'"
-      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
+      class="pr-5 pl-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
       uib-tooltip="{{column.datatype}}"
-      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:rtablas}}</span>
+      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:meta}}</span>
 <!-- modo READ -->
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype=='number'"
-      class="pr-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}} mr-20"
+      class="pr-5 pl-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}} mr-20"
       uib-tooltip="{{column.datatype}}"
-      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:rtablas}}</span>
+      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:meta}}</span>
 <!-- /modo READ -->
 
 <!-- Estado -->
