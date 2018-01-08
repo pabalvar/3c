@@ -9,39 +9,53 @@
   <!-- /search box -->
 </rnd-breadcrumb>
 
+<!-- Alertas -->
+<rnd-alerts is-busy="[saveWS]"
+            service="alert">
+</rnd-alerts>
+<!-- /Alertas -->
+
+<!-- Pantalla vacía -->
+<section ng-if="!pasoEntidad.data.length"
+         class="text-center text-default lt">
+  <h2>¡Nadie aquí!</h2>
+  <p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>
+</section>
+<!-- /Pantalla vacía -->
+
 <section ng-if="pasoEntidad.data.length">
 
   <!-- #ROW: Entidad, Deuda -->
   <div rnd-row
        class="rnd-gray">
 
+    <!-- Entidad -->
     <div class="col-xs-4">
-      <!-- Entidad -->
       <rnd-profile meta="metaEntidad"
-                   options="{showEmpty:'<h2>¡Nadie aquí!</h2><p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>', title:'Datos entidad'}"
-    
+                   options="{title:'Datos entidad'}"
                    source="pasoEntidad">
       </rnd-profile>
-      <!-- /Entidad -->
     </div>
+    <!-- /Entidad -->
 
+    <!-- totales -->
     <div class="col-xs-8 pt-20">
-      <!-- totales -->
       <rnd-tile-simple options="{title:'por pagar'}">{{resumen.saldoDeuda|monitor:'currency'}}</rnd-tile-simple>
       <rnd-tile-simple options="{title:'total asignado'}">{{resumen.asignadoCruce|monitor:'currency'}}</rnd-tile-simple>
-      <!-- /totales -->
     </div>
+    <!-- /totales -->
 
-    <div class="col-xs-12">
-      <!-- Deuda -->
+    <!-- Deuda -->
+    <div class="col-xs-12 pt-20 pb-20">
       <rnd-smtable meta="metaDeuda"
-                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:3, pageheight:3}"
+                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:4, pageheight:4, xglobalsearch:true, xfieldsearch:true}"
                    source="pasoDeuda"
                    dialog="{selectRow:selectRow}"
                    api="apiDeuda">
       </rnd-smtable>
-      <!-- /Deuda -->
     </div>
+    <!-- /Deuda -->
+
   </div>
 
   <!-- #ROW: Pagos, Asignación, acciones -->
@@ -94,8 +108,7 @@
               type="button"
               ng-click="save()"
               class="btn btn-greensea btn-border btn-rounded-20">Guardar cambios</button>
-      <button
-              type="button"
+      <button type="button"
               ng-click="dump()"
               class="btn btn-default btn-border btn-rounded-20">debug</button>
     </div>

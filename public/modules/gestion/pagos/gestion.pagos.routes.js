@@ -24,9 +24,10 @@ angular.module('gestion').config(['$stateProvider',
                     menuLevel: 1,
                     menuPrio: 20
                 }, resolve: {
-                    metaEntidad: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'entidades' }).$promise],
-                    metaPago: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'pagos' }).$promise],
-                    metaDeuda: ['rndMeta', (rndMeta) => rndMeta.get({ id: 'documentos.deuda' }).$promise]
+                    metaEntidad: ['rndMeta', (rndMeta) => rndMeta('entidades').get().$promise],
+                    metaPago: ['rndMeta', (rndMeta) => rndMeta('pagos').get().$promise],
+                    metaPagod: ['rndMeta', (rndMeta) => rndMeta('pagosd').get().$promise],
+                    metaDeuda: ['rndMeta', (rndMeta) => rndMeta('documentos.deuda').get().$promise]
                 },
             })
     }
