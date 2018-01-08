@@ -18,7 +18,7 @@ angular.module("core")
         /* Agrega columna estado */
         function initMeta(meta) {
             // Compilar validaciones Built-in
-            meta.forEach(function(m){
+            meta.forEach(function (m) {
                 m.validations = rndValidation(m)
             })
 
@@ -33,7 +33,7 @@ angular.module("core")
             }
 
             // Agregar referencia a campos en array para poder acceder por propiedad
-			meta.forEach(f => { meta[f.field] = f });
+            meta.forEach(f => { meta[f.field] = f });
             return meta;
         }
 
@@ -47,6 +47,7 @@ angular.module("core")
 
             isLineHidden: isLineHidden,
             onChange: onChange,
+            change: change,
             getLineMatch: getLineMatch,
             getTouched: getTouched,
             getModified: getModified,
@@ -237,7 +238,7 @@ angular.module("core")
             if (meta.field[0] == '$') return true;
 
             // ejecutar todas las validaciones definidas en el modelo.validations=[fn,fn...]
-            var validArr = (meta.validations || []).map(fn=>fn(Data,i,meta));
+            var validArr = (meta.validations || []).map(fn => fn(Data, i, meta));
 
             // En el caso de hotTable ejecutar la validación interna de la directiva modelo.validator
             if (meta.hotValidator) {
@@ -262,7 +263,7 @@ angular.module("core")
         }
 
         function validate(Data, Columns, hot) {
-           
+
             Data.data.forEach(function (d, i) {
                 if (!((d.$estado) || {}).$action) return;
                 else if (d.$estado.$action == 'N' || d.$estado.$action == 'M') { // Economy: validar sólo líneas modificadas
@@ -276,7 +277,7 @@ angular.module("core")
          hotValidation/rndValidation -> meta.validations -> cell.validations */
         function onChange(Data, i, meta, oldval, hot) { //(Data, i, meta, hot)
             //console.log("rndDialog: onChange");
-            
+
             // Hacer el cambio dado por la directiva
             if (hot) {
                 if (meta.hotChange) meta.hotChange(Data, i, meta, oldval, hot);
@@ -287,6 +288,23 @@ angular.module("core")
             }
 
         }
+
+        function change(line, column, newVal) {
+            // Buscar rowIx
+            var oldVal = line[column.field]
+            // Asignar
+            line[column.field] = newVal;
+            // Ejecutar hooks incluidos en metadata.onValueChange
+            // onChange(Data, rowIx, column, oldVal);
+            // Marcar como modificada 
+            if (oldVal != newVal) {
+                setCellDirtyLine(line, column);
+                setLineModified(line);
+                // Ejecutar validación en la celda
+                //rndDialog.validateCell(Data, rowIx, column);
+            }
+        }
+
         function genId() {
             return 'A_' + parseInt(Math.random() * 10000000000);
         }
@@ -320,12 +338,16 @@ angular.module("core")
             }
         }
 
-        function setCellDirty(Data, i, meta) {
-            var line = Data.data[i];
+        function setCellDirtyLine(line, meta) {
             var key = meta.field;
             line.$estado = line.$estado || {};
             line.$estado[key] = line.$estado[key] || {};
             line.$estado[key].$dirty = true;
+        }
+
+        function setCellDirty(Data, i, meta) {
+            var line = Data.data[i];
+            setCellDirtyLine(line, meta)
         }
 
         function setLineModified(line) {
@@ -403,7 +425,9 @@ angular.module("core")
             var obj = meta.data.reduce(function (t, m) {
                 // si tiene función onInit llamarla
                 if (m.onInit) {
-                    t[m.field] = m.onInit();
+                    if (typeof (m.onInit == 'function')) {
+                        t[m.field] = m.onInit();
+                    }
                 } else {
                     // Si no, inicializar el constructor por defecto del tipo
                     t[m.field] = initByType(m, meta);

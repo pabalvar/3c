@@ -35,6 +35,7 @@ angular.module('core')
                 m.parse = function (r) {
                     var ret, out;
                     var outArr = [];
+                    close();
 
                     if (r.status) { // Error HTTP != 20x
                         if (r.data) { // error controlado (por ejemplo validación insert SQL)
@@ -133,6 +134,9 @@ angular.module('core')
                         });
 
                     }
+
+                    // Mandar a cerrar
+                    $timeout(f=>close(),5000)
                     return ret;
                 }
 
