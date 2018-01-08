@@ -1,0 +1,19 @@
+<div ng-switch="(isBusy[0].busy || isBusy[1].busy || isBusy[2].busy || isBusy[3].busy)"
+     class="rnd-alert">
+    <div ng-switch-when="true">
+        <!-- spinner -->
+        <md-progress-linear md-mode="indeterminate"
+                            ng-disabled="true"
+                            class="pl-10 pr-10">
+        </md-progress-linear>
+        <!-- /spinner -->
+    </div>
+    <div ng-switch-default="false" class="shadow">
+        <div uib-alert
+             ng-repeat="alert in service.alerts"
+             close="service.close($index)"
+             ng-class="'alert-'+alert.type">
+            <i class="fa {{alert.icon}}" />{{alert.msg}}</div>
+    </div>
+
+</div>

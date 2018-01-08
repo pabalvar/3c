@@ -1,4 +1,3 @@
-
 <div ng-if="options.title">
     <p class="text-uppercase text-strong mb-0 custom-font">
         <span ng-bind-html="options.title | trust"></span>
@@ -10,11 +9,12 @@
                     ng-disabled="true">
 </md-progress-linear>
 
-<div style="overflow:auto; {{options.pageheight?'height:'+((options.pageheight*21)+40+33+33)+'px;':''}}"
+<div style="overflow:auto; {{options.pageheight?'height:'+((options.fieldsearch?35:0)+(options.globalsearch?37:0) + (options.pagesize?31:0) + (options.pageheight*25)+33)+'px;':''}}"
      class="{{source.busy?'busy':''}}">
     <table st-safe-src="source.data"
            st-table="displayedCollection"
            ng-keydown="pressed($event)"
+           style="width:100%;"
            class="st-table table-condensed table table-custom table-hover dt-responsive headerdark table-bordered inputable {{id}}">
 
         <!-- create row -->
@@ -35,8 +35,9 @@
         </tfoot>
         <!-- /create row -->
 
-        <!-- column headers -->
-        <thead class="">
+
+        <thead>
+            <!-- column headers -->
             <tr>
                 <th ng-repeat="m in meta.data | filter: {visible:true}"
                     st-sort="{{m.field}}"
@@ -46,25 +47,43 @@
                     {{m.name}}
                 </th>
             </tr>
+            <!-- /column headers -->
+
+            <!-- búsqueda global -->
+            <tr>
+                <th ng-if="options.globalsearch && source.data.length"
+                    colspan="100"
+                    class="text-right">
+
+                    <span style="display:inline-block;">
+                        <!-- input -->
+                        <input st-search=""
+                               class="form-control search m-0"
+                               placeholder="búsqueda global ..."
+                               type="text" />
+                        <!-- /input -->
+
+                        <!-- lupa -->
+                        <span class="input-icon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <!-- /lupa -->
+                    </span>
+                </th>
+            </tr>
+            <!-- /búsqueda global -->
+
+            <tr ng-if="options.fieldsearch">
+                <th ng-repeat="m in meta.data | filter: {visible:true}">
+                    <input st-search="{{m.field}}"
+                           placeholder="buscar {{m.name}}"
+                           class="text-{{m.datatype|alignment}} input-xs form-control searchcell"
+                           type="search" />
+                </th>
+            </tr>
+
         </thead>
         <!-- /column headers -->
-
-        <!-- paginación -->
-        <thead ng-if="options.pagesize < source.data.length && options.pagesize"
-               class="table-head-pagination">
-            <tr>
-                <td colspan="500"
-                    class="text-center">
-                    <div st-pagination=""
-                         st-page-change="api.redraw()"
-                         st-template="rndSmtable.pagination.html"
-                         st-items-by-page="options.pagesize"
-                         st-displayed-pages="3">
-                    </div>
-                </td>
-            </tr>
-        </thead>
-        <!-- /paginación -->
 
         <tbody class="rnd-gray shadow-b ">
             <tr ng-if="isLineVisible(fila)"
@@ -96,24 +115,41 @@
                 </td>
 
                 <!--<pre ng-if="!blink && m.datatype=='table'">{{fila[m.field]}}</pre>
-                    <pre ng-if="!blink && m.datatype=='table'">{{m.options.meta.data}}</pre>->
-                
+                    <pre ng-if="!blink && m.datatype=='table'">{{m.options.meta.data}}</pre>-->
+
             </tr>
         </tbody>
 
         <!-- offline -->
-                <tfoot ng-if="source.$offline">
-                    <tr>
-                        <td colspan="500"
-                            class="text-center">
-                            <div>
-                                <h3 class="m-10 text-danger busy">
-                                    <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
-                <!-- offline -->
+        <tfoot ng-if="source.$offline">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div>
+                        <h3 class="m-10 text-danger busy">
+                            <i class="fa fa-exclamation-triangle"></i> Error de conexión</h3>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+        <!-- offline -->
+
+        <!-- paginación -->
+        <thead ng-if="options.pagesize < source.data.length && options.pagesize"
+               class="table-head-pagination">
+            <tr>
+                <td colspan="500"
+                    class="text-center">
+                    <div st-pagination=""
+                         st-page-change="api.redraw()"
+                         st-template="rndSmtable.pagination.html"
+                         st-items-by-page="options.pagesize"
+                         st-displayed-pages="3">
+                    </div>
+                </td>
+            </tr>
+        </thead>
+        <!-- /paginación -->
 
     </table>
 </div>

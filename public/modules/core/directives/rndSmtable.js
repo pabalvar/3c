@@ -13,6 +13,8 @@
 * @param {string} options.showEmpty texto a mostrar si no hay datos
 * @param {integer} options.pagesize  número de filas a paginar 
 * @param {integer} options.pageheight  fija el tamaño de la ventana (medido en número de filas) 
+* @param {boolean} options.globalsearch incluye campo búsqueda global 
+* @param {boolean} options.filtersearch incluye campo búsqueda por campo 
 * @param {Object} dialog Objeto con funciones para regular lógica
 * @param {function} dialog.selectRow función a llamar cuando se hace click en una línea. Se llama con los parámetros  <code>("objeto linea", source, meta, rtablas)</code>
 * @param {function} dialog.onChange función a llamar cuando se modifica un dato. Se llama con los parámetros  <code>(newVal, oldVal, "objeto linea", source, rowIx, field, meta)</code>
@@ -105,10 +107,10 @@ angular.module('core')
             // Inicialización
             $scope.pressed = function ($event) {
                 // Add Row con Enter
-                if ($event.keyCode==13){
+                if ($event.keyCode == 13) {
                     if ($scope.dialog.canCreate) addRow();
                 }
-               
+
             }
 
             /* Asignar un id al DOM en la tabla*/
@@ -138,6 +140,7 @@ angular.module('core')
             $scope.api.goToRow = goToRow;
             $scope.api.redraw = redraw;
             $scope.api.addRow = addRow;
+           // $scope.api.change = change;
             $scope.api.validate = validate; // mostrar validate de rndDialog
 
             function validate() {
@@ -214,9 +217,7 @@ angular.module('core')
             function redraw() {
                 console.log("redrawing");
                 $scope.blink = true;
-                $timeout(function () {
-                    $scope.blink = false;
-                }, 0);
+                $timeout(() => { $scope.blink = false }, 0);
             }
 
             /* Función utilizada para ocultar líneas por controlador */

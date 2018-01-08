@@ -104,7 +104,7 @@ angular.module("core")
           // Anexar cellClick si lo tiene el meta
           if (column.onClick) {
             $scope.cellClick = function (line, column, source) {
-              console.log("hizo click en la celda", line);
+              //console.log("hizo click en la celda", line);
               // llamar a la función de meta
               column.onClick(line, column, source);
             }
@@ -129,10 +129,11 @@ angular.module("core")
 
           /** Función que llama al actualizar valores */
           function updateBuffer(newVal, oldVal) {
+
             // Descartar si no hay cambio (o se está inicializando watcher)
             if ((newVal == oldVal) || typeof (newVal) == 'undefined') return;
 
-            // Aplica pre Hooks internos
+            // Asignar valor
             if (hooks.length) {
               hooks.forEach(function (fn) {
                 var refs = [null, key, oldVal, newVal];
@@ -142,16 +143,9 @@ angular.module("core")
               line[key] = newVal;
             }
 
-            // obtener row number buscando por index,  si no, buscar igual
-            var rowIx = -1;
-            if (indexBy) {
-              // si viene indexBy (es decir, un ID de linea basado en dato)
-              rowIx = Data.data.findIndex(d => d[indexBy] == line[indexBy]);
-            } else {
-              // Si no viene, intentar comparar objetos que sean iguales
-              rowIx = Data.data.findIndex(l => l === $scope.line);
-            }
-
+            // encontrar línea de esta directiva en $scope.Data.data[]
+            var rowIx = Data.data.findIndex(l => l === $scope.line);
+            
             // Ejecutar hooks requeridos por el controlador (mediante dialog.onChange)
             if ($scope.dialog.onChange) $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column);
 
