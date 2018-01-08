@@ -166,7 +166,7 @@ function SQLexpr(d) {
         var t = this.transform;
         var a = this.alias;
 
-        var sqlexpr = /^(?:@\w+)|DATE\(.*\)|HASHBYTES\(.*\)|NEWID\(.*\)|SUM\(.*\)/; // Listar otras funciones SQL a continuación: ej. ...|DATE\(.*\)|COALESCE\(.*\)
+        var sqlexpr = /^(?:@\w+)|GETDATE\(.*\)|DATE\(.*\)|DATEPART\(.*\)|DATEADD\(.*\)|DATE\(.*\)|HASHBYTES\(.*\)|NEWID\(.*\)|SUM\(.*\)/; // Listar otras funciones SQL a continuación: ej. ...|DATE\(.*\)|COALESCE\(.*\)
         var noquote = '/noquote';
         var quote = '/quote';
         // Convertir cada json del array en un array
