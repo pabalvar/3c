@@ -1643,6 +1643,12 @@ button.close {
     border-radius: 8px;
     padding-right: 20px;
 }
+.form-control.searchcell {
+    height: 20px;
+    border-radius: 3px;
+    padding: 0px;
+    font-weight: normal;
+}
 
 .input-icon {
     position: absolute;
@@ -3084,7 +3090,7 @@ table > thead.table-head-pagination > tr > td > div > div > ul > li.active > a{
 }
 table > thead.table-head-pagination > tr > td{
     border-bottom-width: 1px;
-    box-shadow: inset 0px -5px 5px -3px rgba(0,0,0,0.2);
+    box-shadow: inset 0px 5px 5px -3px rgba(0,0,0,0.2);
 }
 
 .pagination>li>a:hover,
@@ -10211,6 +10217,7 @@ only screen and (min-resolution: 144dpi) {
 
 .table.table-custom {
    /* border-collapse: separate; PAD: se ve feo*/
+
 }
 
 .table.table-custom>thead>tr td,
