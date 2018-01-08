@@ -15,7 +15,7 @@ angular.module('liberp')
 			 * @methodOf liberp.documentos
 			 * @returns {$resource} Documentos de deuda
 			 */
-			traeDeuda: $resource('/documentos/traeDeuda/:id', { id: '@id' }, {
+			traeDeuda: $resource('/documentos/deuda/', { id: '@id' }, {
 				get: {
 					method: 'GET',
 					headers: { Authorization: 'Bearer ' + auth_service.getToken() },
