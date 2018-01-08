@@ -14,6 +14,13 @@
     color:white;
 }
 
+.rnd-alert{
+    position:absolute;
+    z-index: 99;
+    left:20px;
+    right:20px;
+}
+
 .add:after    { content: "\271A"; }
 .edit:after   { content: "\270E"; }
 .delete:after { content: "\2718";}
