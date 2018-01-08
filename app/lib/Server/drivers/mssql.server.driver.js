@@ -421,7 +421,6 @@ function executeListQuery(app) {
                             return 0
                         }
                         //console.log("Transaction commited.");
-                        console.log(results);
                         for (var key in results) {
                             req.resultados[key] = results[key];
                         }
