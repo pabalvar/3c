@@ -62,7 +62,7 @@ function getDocumentosSQL() {
 
 // Entrega metadatos
 function getMetaDeuda(req, res, next) {
-  req.add(getDeudaMeta(), 'data');
+  req.add(getDeudaMeta(), 'documentos.deuda');
   req.add(getEstadosPago(), 'estadosPago');
   if (next) next();
 }
@@ -77,10 +77,10 @@ function getDeudaMeta() {
     { field: "TIMODO", name: "Timodo", visible: false },
     { field: "TAMODO", name: "Tamodo", visible: false },
     { field: "ESPGDO", name: "Estado doc.", visible: false, length: '1', datatype: 'lookup', tabla: 'estadosPago', options: { returnSrv: "id", returnClient: "name" } },
-    { field: "FEULVEDO", name: "F. Vencim.", visible: true, length: '8', datatype: 'date' },
+    { field: "FEULVEDO", name: "F. Vencim.", visible: true, length: '10', datatype: 'date' },
     { field: "MODO", name: "M", description: "Moneda", length: '1', visible: true },
     { field: "VABRDO", name: "Valor doc.", visible: true, length: '10', datatype: 'number' },
-    { field: "VAABDO", name: "Saldo ant.", visible: true, length: '10', datatype: 'number' },
+    { field: "VAABDO", name: "Saldo ant.", visible: false, length: '10', datatype: 'number' },
     { field: "VAIVARET", name: "Valor IVA ret.", visible: false, datatype: 'number' },
     { field: "VAIVDO", name: "Valor IVA doc.", visible: false, datatype: 'number' },
     { field: "VANEDO", name: "Valor neto doc.", visible: false, datatype: 'number' },

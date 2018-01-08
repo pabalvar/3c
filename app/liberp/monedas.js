@@ -42,7 +42,7 @@ ORDER BY
 
 
 function getMetaMonedas(req, res, next) {
-    req.add(getMonedasMeta(), 'data');
+    req.add(getMonedasMeta(), 'monedas');
     if (next) next();
 }
 

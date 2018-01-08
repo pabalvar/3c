@@ -47,7 +47,7 @@ ORDER BY
 
 // Entrega metadatos
 function getMetaEntidades(req, res, next) {
-  req.add(getEntidadesMeta(), 'data')
+  req.add(getEntidadesMeta(), 'entidades')
   req.add(getTipoEntidad(), 'tipoEntidad')
   next();
 }

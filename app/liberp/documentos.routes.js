@@ -6,7 +6,7 @@ var globals = require('../lib/globals/controllers/globals.js');
 
 module.exports = function (app) {
 
-    app.route('/documentos/traeDeuda')
+    app.route('/documentos/deuda')
         .get(
         documentos.getDeuda,
         driver.runsql,
