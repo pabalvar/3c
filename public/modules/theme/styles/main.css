@@ -4974,7 +4974,7 @@ button:focus {
 }
 
 .btn.btn-default:hover {
-    /* background-color: #f2f3f4; */
+    background-color: #f2f3f4;
 }
 
 .btn.btn-default:active,
