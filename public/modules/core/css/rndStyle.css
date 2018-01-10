@@ -9,11 +9,6 @@
 	max-width:1380px;
 }
 
-
-.rnd-btn:hover{
-    color:white;
-}
-
 .rnd-alert{
     position:absolute;
     z-index: 99;
@@ -31,12 +26,16 @@
 .left:after  { content: "\25C0"; }
 
 .rnd-btn {
-    background-color: #616f7720;
+    background-color:rgba(97, 111, 119, 0.1);
     /* padding-left: 5px; */
     padding-right: 5px;
     width: 100%;
     display: block;
     border-radius: 5px;
+}
+.rnd-btn:hover, 
+.rnd-btn:focus{
+    box-shadow: inset 0px 0px 20px 0px #2390b060;
 }
 
 .rnd-gray {
