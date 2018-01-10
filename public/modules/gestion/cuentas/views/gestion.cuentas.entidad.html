@@ -1,0 +1,26 @@
+<!--<div class="modal-header">
+    <h3 class="modal-title"
+        id="modal-title">I'm a modal!</h3>
+</div>-->
+<div class="modal-body">
+    <rnd-smtable source="pasoCuentas"
+                 meta="metaCuentas"
+                 options="{title:'Cuentas de la Entidad',showEmpty:'No hay asignaciones', textCreate:'Ingresar una nueva cuenta'}"
+                 dialog="{canCreate:true}"
+                 api="apiCuentas">
+    </rnd-smtable>
+</div>
+<div class="modal-footer">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox"
+                   ng-model="oneAtATime"> Agregar esta cuenta como antecedente del cliente
+        </label>
+    </div>
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="$ctrl.ok()">Aceptar</button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$ctrl.cancel()">Cancelar</button>
+</div>

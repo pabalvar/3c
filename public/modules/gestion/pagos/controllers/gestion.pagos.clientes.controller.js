@@ -7,11 +7,10 @@
  * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
  */
 angular.module('gestion').controller('gestionPagosClientesController',
-    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaPagod', 'metaDeuda', '$timeout', 'rndAlerts',
-        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaPagod, metaDeuda, $timeout, rndAlerts) {
+    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaPagod', 'metaDeuda', '$timeout', 'rndAlerts', '$uibModal', 'gestionCuentasEntidadModal', 'focus',
+        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaPagod, metaDeuda, $timeout, rndAlerts, $uibModal, gestionCuentasEntidadModal, focus) {
 
             /** Modelo de datos */
-            console.log("rndEmpresa",rndEmpresa.get())
 
             // Trae ENTIDAD 
             $scope.metaEntidad = metaEntidad;
@@ -27,7 +26,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
 
             // Trae PAGO
             $scope.metaPago = metaPago;
-            $scope.metaPago.data.ENDP.onInit = ()=>$scope.pasoEntidad.data[0].KOEN; // Agregar código entidad al nuevo pago
+            $scope.metaPago.data.ENDP.onInit = () => $scope.pasoEntidad.data[0].KOEN; // Agregar código entidad al nuevo pago
+            $scope.metaPago.data.TIDP.onBlur = selectCuenta; // Abrir modal select cuenta cuando pierde foco CHV
+            $scope.metaPago.data.TIDP.onInit = () => 'EFV' // Por defecto efectivo
             $scope.metaPago.data.push({ field: "SALDODP", name: "Saldo", visible: true, length: '10', readOnly: true, datatype: "currency" })
             $scope.metaPago.data.$estado.visible = true;
             $scope.apiPago = {}
@@ -40,13 +41,15 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     variante: 'simple',
                     size: 10,
                     order: 'FEEMDP'
-                }, $scope.pasoPago, clickRow($scope.apiPago, 0));
+                }, $scope.pasoPago, [/*clickRow($scope.apiPago, 0), */focusOnTable]);
             };
-
+            function focusOnTable() {
+                //console.log("vamos a cliquear en:", $scope.apiPago.id);
+                focus($scope.apiPago.id);
+            }
 
             // Trae DEUDA
             $scope.metaDeuda = metaDeuda;
-            //$scope.metaDeuda.data = rndDialog.initMeta(metaDeuda.data);
             $scope.apiDeuda = {}
             $scope.pasoDeuda = { data: [] };
             function traeDeuda() {
@@ -91,8 +94,8 @@ angular.module('gestion').controller('gestionPagosClientesController',
             // Si se crea un nuevo pago, proponer el total por pagar
             $scope.metaPago.data.VADP.onInit = () => $scope.resumen.saldoDeuda;
             // Valores por defecto para un nuevo pago
-            $scope.metaPago.data.EMPRESA.onInit = ()=>rndEmpresa.get();
-            $scope.metaPago.data.MODP.onInit = ()=>'$';
+            $scope.metaPago.data.EMPRESA.onInit = () => rndEmpresa.get();
+            $scope.metaPago.data.MODP.onInit = () => '$';
             // Al hacer click en líneas, mostrar cruce que tienen que ver
             $scope.selectRow = filtraLineas;
             // Botón grabar
@@ -292,6 +295,16 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 calcula();
                 $scope.apiCruce.redraw();// XXX Truco para que redibuje la tabla (falla rnd-input)
             }
+
+            /** Función que abre un modal para seleccionar las cuentas */
+            function selectCuenta(line, column, source) {
+                if (line.TIDP && line.TIDP != 'EFV')
+                    $uibModal.open(gestionCuentasEntidadModal({ koen: line.ENDP, tidp: line.TIDP, empresa: line.EMPRESA, tidp: line.TIDP })).result.then(function (res) {
+                        //console.log("selected:", res)
+                    }, function () {
+                        //console.info('Modal dismissed at: ' + new Date());
+                    });
+            };
 
 
             /** Función que oculta las líneas en pasoCruce que no están seleccionadas en 
