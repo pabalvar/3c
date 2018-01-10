@@ -5,6 +5,22 @@ function isTypeNumeric(input) {
 
 
 angular.module('core')
+	.factory('focus', function ($timeout, $window) {
+		return function (id) {
+			// timeout makes sure that it is invoked after any other event has been triggered.
+			// e.g. click events that need to run before the focus or
+			// inputs elements that are in a disabled state but are enabled when those events
+			// are triggered.
+			$timeout(function () {
+				var element = $window.document.getElementById(id);
+				if (element)
+					element.focus();
+				else
+					console.warn("no se pudo hacer foco en id=", id);
+			});
+		};
+	})
+
 	/** inserta html desde controlador */
 	.filter("trustedUrl", ['$sce', function ($sce) {
 		return function (url) {
@@ -35,9 +51,11 @@ angular.module('core')
 			switch (typeof (input)) {
 				case 'string':
 					if (isTypeNumeric(input)) ret = 'right';
+					else if (input == 'boolean') ret = 'center';
 					break;
 				case 'object':
 					if (isTypeNumeric(input.datatype)) ret = 'right';
+					else if (input.datatype == 'boolean') ret = 'center';
 					break;
 				default:
 					break;
@@ -68,9 +86,9 @@ angular.module('core')
 				sub = param.split(':')[2];
 			} else if (typeof (param) == 'object') {
 				// revisar si es rtabla
-				if (param.datatype=='lookup'){
-					datatype='lookup'
-				}else if (param.tabla) {
+				if (param.datatype == 'lookup') {
+					datatype = 'lookup'
+				} else if (param.tabla) {
 					datatype = 'rtabla';
 				} else {
 					if (param.datatype) {
@@ -120,8 +138,10 @@ angular.module('core')
 
 	/** returnSrv a returnClient */
 	.service('decodeRtabla', function () {
-		return function (input, rtabla, opts) {
+		return function (input, _rtabla, opts) {
 			var value = input; // falback returns same input
+			// Si es función, instanciar
+			var rtabla = (typeof (_rtabla) == 'function') ? _rtabla() : _rtabla;
 			var valid = false; // 
 			var data;
 			// Ahora recorrer la tabla, hasta encontrar el valor
@@ -257,6 +277,11 @@ angular.module('core')
 			} else if (type.datatype == '$estado') {
 				//console.log("es estado", ret)
 				ret = ''
+			}
+			// string
+			else if (type.datatype == 'boolean') {
+				// Hacer falsy el '0'
+				ret = (input == '0' || !input) ? '☐' : '☑';
 			}
 			// string
 			else if (type.datatype == 'string') {
