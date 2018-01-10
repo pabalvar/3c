@@ -5,6 +5,7 @@ var _ = require('lodash');
 /** Middleare para entregrar convertir parámetros de embed a objeto **/
 module.exports = function (app) {
     app.use(function (req, res, next) {
+        req.embed = req.embed||{};
         // catches: embed. Si viene separado por comas, lo convierte en array
         var ret;
         var query = req.query;
