@@ -106,6 +106,7 @@ angular.module('core')
 
             // Inicialización
             $scope.pressed = function ($event) {
+                //console.log("keydown on element:2",$scope.id);
                 // Add Row con Enter
                 if ($event.keyCode == 13) {
                     if ($scope.dialog.canCreate) addRow();
@@ -115,7 +116,6 @@ angular.module('core')
 
             /* Asignar un id al DOM en la tabla*/
             $scope.id = rndDialog.newRandomString()();
-
             /* Opción showEmpty. Si es trueShow empty: si es true se muestra la tabla vacía, false no, texto se agrega */
             if ($scope.options.showEmpty === true) {
                 $scope.alwaysShow = true;
@@ -140,6 +140,7 @@ angular.module('core')
             $scope.api.goToRow = goToRow;
             $scope.api.redraw = redraw;
             $scope.api.addRow = addRow;
+            $scope.api.id = $scope.id;
            // $scope.api.change = change;
             $scope.api.validate = validate; // mostrar validate de rndDialog
 

@@ -101,6 +101,7 @@ angular.module("core")
 
           // Crear watcher
           $scope.$watch('buffer.tmpInput', updateBuffer, true);
+
           // Anexar cellClick si lo tiene el meta
           if (column.onClick) {
             $scope.cellClick = function (line, column, source) {
@@ -109,7 +110,14 @@ angular.module("core")
               column.onClick(line, column, source);
             }
           }
-
+          // Anexar cellBlur si lo tiene el meta
+          if (column.onBlur) {
+            $scope.cellBlur = function (line, column, source) {
+              console.log("hizo blur en la celda", line,column);
+              // llamar a la función de meta
+              column.onBlur(line, column, source);
+            }
+          }
 
           // Implementation details
 

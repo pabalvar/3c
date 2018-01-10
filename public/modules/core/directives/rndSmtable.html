@@ -11,9 +11,11 @@
 
 <div style="overflow:auto; {{options.pageheight?'height:'+((options.fieldsearch?35:0)+(options.globalsearch?37:0) + (options.pagesize?31:0) + (options.pageheight*25)+33)+'px;':''}}"
      class="{{source.busy?'busy':''}}">
-    <table st-safe-src="source.data"
+
+    <table 
+           st-safe-src="source.data"
            st-table="displayedCollection"
-           ng-keydown="pressed($event)"
+          
            style="width:100%;"
            class="st-table table-condensed table table-custom table-hover dt-responsive headerdark table-bordered inputable {{id}}">
 
@@ -22,14 +24,14 @@
             <tr>
                 <td colspan="500"
                     class="text-center">
-                    <div>
+                    <button class="rnd-btn b-0" id={{id}} ng-keydown="pressed($event)">
                         <h3 ng-if="!source.data.length"
                             class="m-10 text-default lt ">{{options.showEmpty}}</h3>
                         <h4 ng-if="dialog.canCreate"
                             ng-click="api.addRow()"
                             class="m-5 text-default lt">
                             <i class="fa fa-plus-circle"></i> {{options.textCreate}}</h4>
-                    </div>
+                    </button>
                 </td>
             </tr>
         </tfoot>
