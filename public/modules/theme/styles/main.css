@@ -10236,6 +10236,7 @@ only screen and (min-resolution: 144dpi) {
     position: relative;
 }
 .table.table-hover>tbody>tr:hover td,
+.table.table-hover>tbody>tr:focus td,
 .table.table-hover>tbody>tr:hover th {
     /*mix-blend-mode: darken;*/
     box-shadow: inset 0px 0px 50px 50px rgba(0, 127, 255, 0.1);
