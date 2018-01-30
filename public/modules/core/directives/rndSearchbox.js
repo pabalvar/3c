@@ -61,18 +61,51 @@ angular.module('core')
                     dialog: '=?dialog',
                     dataset: '=?dataset',
                     meta: '=',
-                    rtablas: '='
+                    rtablas: '=',
+                    api: '='
                 },
                 templateUrl: 'modules/core/directives/rndSearchbox.html',
-                controller: ['$scope', function ($scope) {
+                controller: ['$scope', 'rndDialog', 'focus', function ($scope, rndDialog, focus) {
+
+                    /** Inicialización */
+
+                    // $offline indica cuando no hay conexión
                     $scope.$offline = false;
 
+                    // Inicializar id de instancia
+                    $scope.id = rndDialog.newRandomString()();
+
+                    // Inicializar API instancia
+                    $scope.api = $scope.api || {};
+                    $scope.api.id = $scope.id;
+
+                    // Inicializar opciones por defecto para mostrar en directiva
+                    $scope.options = $scope.options || {};
+                    $scope.options.placeholder = 'buscar';
+
+                    // índice de columna en meta que contiene el nombre principal a mostrar
+                    $scope.namepropIx = getNamePropIx($scope.options, $scope.meta);
+
+                    // callback al seleccionar item
+                    $scope.onSelectLocal = onSelectLocal;
+
                     // convertir el $resource en una función que acepta "texto", usada por la directiva
-                    $scope.sourceP = function (texto) {
+                    $scope.sourceP = sourceP;
+
+                    // Si viene opción getFocus, fijar foco en campo de search
+                    $scope.dialog = $scope.dialog||{}
+                    if ($scope.dialog.getFocus) getFocus(200)
+
+                    /** Detalles implementación */
+
+                    // Función que data una entrada de texto, llama al recurso con texto como parámetro search
+                    function sourceP(texto) {
+
                         // ejecutar la promesa
                         return $scope.source({ search: texto }).$promise
                             .then(function (res) {
                                 $scope.$offline = false;
+
                                 // incluir una referencia en cada línea a metadatos y rtablas (se necesita para renderizar opciones)
                                 res.data.forEach(function (d) { d.$meta = $scope.meta; d.$rtablas = $scope.rtablas })
                                 return res.data
@@ -82,24 +115,21 @@ angular.module('core')
                                 console.log("error", err)
                             })
                     };
+
+
                     // Buscar qué campo mostrar en línea principal
-                    var namePropIx = -1;
-                    if ($scope.options.nameprop) {
-                        namePropIx = $scope.meta.data.findIndex(f => f.field == $scope.options.nameprop)
-                        if (namePropIx < 0) console.warn("rndSearchbox: no hay metadato llamado " + $scope.options.nameprop);
-                    } else {
-                        namePropIx = $scope.meta.findIndex(f => f.nameprop);
+                    function getNamePropIx(options, meta) {
+                        var namePropIx = -1;
+                        if (options.nameprop) {
+                            namePropIx = meta.data.findIndex(f => f.field == options.nameprop)
+                            if (namePropIx < 0) console.warn("rndSearchbox: no hay metadato llamado " + options.nameprop);
+                        } else {
+                            namePropIx = meta.findIndex(f => f.nameprop);
+                        }
+                        var ret = (namePropIx < 0) ? 1 : namePropIx; // Si ninguna columna es nameprop, usar columna 1
+                        return ret;
                     }
-                    $scope.namepropIx = (namePropIx < 0) ? 1 : namePropIx; // Si ninguna columna es nameprop, usar columna 1
 
-
-
-                    // parámetros por defecto para mostrar en directiva
-                    $scope.options = $scope.options || {};
-                    $scope.options.placeholder = 'buscar';
-
-                    // callback al seleccionar
-                    $scope.onSelectLocal = onSelectLocal;
 
                     function onSelectLocal($item, $model, $label, $event) {
                         // deshacer apéndice "$model" que se anexó eventualmente en controlador parent
@@ -123,6 +153,13 @@ angular.module('core')
                             $scope.dialog.onChange(ret, $model, $label, $event);
                         }
                         //console.log("retorna: ", ret)
+                    }
+
+                    // Fija el foco en cuadro de búsqueda
+                    function getFocus(delay) {
+                        console.log("fijando foco en id=", $scope.id)
+                        //if (!$scope.id) console.log("no hay id!")
+                        focus($scope.id, delay);
                     }
 
                 }]

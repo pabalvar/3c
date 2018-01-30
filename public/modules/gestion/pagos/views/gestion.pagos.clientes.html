@@ -1,118 +1,121 @@
-<rnd-breadcrumb>
-  <!-- search box -->
-  <rnd-searchbox options="{placeholder:'buscar entidad', nameprop:'NOKOEN'}"
-                 meta="metaEntidad"
-                 dataset="pasoEntidad"
-                 source="traeEntidad"
-                 dialog="{onChange:onChangeEntidad}">
-  </rnd-searchbox>
-  <!-- /search box -->
-</rnd-breadcrumb>
-
-<!-- Alertas -->
-<rnd-alerts is-busy="[saveWS]"
-            service="alert">
-</rnd-alerts>
-<!-- /Alertas -->
-
-<!-- Pantalla vacía -->
-<section ng-if="!pasoEntidad.data.length"
-         class="text-center text-default lt">
-  <h2>¡Nadie aquí!</h2>
-  <p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>
-</section>
-<!-- /Pantalla vacía -->
-
-<section ng-if="pasoEntidad.data.length">
-
-  <!-- #ROW: Entidad, Deuda -->
-  <div rnd-row
-       class="rnd-gray">
-
-    <!-- Entidad -->
-    <div class="col-xs-4">
-      <rnd-profile meta="metaEntidad"
-                   options="{title:'Datos entidad'}"
-                   source="pasoEntidad">
-      </rnd-profile>
-    </div>
-    <!-- /Entidad -->
-
-    <!-- totales -->
-    <div class="col-xs-8 pt-20">
-      <rnd-tile-simple options="{title:'por pagar'}">{{resumen.saldoDeuda|monitor:'currency'}}</rnd-tile-simple>
-      <rnd-tile-simple options="{title:'total asignado'}">{{resumen.asignadoCruce|monitor:'currency'}}</rnd-tile-simple>
-    </div>
-    <!-- /totales -->
-
-    <!-- Deuda -->
-    <div class="col-xs-12 pt-20 pb-20">
-      <rnd-smtable meta="metaDeuda"
-                   options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:4, pageheight:4, xglobalsearch:true, xfieldsearch:true}"
-                   source="pasoDeuda"
-                   dialog="{selectRow:selectRow}"
-                   api="apiDeuda">
-      </rnd-smtable>
-    </div>
-    <!-- /Deuda -->
-
-  </div>
-
-  <!-- #ROW: Pagos, Asignación, acciones -->
-  <div rnd-row
-       class="rnd-white shadow-b">
-
-    <div class="col-md-9 col-lg-8 pt-20">
-      <!-- /Pagos -->
-      <rnd-smtable meta="metaPago"
-                   options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, xpageheight:5}"
-    
-                   source="pasoPago"
-                   dialog="{selectRow:selectRow,onChange:onChangeValue, onAddRow:onAddRowPago, canCreate:true }"
-                   api="apiPago">
-      </rnd-smtable>
-      <!-- /Pagos -->
-    </div>
-
-    <div class="col-sm-8 col-md-3 col-lg-4 pt-20">
-
-      <div ng-repeat="pago in pasoPago.data"
-           ng-if="pago.isSelected">
-
-        <!-- titulo del pago -->
-        <div class="mb-0">
-          <strong>Asignación de: {{pago.TIDP}}</strong>
-          <span> {{pago.NUDP}}</span>
-          <span class="mr-20"
-                style="position:absolute; right:0px">
-            <small class="ml-5">saldo: </small>
-            <span>{{pago.SALDODP|monitor:'currency'}}</span>
-          </span>
+<div ng-keydown="cacha($event)">
+    <rnd-breadcrumb>
+        <!-- search box -->
+        <rnd-searchbox options="{placeholder:'buscar entidad', nameprop:'NOKOEN'}"
+                       meta="metaEntidad"
+                       dataset="pasoEntidad"
+                       source="traeEntidad"
+                       dialog="{onChange:onChangeEntidad, getFocus:true}"
+                       api = "apiEntidad">
+        </rnd-searchbox>
+        <!-- /search box -->
+      </rnd-breadcrumb>
+      
+      <!-- Alertas -->
+      <rnd-alerts is-busy="[saveWS]"
+                  service="alert">
+      </rnd-alerts>
+      <!-- /Alertas -->
+      
+      <!-- Pantalla vacía -->
+      <section ng-if="!pasoEntidad.data.length"
+               class="text-center text-default lt">
+        <h2>¡Nadie aquí!</h2>
+        <p>Usa el cuadro de búsqueda para traer la deuda de un cliente</p>
+      </section>
+      <!-- /Pantalla vacía -->
+      
+      <section ng-if="pasoEntidad.data.length">
+      
+        <!-- #ROW: Entidad, Deuda -->
+        <div rnd-row
+             class="rnd-gray">
+      
+          <!-- Entidad -->
+          <div class="col-xs-4">
+            <rnd-profile meta="metaEntidad"
+                         options="{title:'Datos entidad'}"
+                         source="pasoEntidad">
+            </rnd-profile>
+          </div>
+          <!-- /Entidad -->
+      
+          <!-- totales -->
+          <div class="col-xs-8 pt-20">
+            <rnd-tile-simple options="{title:'por pagar'}">{{resumen.saldoDeuda|monitor:'currency'}}</rnd-tile-simple>
+            <rnd-tile-simple options="{title:'total asignado'}">{{resumen.asignadoCruce|monitor:'currency'}}</rnd-tile-simple>
+          </div>
+          <!-- /totales -->
+      
+          <!-- Deuda -->
+          <div class="col-xs-12 pt-20 pb-20 ">
+            <rnd-smtable meta="metaDeuda"
+                         options="{showEmpty:'¡Todo pagado!', title:'Estado de cuenta',pagesize:4, pageheight:4, xglobalsearch:true, xfieldsearch:true}"
+                         source="pasoDeuda"
+                         dialog="{selectRow:selectRow}"
+                         api="apiDeuda">
+            </rnd-smtable>
+          </div>
+          <!-- /Deuda -->
+      
         </div>
-        <!-- /título del pago -->
-
-        <!-- Cruce -->
-        <rnd-smtable meta="metaCruce"
-                     options="{showEmpty:'No hay asignaciones'}"
-                     source="{data:pago.$cruce}"
-                     dialog="{onChange:onChangeValue}"
-                     api="apiCruce">
-        </rnd-smtable>
-        <!-- /Cruce -->
-
-      </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center p-20">
-      <button ng-disabled="!resumen.canSave"
-              type="button"
-              ng-click="save()"
-              class="btn btn-greensea btn-border btn-rounded-20">Guardar cambios</button>
-      <button type="button"
-              ng-click="dump()"
-              class="btn btn-default btn-border btn-rounded-20">debug</button>
-    </div>
-
-  </div>
-
-</section>
+      
+        <!-- #ROW: Pagos, Asignación, acciones -->
+        <div rnd-row
+             class="rnd-white shadow-b">
+      
+          <div class="col-md-9 col-lg-8 pt-20">
+            <!-- /Pagos -->
+            <rnd-smtable meta="metaPago"
+                         options="{showEmpty:'No hay pagos registrados', title:'Registro de pagos', textCreate:'Ingresar un documento de pago', pagesize:5, Xpageheight:5}"
+          
+                         source="pasoPago"
+                         dialog="{XselectRow:selectRow,onChange:onChangeValue, onAddRow:onAddRowPago, canCreate:true, getFocus:'create' }"
+                         api="apiPago">
+            </rnd-smtable>
+            <!-- /Pagos -->
+          </div>
+      
+          <div class="col-sm-8 col-md-3 col-lg-4 pt-20">
+      
+            <div ng-repeat="pago in pasoPago.data"
+                 ng-if="pago.isSelected">
+      
+              <!-- titulo del pago -->
+              <div class="mb-0">
+                <strong>Asignación de: {{pago.TIDP}}</strong>
+                <span> {{pago.NUDP}}</span>
+                <span class="mr-20"
+                      style="position:absolute; right:0px">
+                  <small class="ml-5">saldo: </small>
+                  <span>{{pago.SALDODP|monitor:'currency'}}</span>
+                </span>
+              </div>
+              <!-- /título del pago -->
+      
+              <!-- Cruce -->
+              <rnd-smtable meta="metaCruce"
+                           options="{showEmpty:'No hay asignaciones'}"
+                           source="{data:pago.$cruce}"
+                           dialog="{onChange:onChangeValue}"
+                           api="apiCruce">
+              </rnd-smtable>
+              <!-- /Cruce -->
+      
+            </div>
+          </div>
+      
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center p-20">
+            <button ng-disabled="!resumen.canSave"
+                    type="button"
+                    ng-click="save()"
+                    class="btn btn-greensea rnd-clickable btn-border btn-rounded-20">Guardar cambios</button>
+            <button type="button"
+                    ng-click="dump()"
+                    class="btn btn-default rnd-clickable btn-border btn-rounded-20">debug</button>
+          </div>
+      
+        </div>
+      
+      </section>
+</div>

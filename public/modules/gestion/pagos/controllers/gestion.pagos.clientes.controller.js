@@ -7,11 +7,12 @@
  * Controlador de pagos. Usa el servicio {@link liberp.pagos pagos}, {@link liberp.documentos documentos}, {@link liberp.entidades entidades}
  */
 angular.module('gestion').controller('gestionPagosClientesController',
-    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaPagod', 'metaDeuda', '$timeout', 'rndAlerts', '$uibModal', 'gestionCuentasEntidadModal', 'focus',
-        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaPagod, metaDeuda, $timeout, rndAlerts, $uibModal, gestionCuentasEntidadModal, focus) {
+    ['$scope', 'entidades', 'pagos', 'documentos', 'rndEmpresa', 'ws', 'rndDialog', 'metaEntidad', 'metaPago', 'metaPagod', 'metaDeuda', '$timeout', 'rndAlerts', '$uibModal', 'gestionCuentasEntidadModal', 'focus','$interval',
+        function ($scope, entidades, pagos, documentos, rndEmpresa, ws, rndDialog, metaEntidad, metaPago, metaPagod, metaDeuda, $timeout, rndAlerts, $uibModal, gestionCuentasEntidadModal, focus, $interval) {
 
             /** Modelo de datos */
-
+            $scope.apiEntidad = {}
+            //$interval(()=>{ console.log("foco",document.activeElement)},5000)
             // Trae ENTIDAD 
             $scope.metaEntidad = metaEntidad;
             $scope.pasoEntidad = { data: [] };
@@ -23,6 +24,11 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     order: 'NOKOEN'
                 });
             }
+
+            $scope.cacha = function(e){
+                console.log("te caché",e.target)
+            }
+
 
             // Trae PAGO
             $scope.metaPago = metaPago;
@@ -41,12 +47,9 @@ angular.module('gestion').controller('gestionPagosClientesController',
                     variante: 'simple',
                     size: 10,
                     order: 'FEEMDP'
-                }, $scope.pasoPago, [/*clickRow($scope.apiPago, 0), */focusOnTable]);
+                }, $scope.pasoPago, [/*clickRow($scope.apiPago, 0), *//*focusOnTable*/ ]);
             };
-            function focusOnTable() {
-                //console.log("vamos a cliquear en:", $scope.apiPago.id);
-                focus($scope.apiPago.id);
-            }
+
 
             // Trae DEUDA
             $scope.metaDeuda = metaDeuda;
@@ -111,6 +114,10 @@ angular.module('gestion').controller('gestionPagosClientesController',
                 }, $scope.saveWS, [$scope.alert.parse, cleanAll], $scope.alert.parse);
             }
 
+            /*function focusOnTable() {
+                console.log("vamos a cliquear en:", $scope.apiPago.id);
+                focus($scope.apiPago.id);
+            }*/
             /** Funciones auxiliares */
             function save() {
                 guardaPago();

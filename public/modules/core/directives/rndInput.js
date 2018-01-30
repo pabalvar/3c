@@ -49,12 +49,12 @@ angular.module("core")
         rtablas: '=',
         dialog: '=?',
         indexBy: '@'
-      }, controller: ['$timeout', '$scope', 'getDatatype', '$moment', 'decodeRtabla', 'rndDialog',
+      }, controller: ['$timeout', '$scope', 'getDatatype', '$moment', 'decodeRtabla', 'rndDialog', 'focus',
         /** Al hacer un cambio se ejecutan las siguientes funciones: 
          * hooks[] // variables internas
          * scope.column.onValueChange
           */
-        function ($timeout, $scope, getDatatype, $moment, decodeRtabla, rndDialog) {
+        function ($timeout, $scope, getDatatype, $moment, decodeRtabla, rndDialog, focus) {
           // Revisar deprecado
           //console.log("rndInput: creación objeto");
           if ($scope.columns) console.warn("rndInput: columns va a ser deprecado. Use meta");
@@ -62,10 +62,17 @@ angular.module("core")
 
           if ($scope.data) console.warn("rndInput: data va a ser deprecado. Use source");
           var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
-
+function keydown(ev){
+  console.log("hola",ev)
+  ev.key="ArrowDown";
+  ev.keyCode = 40;
+}
+$scope.keydown = keydown;
 
           // Init
           $scope.line.$estado = $scope.line.$estado || {}; // init $estado (lineMeta)
+
+          $scope.id = rndDialog.newRandomString()();
 
           // Referenciar meta
           $scope.column = meta.find(o => o.field == $scope.key);//  modelo de la columna
@@ -102,6 +109,7 @@ angular.module("core")
           // Crear watcher
           $scope.$watch('buffer.tmpInput', updateBuffer, true);
 
+
           // Anexar cellClick si lo tiene el meta
           if (column.onClick) {
             $scope.cellClick = function (line, column, source) {
@@ -113,7 +121,7 @@ angular.module("core")
           // Anexar cellBlur si lo tiene el meta
           if (column.onBlur) {
             $scope.cellBlur = function (line, column, source) {
-              console.log("hizo blur en la celda", line,column);
+              console.log("hizo blur en la celda", line, column);
               // llamar a la función de meta
               column.onBlur(line, column, source);
             }
@@ -153,7 +161,7 @@ angular.module("core")
 
             // encontrar línea de esta directiva en $scope.Data.data[]
             var rowIx = Data.data.findIndex(l => l === $scope.line);
-            
+
             // Ejecutar hooks requeridos por el controlador (mediante dialog.onChange)
             if ($scope.dialog.onChange) $scope.dialog.onChange(newVal, oldVal, Data.data[rowIx], Data, rowIx, key, column);
 
@@ -176,7 +184,7 @@ angular.module("core")
 
           /** Función que hace cargo de cuando el input es de tipo rtabla. */
           function initLookup() {
-           // $scope._rtablas = (typeof (rtablas) == 'function') ? rtablas() : rtablas; // instanciar si es función
+            // $scope._rtablas = (typeof (rtablas) == 'function') ? rtablas() : rtablas; // instanciar si es función
             buffer.tmpInput = decodeRtabla(line[key], $scope.meta[column.tabla], column.options).data
             // Anexar hook para cambiar la tabla
             hooks.push(updateInputRtabla);
@@ -186,6 +194,8 @@ angular.module("core")
           function initDate(type) {
             // Inicializar valor
             buffer.tmpInput = new Date(line[key]);
+
+
 
             // inicializar controlador del date
             $scope.dateCtrl = {
@@ -208,11 +218,25 @@ angular.module("core")
               timer: {}
             }
 
+            // Crear watcher que deja el foco donde corresponde cuando cierra el calendario
+            $scope.$watch('dateCtrl.isOpen', onCloseCalendario);
+
+            function onCloseCalendario(newVal, oldVal) {
+              if (oldVal === true){
+                if (newVal === false){
+                  console.log("lo cerró.- calendario cambio de ", oldVal, " a ", newVal);
+                  focus($scope.id,0)
+                }
+              }
+              
+            }
+
             function dateCloseDeferred() {
               $timeout.cancel($scope.dateCtrl.timer);
               var fn = function () { $scope.dateCtrl.setOpen(false) }
               $scope.dateCtrl.timer = $timeout(fn, 100);
             }
+
             function dateOpenDeferred() {
               $timeout.cancel($scope.dateCtrl.timer);
 

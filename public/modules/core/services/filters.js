@@ -6,18 +6,19 @@ function isTypeNumeric(input) {
 
 angular.module('core')
 	.factory('focus', function ($timeout, $window) {
-		return function (id) {
-			// timeout makes sure that it is invoked after any other event has been triggered.
-			// e.g. click events that need to run before the focus or
-			// inputs elements that are in a disabled state but are enabled when those events
-			// are triggered.
+		return function (param, timer) {
 			$timeout(function () {
-				var element = $window.document.getElementById(id);
-				if (element)
+				// truco: id puede ser un objeto
+				var className = (typeof(param)=='string')?param:param.id;
+				var element = angular.element(document.getElementsByClassName(className));
+				if (element) {
+					console.log("haciendo foco en id=", className);
 					element.focus();
-				else
-					console.warn("no se pudo hacer foco en id=", id);
-			});
+				}
+				else {
+					console.warn("no se pudo hacer foco en id=", className);
+				}
+			}, timer);
 		};
 	})
 

@@ -104,36 +104,12 @@ angular.module('core')
     .controller("rndSmtable", ['$scope', 'rndDialog', '$timeout',
         function ($scope, rndDialog, $timeout) {
 
-            // Inicialización
-            $scope.pressed = function ($event) {
-                //console.log("keydown on element:2",$scope.id);
-                // Add Row con Enter
-                if ($event.keyCode == 13) {
-                    if ($scope.dialog.canCreate) addRow();
-                }
+            /** Inicialización */
 
-            }
-
-            /* Asignar un id al DOM en la tabla*/
+            // Inicializar id de instancia
             $scope.id = rndDialog.newRandomString()();
-            /* Opción showEmpty. Si es trueShow empty: si es true se muestra la tabla vacía, false no, texto se agrega */
-            if ($scope.options.showEmpty === true) {
-                $scope.alwaysShow = true;
-            } else {
-                if (typeof ($scope.options.showEmpty) == 'string') {
-                    $scope.emptyHintHtml = $scope.options.showEmpty;
-                } else {
-                    $scope.emptyHintHtml = '<h2>Ingresa datos</h2><p>para seguir</p>'
-                }
-            }
 
-            // Al seleccionar la línea
-            $scope.selectRow = selectRow;
-
-            // Funcíón auxiliar que entrega valor de !data.$estado.hidden 
-            $scope.isLineVisible = isLineVisible;
-
-            // Anexar instancia
+            // Inicializar API instancia
             $scope.api = $scope.api || {};
             $scope.api.clickRow = clickRow;
             $scope.api.goToPage = goToPage;
@@ -141,8 +117,83 @@ angular.module('core')
             $scope.api.redraw = redraw;
             $scope.api.addRow = addRow;
             $scope.api.id = $scope.id;
-           // $scope.api.change = change;
+            // $scope.api.change = change;
             $scope.api.validate = validate; // mostrar validate de rndDialog
+
+            // función que controla los comandos de teclado 
+            $scope.onKeydown = onKeydown;
+
+            // Funcíón auxiliar que entrega valor de !data.$estado.hidden 
+            $scope.isLineVisible = isLineVisible;
+
+            // Al seleccionar la línea
+            $scope.selectRow = selectRow;
+
+            // Html a mostrar cuando está vacío
+            $scope.emptyHintHtml = renderEmptyHint($scope.options);
+
+
+            /** Detalles de implementación */
+
+            function onKeydown($event) {
+                $event.stopPropagation()
+                console.log("keydown on element:2", $event, " key:", $event.keyCode);
+                // Add Row con Enter
+                switch ($event.keyCode) {
+                    case 38: tableGoUp($event); break;
+                    case 40: tableGoDown($event); break;
+                    case 39: tableGoRight($event); break;
+                    case 37: tableGoLeft($event); break;
+                }
+                if ($event.keyCode == 13) {
+                    // if ($scope.dialog.canCreate) addRow();
+                }
+            }
+
+            function getFieldFromClassList(el) {
+                var ret;
+                el.classList.forEach(c => {
+                    if (c.match(/field-/)) ret = c.replace("field-", "");
+                })
+                return ret;
+            }
+            function tableGoUp($event) {
+                // Get field class of cell
+                var td = $event.target.closest('td');
+                var field = getFieldFromClassList(td);
+                var tr = td.closest('tr');
+                var prevTr = tr.previousElementSibling;
+                var goalTd = angular.element(prevTr).find('.field-' + field + " input");
+                goalTd.trigger('focus',100);
+            }
+            function tableGoDown($event) {
+                var td = $event.target.closest('td');
+                var field = getFieldFromClassList(td);
+                var tr = td.closest('tr');
+                var nextTr = tr.nextElementSibling;
+                var goalTd = angular.element(nextTr).find('.field-' + field + " input");
+                goalTd.trigger('focus',100);
+            }
+            function tableGoRight($event) {
+                var td = $event.target.closest('td');
+                var field = getFieldFromClassList(td);
+                var goalTd = td.nextElementSibling.find('.field-' + field + " input");
+                /*var field = getFieldFromClassList(td);
+                var tr = td.closest('tr');
+                var nextTr = ts.nextElementSibling;
+                var goalTd = angular.element(nextTr).find('.field-' + field + " input");*/
+                goalTd.trigger('focus',100);
+            }
+
+            function renderEmptyHint(options) {
+                var ret = '';
+                if (typeof (options.showEmpty) == 'string') {
+                    ret = options.showEmpty;
+                } else {
+                    ret = '<h2>Ingresa datos</h2><p>para seguir</p>'
+                }
+                return ret;
+            }
 
             function validate() {
                 rndDialog.validate($scope.source, $scope.meta);
@@ -159,6 +210,9 @@ angular.module('core')
                 if ($scope.dialog.onAddRow) {
                     $scope.dialog.onAddRow(obj, $scope.source, rowIx);
                 }
+
+                // Si la nueva línea quedó en otra página, ir a la página
+
             }
 
             function goToRow(rowIx) {

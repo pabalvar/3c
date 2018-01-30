@@ -81,10 +81,11 @@
                        ng-show="!dateCtrl.isDateInfinite"
                        ng-click="$event.stopPropagation()"
                        type="text"
+                       ng-keydown="keydown($event)"
                        style="display:inline-block;"
                        ng-mouseenter="dateCtrl.openDeferred();"
                        ng-mouseleave="dateCtrl.closeDeferred();"
-                       class="form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
+                       class="{{id}} form-control rndinput rnd-input-open-numeric text-right {{cellMeta.$dirty?'ng-dirty':''}} {{cellMeta.$invalid?'htInvalid':''}}"
                        uib-datepicker-popup="{{dateCtrl.format}}"
                        ng-model-options="{timezone: 'utc'}"
                        is-open="dateCtrl.isOpen"
@@ -134,12 +135,14 @@
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype!='number'"
       class="pr-5 pl-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}}"
       uib-tooltip="{{column.description||column.name}}"
-      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:meta}}</span>
+      ng-click="cellClick(line,column,source)"
+      tabindex="-1">{{line[key]| monitor:column:meta}}</span>
 <!-- modo READ : otras columnas -->
 <span ng-if="(!line.$estado.$isOpen || column.readOnly) && type.datatype!='$estado' && type.datatype=='number'"
       class="pr-5 pl-5 {{column.onClick?'rnd-btn btn-border btn-rounded':''}} {{column.icon?column.icon:''}} mr-20"
       uib-tooltip="{{column.description||column.name}}"
-      ng-click="cellClick(line,column,source)">{{line[key]| monitor:column:meta}}</span>
+      ng-click="cellClick(line,column,source)"
+      tabindex="-1">{{line[key]| monitor:column:meta}}</span>
 <!-- /modo READ -->
 
 <!-- Estado -->

@@ -1,7 +1,7 @@
 angular.module('gestion')
 
     .controller('gestionCuentasEntidadController', ['$scope', '$uibModalInstance', 'params', 'ws', 'cuentas', 'rndDialog','focus', 
-    function ($scope, $uibModalInstance, params, ws, cuentas, rndDialog,focus) {
+    function ($scope, $uibModalInstance, params, ws, cuentas, rndDialog, focus) {
         // Agregar la lista de bancos
         params.embed = 'entidadesPago'
 
@@ -18,7 +18,7 @@ angular.module('gestion')
         /** Lógica **/
         function focusOnTable(){
             console.log("haciendo focus en cuentas", $scope.apiCuentas.id)
-            focus($scope.apiCuentas.id)
+            focus($scope.apiCuentas)
         }
         // Si viene params, llamar al servicio
         if (params) traeCuentas();
