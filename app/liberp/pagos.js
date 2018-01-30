@@ -331,7 +331,7 @@ function pagosMeta() {
         { field: "NUCUDP", name: "Número", description: "Número de cheque o transferencia", visible: true, length: "10" },
         { field: "FEEMDP", name: "F. Emisión", visible: true, datatype: 'date', length: "10" },
         { field: "FEVEDP", name: "F. Vencim.", visible: true, datatype: 'date', length: "10" },
-        { field: "MODP", name: "M", description: "Moneda", visible: true, length: "3", datatype: 'lookup', tabla: 'monedas', options: { returnSrv: "KOMO", returnClient: "KOMO" } },
+        { field: "MODP", name: "M", description: "Moneda", visible: true, length: "5", datatype: 'lookup', tabla: 'monedas', options: { returnSrv: "KOMO", returnClient: "KOMO" } },
         { field: "TIMODP", name: "Tipo moneda", description: "Nacional (N) o extranjera (E)", visible: false },
         { field: "TAMODP", name: "Tasa de cambio", visible: false },
         { field: "VADP", name: "Monto", visible: true, datatype: 'number', length: "10", validations: [{ min: 1 }] },
