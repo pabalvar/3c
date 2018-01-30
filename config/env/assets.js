@@ -33,7 +33,7 @@ module.exports = {
                 "public/bower_components/angular/angular.js",
                 "public/bower_components/angular-animate/angular-animate.js",
                 //"public/bower_components/angular-i18n/angular-locale_es_cl.js",
-                "public/bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+                "public/scripts/vendor/angular-bootstrap/ui-bootstrap-tpls.js", // PAD: hice versión propia debido a open on arrowdown
                 'public/bower_components/froala-wysiwyg-editor/js/froala_editor.min.js',
                 'public/bower_components/froala-wysiwyg-editor/js/plugins/code_view.min.js',
                 'public/bower_components/froala-wysiwyg-editor/js/plugins/table.min.js',
