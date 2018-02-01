@@ -26,7 +26,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             }
 
             $scope.cacha = function(e){
-                console.log("te caché",e.target)
+                console.log("keydown gestion")
             }
 
 
@@ -335,7 +335,7 @@ angular.module('gestion').controller('gestionPagosClientesController',
             $scope.dump = dump;
             function dump() {
                 console.log(rndDialog.getCreated($scope.pasoPago.data, $scope.metaPago.data));
-                console.log(rndDialog.getModified($scope.pasoCruce.data, $scope.metaCruce.data));
+                //console.log(rndDialog.getModified($scope.pasoCruce.data, $scope.metaCruce.data));
             }
 
         }

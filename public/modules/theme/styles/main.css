@@ -1678,7 +1678,7 @@ button.close {
     color: #bfc7cb;
     font-style: italic;
     font-size: 12px;
-    line-height: 20px;
+    /*line-height: 20px; PAD: texto en placeholder salía muy abajo */
 }
 
 .form-control:-moz-placeholder {
@@ -3419,6 +3419,15 @@ check-toggler.checked:before,
     left: 0;
 }
 
+/* Oculta arrows en campo input numérico */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
 
 /* General button style (reset) */
 

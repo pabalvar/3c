@@ -16,11 +16,28 @@
 
         <table st-safe-src="source.data"
                st-table="displayedCollection"
+               ng-keydown="onKeydown($event)"
                style="width:100%;"
                class="st-table table-condensed table table-custom table-hover dt-responsive headerdark table-bordered inputable">
+            <!-- paginación -->
+            <thead ng-if="options.pagesize < source.data.length && options.pagesize"
+                   class="table-head-pagination">
+                <tr>
+                    <td colspan="500"
+                        class="text-center">
+                        <div st-pagination=""
+                             st-page-change="api.redraw()"
+                             st-template="rndSmtable.pagination.html"
+                             st-items-by-page="options.pagesize"
+                             st-displayed-pages="3">
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            <!-- /paginación -->
 
             <!-- create row -->
-            <tfoot ng-show="!source.$offline && (dialog.canCreate || !source.data.length) ">
+            <tfoot class="table-foot-actions" ng-show="!source.$offline && (dialog.canCreate || !source.data.length) ">
                 <tr>
                     <td colspan="500"
                         class="text-center">
@@ -29,7 +46,6 @@
                             class="m-10 text-default lt ">{{options.showEmpty}}</h3>
                         <button ng-if="dialog.canCreate"
                                 class="rnd-btn b-0 action-create"
-                                
                                 ng-click="api.addRow()">
                             <h4 tabindex="-1"
                                 class="m-5 text-default lt">
@@ -92,7 +108,7 @@
             <!-- /column headers -->
 
             <!-- datos de la tabla -->
-            <tbody class="rnd-gray shadow-b " ng-keydown="onKeydown($event)">
+            <tbody class="rnd-gray shadow-b ">
                 <tr ng-if="isLineVisible(fila)"
                     st-select-row="dialog.selectRow?fila:''"
                     ng-click="selectRow(fila)"
@@ -142,70 +158,85 @@
             </tfoot>
             <!-- offline -->
 
-            <!-- paginación -->
-            <thead ng-if="options.pagesize < source.data.length && options.pagesize"
-                   class="table-head-pagination">
-                <tr>
-                    <td colspan="500"
-                        class="text-center">
-                        <div st-pagination=""
-                             st-page-change="api.redraw()"
-                             st-template="rndSmtable.pagination.html"
-                             st-items-by-page="options.pagesize"
-                             st-displayed-pages="3">
-                        </div>
-                    </td>
-                </tr>
-            </thead>
-            <!-- /paginación -->
+
 
         </table>
     </div>
 </div>
 
 <script type="text/ng-template"
-        id="rndSmtable.pagination.html">
+     id="rndSmtable.pagination.html">
 
     <div class="text-left"
          ng-if="pages.length >= 2">
         <span class="text-xs mr-10">Página {{currentPage}} de {{numPages}} </span>
         <ul class="pagination">
 
-            <!-- retroceder -->
-            <li class="text-xs table-previous-page">
-                <a ng-disabled="currentPage < 2"
-                   ng-click="selectPage(currentPage - 1)">&lt;</a>
+            <!-- ir a inicio -->
+            <li class="text-xs table-first-page">
+                <a class="p-0" ng-disabled="currentPage == 1"
+                   ng-click="selectPage(1)"><i class="fa fa-fast-backward "/>
+                </a>
             </li>
 
-            <!-- mostrar primera -->
-            <li class="text-xs table-first-page" ng-class="{active: currentPage==1}">
+            <!-- retroceder -->
+            <li class="text-xs table-previous-page">
+                <a class="p-0 pr-5" ng-disabled="currentPage < 2"
+                   ng-click="selectPage(currentPage - 1)"><i class="fa fa-backward "/></a>
+            </li>
+
+
+            <!-- mostrar primera --
+            <li class="text-xs table-first-page"
+                ng-class="{active: currentPage==1}">
                 <a ng-disabled="currentPage == 1"
                    ng-click="selectPage(1)">1
                 </a>
             </li>
+            <!-- /mostrar primera -->
 
             <!-- bloque de la actual -->
-            <li class="text-xs" ng-if="numPages > 4 && currentPage > 3"><a ng-disabled="true">...</a></li>
-            <li class="text-xs" ng-repeat="page in pages"
-                ng-if="page > (currentPage-4) && page < (currentPage+4) && (page > 1) && (page < numPages)"
+            <!--
+            <li class="text-xs"
+                ng-if="numPages > 4 && currentPage > 3">
+                <a ng-disabled="true">...</a>
+            </li>-->
+            <li class="text-xs"
+                ng-repeat="page in pages"
+                ng-if="(page-currentPage)<2 || (page==3 && currentPage==1)"
                 ng-class="{active: page==currentPage}">
                 <a ng-click="selectPage(page)">{{page}}</a>
             </li>
-            <li class="text-xs" ng-if="numPages > 4 && currentPage <  numPages - 2"><a ng-disabled="true">...</a></li>
+            <!--
+            <li class="text-xs"
+                ng-if="numPages > 4 && currentPage <  numPages - 2">
+                <a ng-disabled="true">...</a>
+            </li>-->
 
-            <!-- mostrar última página -->
-            <li class="text-xs table-last-page" ng-class="{active: currentPage==numPages}">
+            <!-- mostrar última página --
+            <li class="text-xs table-last-page"
+                ng-class="{active: currentPage==numPages}">
                 <a ng-disabled="currentPage == numPages"
                    ng-click="selectPage(numPages)">{{numPages}}
                 </a>
             </li>
+            <!-- /mostrar última página -->
+
+
 
             <!-- avanzar -->
-            <li class="text-xs  table-next-page">
-                <a class="" ng-disabled="currentPage > (numPages-2)"
-                   ng-click="selectPage(currentPage+1)">&gt;</a>
+            <li class="text-xs table-next-page">
+                <a class="p-0 pl-5"
+                   ng-disabled="currentPage > (numPages-2)"
+                   ng-click="selectPage(currentPage+1)"><i class="fa fa-forward "/></a>
             </li>
-
+            <!-- ir al final -->
+            <li class="text-xs table-last-page">
+                <a class="p-0" 
+                ng-disabled="currentPage == numPages"
+                   ng-click="selectPage(numPages)"><i class="fa fa-fast-forward "/>
+                </a>
+            </li>
         </ul>
     </div>
 

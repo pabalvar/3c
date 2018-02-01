@@ -135,7 +135,7 @@ input.rndinputd {
     padding: 0px;
     margin: 0px;
     font-family: "Lato", "Arial", sans-serif;
-    height: 18px;
+    height: 20px; /* PAD: 18 a 20px por Firefox */
     width: 100%;
 }
 div.rnd-input-open input.rnd-input-open-numeric,

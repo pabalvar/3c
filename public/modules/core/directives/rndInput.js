@@ -62,12 +62,10 @@ angular.module("core")
 
           if ($scope.data) console.warn("rndInput: data va a ser deprecado. Use source");
           var Data = $scope.data || $scope.source; //backwards compatibile columns ahora se llama source
-function keydown(ev){
-  console.log("hola",ev)
-  ev.key="ArrowDown";
-  ev.keyCode = 40;
-}
-$scope.keydown = keydown;
+
+          // Anula la acción por defecto de los key-arrows para permitir navegar en contexto de tabla
+          $scope.keydown = keydown;
+
 
           // Init
           $scope.line.$estado = $scope.line.$estado || {}; // init $estado (lineMeta)
@@ -121,7 +119,7 @@ $scope.keydown = keydown;
           // Anexar cellBlur si lo tiene el meta
           if (column.onBlur) {
             $scope.cellBlur = function (line, column, source) {
-              console.log("hizo blur en la celda", line, column);
+              //console.log("hizo blur en la celda", line, column);
               // llamar a la función de meta
               column.onBlur(line, column, source);
             }
@@ -140,7 +138,6 @@ $scope.keydown = keydown;
               case 'date': initDate(type); break;
               case 'lookup': initLookup(); break;
             }
-
           }
 
           /** Función que llama al actualizar valores */
@@ -173,6 +170,23 @@ $scope.keydown = keydown;
             // Ejecutar validación en la celda
             rndDialog.validateCell(Data, rowIx, column);
           }
+
+          /** Anula la acción por defecto de los key-arrows para permitir navegar en contexto de tabla **/
+          function keydown(evt) {
+            console.log("keydown en rndInput")
+            // arrows    // page
+            if (/(37|38|39|40|33|34)/.test(evt.which)) {
+              evt.preventDefault();
+
+              // Debido a BUG en firefox se reescribe el valor en dropdown. https://stackoverflow.com/questions/22321604
+              if ($scope.type.datatype == 'lookup'){
+                var val = $scope.buffer.tmpInput;
+                $timeout(()=>{ $scope.buffer.tmpInput = val});
+              }
+            
+            }
+          }
+
 
           /** Función que hace cargo de cuando el input es de tipo rtabla. */
           function initRtabla() {
@@ -222,13 +236,12 @@ $scope.keydown = keydown;
             $scope.$watch('dateCtrl.isOpen', onCloseCalendario);
 
             function onCloseCalendario(newVal, oldVal) {
-              if (oldVal === true){
-                if (newVal === false){
-                  console.log("lo cerró.- calendario cambio de ", oldVal, " a ", newVal);
-                  focus($scope.id,0)
+              if (oldVal === true) {
+                if (newVal === false) {
+                  //console.log("lo cerró.- calendario cambio de ", oldVal, " a ", newVal);
+                  focus($scope.id, 0)
                 }
               }
-              
             }
 
             function dateCloseDeferred() {

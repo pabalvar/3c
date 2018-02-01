@@ -132,22 +132,34 @@ angular.module('core')
             // Html a mostrar cuando está vacío
             $scope.emptyHintHtml = renderEmptyHint($scope.options);
 
-
             /** Detalles de implementación */
 
+            // Navegación keyboard
             function onKeydown($event) {
-                $event.stopPropagation()
-                console.log("keydown on element:2", $event, " key:", $event.keyCode);
+                $event.stopPropagation();
+                console.log("keydown smTable", $event.keyCode);
                 // Add Row con Enter
                 switch ($event.keyCode) {
-                    case 38: tableGoUp($event); break;
-                    case 40: tableGoDown($event); break;
+                    case 38: tableKeyUp($event); break;
+                    case 40: tableKeyDown($event); break;
                     case 39: tableGoRight($event); break;
                     case 37: tableGoLeft($event); break;
+                    case 34: tableGoNextPage(); break;
+                    case 33: tableGoPreviousPage(); break;
                 }
-                if ($event.keyCode == 13) {
-                    // if ($scope.dialog.canCreate) addRow();
-                }
+            }
+
+            function tableKeyUp($event){
+                var ret;
+                ret = tableGoUp($event); 
+                // Si no funcionó ir hacia abajo en la tabla (ret=false) ir a los botones
+                if (!ret) tableGoLastInput();
+            }
+
+            function tableKeyDown($event){
+                var ret = tableGoDown($event); 
+                // Si no funcionó ir hacia abajo en la tabla (ret=false) ir a los botones
+                if (!ret) tableGoFootActions();
             }
 
             function getFieldFromClassList(el) {
@@ -157,34 +169,62 @@ angular.module('core')
                 })
                 return ret;
             }
+
             function tableGoUp($event) {
                 // Get field class of cell
                 var td = $event.target.closest('td');
+                if (!td) return;
                 var field = getFieldFromClassList(td);
+                if (!field) return;
                 var tr = td.closest('tr');
                 var prevTr = tr.previousElementSibling;
-                var goalTd = angular.element(prevTr).find('.field-' + field + " input");
-                goalTd.trigger('focus',100);
+                var goalTd = angular.element(prevTr).find('.field-' + field + " :input");
+                goalTd.trigger('focus', 100);
+                return true;
             }
             function tableGoDown($event) {
                 var td = $event.target.closest('td');
+                if (!td) return; // salir si no hay td
                 var field = getFieldFromClassList(td);
+                if (!field) return;
                 var tr = td.closest('tr');
                 var nextTr = tr.nextElementSibling;
-                var goalTd = angular.element(nextTr).find('.field-' + field + " input");
-                goalTd.trigger('focus',100);
+                if (!nextTr) return;
+                var goalTd = angular.element(nextTr).find('.field-' + field + " :input");
+                goalTd.trigger('focus', 100);
+                return true;
             }
             function tableGoRight($event) {
                 var td = $event.target.closest('td');
-                var field = getFieldFromClassList(td);
-                var goalTd = td.nextElementSibling.find('.field-' + field + " input");
-                /*var field = getFieldFromClassList(td);
-                var tr = td.closest('tr');
-                var nextTr = ts.nextElementSibling;
-                var goalTd = angular.element(nextTr).find('.field-' + field + " input");*/
-                goalTd.trigger('focus',100);
+                var goalTd = angular.element(td.nextElementSibling).find(':input');
+                goalTd.trigger('focus', 100);
             }
-
+            function tableGoLeft($event) {
+                var td = $event.target.closest('td');
+                var goalTd = angular.element(td.previousElementSibling).find(':input');
+                goalTd.trigger('focus', 100);
+            }
+            function tableGoNextPage(){
+                var el = angular.element(`.${$scope.id} thead.table-head-pagination  li.table-next-page a`)
+                $timeout(()=>{
+                    el.trigger('click');
+                    $timeout(()=>{tableGoLastInput()})
+                });
+            }
+            function tableGoPreviousPage(){
+                var el = angular.element(`.${$scope.id} thead.table-head-pagination  li.table-previous-page a`)
+                $timeout(()=>{
+                    el.trigger('click');
+                    $timeout(()=>{tableGoLastInput()})
+                });
+            }
+            // Función que va a la sección footer actions. Si ya se encuentra ahí retorna falso
+            function tableGoFootActions(){
+                var el = angular.element(`.${$scope.id} tfoot.table-foot-actions`)
+                var goalEl = angular.element(el).find(":input").first();
+                goalEl.trigger('focus', 100);
+                return true;
+            }
             function renderEmptyHint(options) {
                 var ret = '';
                 if (typeof (options.showEmpty) == 'string') {
@@ -206,12 +246,15 @@ angular.module('core')
                 rndDialog.setLineNew(obj);
                 $scope.source.data.push(obj);
                 // Llamar al controlador si se pasó onAddRow
+                /*
                 var rowIx = $scope.source.data.length - 1;
                 if ($scope.dialog.onAddRow) {
                     $scope.dialog.onAddRow(obj, $scope.source, rowIx);
-                }
+                }*/
 
                 // Si la nueva línea quedó en otra página, ir a la página
+                //
+                $timeout(()=>tableGoNextPage());
 
             }
 
@@ -236,22 +279,16 @@ angular.module('core')
                     // Obtener objeto del DOM
                     var el = angular.element(selector);
                     el.trigger('click')
-                    clickInput();
+                    tableGoLastInput();
                 });
             }
 
             /** Función que simula un click en una línea */
-            function clickInput(rowIx) {
-                var selector = `table.${$scope.id} tbody tr:last-child > td :input:first`;
-
+            function tableGoLastInput() {
+                var selector = `.${$scope.id} tbody tr:last-child > td :input:first`;
+                var el = angular.element(selector);
                 // aplicar trigger (en diferido para asegurar esté renderizado)
-                $timeout(function () {
-                    // Obtener objeto del DOM
-                    var el = angular.element(selector);
-                    //console.log("clicke", el);
-                    el.trigger('focus')
-                    clickRow()
-                });
+                $timeout(()=>{el.trigger('focus')});
             }
 
             /** Función que simula un click en una línea */
