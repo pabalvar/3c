@@ -10,8 +10,10 @@ module.exports = _.extend(
 );
 
 /** Obtiene archivos por patrones */
-module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
-	var _this = this;
+module.exports.getGlobbedFiles = getGlobbedFiles; 
+
+
+function getGlobbedFiles (globPatterns, removeRoot) {
 
 	// URL paths regex
 	var urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
@@ -22,7 +24,7 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
 	// If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
 	if (_.isArray(globPatterns)) {
 		globPatterns.forEach(function (globPattern) {
-			output = _.union(output, _this.getGlobbedFiles(globPattern, removeRoot));
+			output = _.union(output, getGlobbedFiles(globPattern, removeRoot));
 		});
 	} else if (_.isString(globPatterns)) {
 		if (urlRegex.test(globPatterns)) {
@@ -59,9 +61,7 @@ module.exports.getJavaScriptAssets = function (includeTests) {
 	return output;
 };
 
-/**
- * Get the modules CSS files
- */
+/** Get the modules CSS files */
 module.exports.getCSSAssets = function () {
 	var output = this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), 'public/');
 	return output;

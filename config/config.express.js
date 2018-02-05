@@ -89,7 +89,7 @@ module.exports = function (config) {
 
     // Set views path and view engine
     app.set('view engine', 'server.view.html');
-    app.set('views', './app/lib/Server/views');
+    app.set('views', ['./app/lib/Server/views','./app/licencias/erp/views']);
 
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
@@ -106,12 +106,16 @@ module.exports = function (config) {
 
     // Incluir los middleware (el orden importa, por eso se fuerza según se requieren)
     function requirePath(routePath) { require(path.resolve(routePath))(app); }
-    config.getGlobbedFiles('./app/lib/*/routes/**/*.js').forEach(requirePath);
-    config.getGlobbedFiles('./app/rrhh/contracts/routes/**/*.js').forEach(requirePath);
-    config.getGlobbedFiles('./app/rrhh/!(contracts)/routes/**/*.js').forEach(requirePath);
-    // módulos no anidados. eg. /app/gestion/entidades.routes.js
-    config.getGlobbedFiles('./app/liberp/*routes.js').forEach(requirePath);
+    // lib
+    config.getGlobbedFiles('./app/lib/*/routes/*.js').forEach(requirePath);
+    // rrhh
+    config.getGlobbedFiles('./app/rrhh/contracts/routes/*.js').forEach(requirePath);
+    config.getGlobbedFiles('./app/rrhh/!(contracts)/routes/*.js').forEach(requirePath);
+    // módulos no anidados.
+    config.getGlobbedFiles('./app/liberp/*.routes.js').forEach(requirePath);
     config.getGlobbedFiles('./app/!(lib|rrhh)/*.routes.js').forEach(requirePath);
+    // otros módulos anidados (con directorio routes)
+    config.getGlobbedFiles('./app/!(lib|rrhh|liberp)/*/routes/*routes.js').forEach(requirePath);
 
     // Responder 500 si viene con error
     app.use(function (err, req, res, next) {
