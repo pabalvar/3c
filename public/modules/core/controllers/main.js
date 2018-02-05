@@ -45,10 +45,6 @@ angular.module('core')
       { id: 'de', name: 'German', img: 'images/flags/Germany.png' }
     ];
 
-    $scope.changeLanguage = function (langKey) {
-      $translate.use(langKey);
-      $scope.currentLanguage = langKey;
-    };
     $scope.currentLanguage = $translate.proposedLanguage() || $translate.use();
 
     /** Empresa */
