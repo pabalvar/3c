@@ -3,7 +3,7 @@ var path = require('path', 'dont-enclose');
 var fs = require('fs');
 
 // puerto TCP por defecto
-var port = process.env.NODE_PORT || 3000;
+var port = process.env.NODE_PORT || 3002;
 
 // ruta a cache en disco (%APPDATA% en windows, /var/log en LINUX)
 var rootPath = process.env.APPDATA || path.join('/var', 'log');
@@ -25,10 +25,10 @@ module.exports = {
     localPath: localPath,
     sql: {
         defaultParams: {
-            'user': '',
-            'password': '',
-            'server': '',
-            'database': '',
+            'user': 'usuario',
+            'password': 'randomERP!2018',
+            'server': 'rrhh.database.windows.net',
+            'database': '3C_DEMO',
             'options': {
                 'tdsVersion': '7_1',
                 'encrypt': true,  //Usar para un servidor Azure
